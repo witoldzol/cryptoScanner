@@ -1,0 +1,22 @@
+{
+  "name": "cryptoscanner",
+  "version": "1.0.0",
+  "description": "scanner for crypto arbitrage",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/witoldzol/CryptoScanner.git"
+  },
+  "author": "Witold Zolnowski",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/witoldzol/CryptoScanner/issues"
+  },
+  "homepage": "https://github.com/witoldzol/CryptoScanner#readme",
+  "devDependencies": {
+    "electron": "^2.0.2"
+  }
+}

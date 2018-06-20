@@ -1,0 +1,4 @@
+let cl = x=>
+{
+    console.log(x)
+}
