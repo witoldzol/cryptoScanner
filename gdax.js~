@@ -1,0 +1,43 @@
+const url = require('url')
+const http = require('http')
+
+// const options = {
+//   hostname: 'https://api.gdax.com',
+//   port: 80,
+//   path: '/products',
+//   method: 'GET',
+//   headers: {
+//     'Content-Type': 'application/json'
+//   }
+// }
+
+
+// const req = http.request(options, (res) => {
+//   let data
+//   res.setEncoding('utf8');
+//   res.on('data', (chunk) => {
+//   	data += chunk
+//   });
+//   res.on('end', () => {
+//     console.log('No more data in response.');
+//     console.log(data)
+//   })
+// })
+
+// req.on('error', (e) => {
+//   console.error(`problem with request: ${e.message}`);
+// })
+// // write data to request body
+// req.write();
+// req.end()
+
+let options = {
+	host: 'https://api.gdax.com',
+	path: '/products',
+	method: 'GET'
+}
+
+let response = (x)=>{
+	console.log(x)
+}
+

@@ -52,26 +52,3 @@ app.on('activate', function() {
 })
 
 // ---------------------------  api
-
-let options = {
-    hostname: 'api.gdax.com',
-    port: 443,
-    path: '/products',
-    method: 'GET'
-}
-
-let req = https.request(options, res=>{
-    cl('status code':, res.statusCode)
-
-    let data = ''
-    
-    res.on('data', d=>data += d )
-
-    req.on('error', err=>cl(err) )
-
-    cl(data)
-    
-    req.end()
-
-    
-})

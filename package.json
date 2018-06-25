@@ -17,9 +17,9 @@
   },
   "homepage": "https://github.com/witoldzol/CryptoScanner#readme",
   "devDependencies": {
-    "electron": "^2.0.2"
+    "electron": "^2.0.3"
   },
   "dependencies": {
-    "subl": "^1.0.3"
+    "axios": "^0.18.0"
   }
 }
