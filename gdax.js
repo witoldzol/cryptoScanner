@@ -9,13 +9,22 @@ let ax = axios.create({
     baseURL: 'https://api.gdax.com',
     timeout: 5000,
     headers: {
-	'User-Agent': 'linux chrome'}
+	    'User-Agent': 'linux chrome',
+        'CB-ACCESS-KEY': 'lol'
+    }
 })
-	
+
+
 //call
-ax.get('/products')
-    .then(res=>cl(res))
+ax.get('products/BTC-EUR/book?level=2')
+    .then(res=>{
+        let bids = res.data.bids
+        let asks = res.data.asks
+        cl(`lowest bid is : ${bids[0]}`)
+        cl(`lowest ask is : ${asks[0]}`)
+    })
     .catch(err=>cl(err))
+
 
 
 
