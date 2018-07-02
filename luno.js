@@ -1,6 +1,6 @@
 const axios = require('axios')
-const axiosRetry= require('axios-retry')
 const async = require('async')
+const rax = require('retry-axios')
 
 //util
 let cl=x=>console.log(x)
@@ -15,8 +15,17 @@ let ax = axios.create(
             'CB-ACCESS-KEY': 'lol'
 	}
     })
-axiosRetry(ax,{ retries: 3})
 
+const interceptorId = rax.attach();
+let f = async ()=>{
+await    ax.get('/orderbook?pair=XBTIDR').then(x=>cl('data')).catch(e=>cl(e.response.status))
+await    ax.get('/orderbook?pair=XBTIDR').then(x=>cl('data 2')).catch(e=>cl(e.response.status))
+await     ax.get('/orderbook?pair=XBTIDR').then(x=>cl('data 3')).catch(e=>cl(e.response.status))
+await    ax.get('/orderbook?pair=XBTIDR').then(x=>cl('data 4')).catch(e=>cl(e.response.status))
+await    ax.get('/orderbook?pair=XBTIDR').then(x=>cl('data 5')).catch(e=>cl(e.response.status))
+}
+f()
+/*
 //currency pairs available on this exchang //XBT = BTC
 const pairs = [ 'XBTIDR', 'XBTMYR', 'XBTNGN', 'XBTZAR', 'ETHXBT' ]
 
@@ -46,21 +55,20 @@ let getProductPrice = async pair=>
         await ax.get(url)
             .then( res=>
                    {
-		       cl(res.statusCode)
-		       cl('tried to get ')
-		       return res
-		   //     let data = {}
-		   //     data[pair]['bids']=res.data.bids.slice(0,10)
-		   //     data[pair]['asks']=res.data.asks.slice(0,10)
-		   //     cl(data)
+		       cl('returning data')
 	           })
-            .catch(e=>cl('error' + e))
+            .catch(e=>{cl('error code : ' + e.response.status)})
     }
 
 // get all prices for all pairs 
- async.mapLimit(pairs,1,getProductPrice,(e,res)=>
+async.mapLimit(pairs,1,getProductPrice,(e,res)=>
                {
 		   if(e){cl(e.message)}
+		   cl(res.data)
                })
 
+// -----------------------------
+// ------------------------------
+// ------------------------------
 
+*/
