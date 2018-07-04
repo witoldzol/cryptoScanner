@@ -23,7 +23,6 @@
   },
   "dependencies": {
     "async": "^2.6.1",
-    "axios": "^0.18.0",
-    "retry-axios": "^0.3.2"
+    "axios": "^0.18.0"
   }
 }

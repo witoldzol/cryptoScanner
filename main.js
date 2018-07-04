@@ -1,10 +1,11 @@
-//MISC
-let cl = x=>cl(x)
-
 // Modules to control application life and create native browser window
 const { app, BrowserWindow } = require('electron')
 const fs = require('fs')
 const https = require('https')
+const luno = require('./luno.js')
+
+//MISC
+let cl = x=>cl(x)
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -50,5 +51,10 @@ app.on('activate', function() {
     createWindow()
   }
 })
+
+// let a =  ()=>luno.getPrice('XBTIDR').then(res=>console.log(res)).catch(e=>console.log(e))
+// console.log('ok')
+luno.getPrice('XBTIDR').then( res=>console.log(res) ).catch(e=>console.log(e))
+
 
 // ---------------------------  api
