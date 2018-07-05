@@ -1,5 +1,7 @@
 const axios = require('axios')
 const async = require('async')
+const bn = require('bottleneck')
+
 const retryDelay = 5000 // dependent on the server settings ( this one is fussy, needs time )
 //const exports = module.exports
 //util
@@ -43,9 +45,45 @@ let delay = (t,v)=>
     {
 	return new Promise( resolve=> setTimeout(resolve.bind(null,v), t) )
     }
+
+let getPrice = async pair=>
+    {
+	return await ax.get( makeUrl(pair) )
+	    .then( function(result){ return Promise.retry(getPrice,3,5000)})
+	    // .then(()=>cl('done'))
+	    // .catch(e=>{ delay(3000).then( x=>getPrice)})
+	    // .then( x=>x )
+	
+
+    }
+
+Promise.retry = function( fn, times, delay)
+{
+    return new Promise( (resolve,reject)=>
+			{
+			    let err
+			    let attempt = ()=>
+				{
+				    if(times == 0) {reject(err)}
+				    else
+				    {
+					fn().then( res=>cl('result returned') )
+					    .catch( e=>{times--; err = e; cl('retry9ing');setTimeout( ()=>attempt(),4000)})
+				    }
+				}
+			    attempt()
+			})
+}
+
+async.mapLimit(pairs,4, getPrice,(e,res)=>
+               {
+		   if(e){cl(e.message)}
+		   cl(res)
+               })
+
 /*
 //get current prices of given pair
-exports.getProductPrice = async (pair, n)=>
+let getProductPrice = async (pair, n)=>
     {
 	if(!n){n=1}
 	//create url to query orderbook
