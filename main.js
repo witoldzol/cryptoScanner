@@ -4,6 +4,7 @@ const fs = require('fs')
 const https = require('https')
 const luno = require('./luno.js')
 const async = require('async')
+const axios = require('axios')
 
 //MISC
 let cl = x=>cl(x)
@@ -53,9 +54,15 @@ app.on('activate', function() {
   }
 })
 
-// let a =  ()=>luno.getPrice('XBTIDR').then(res=>console.log(res)).catch(e=>console.log(e))
-// console.log('ok')
-luno.getPrices().then( res=>console.log(res) ).catch(e=>console.log(e))
+//we need to use async to await results?
+let wrap = async ()=>
+    {
+	let res = await luno.getPrices()
+	cl(res)
+    }
+
+// luno.getPrices().then(x=>console.log(x)).catch(e=>console.log('omg err'))
+luno.lunoPrices.then(x=>console.log(x)).catch(e=>console.log('omg err'))
 
 
 
