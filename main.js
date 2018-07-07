@@ -1,7 +1,5 @@
 // Modules to control application life and create native browser window
 const { app, BrowserWindow } = require('electron')
-const fs = require('fs')
-const https = require('https')
 const luno = require('./luno.js')
 const async = require('async')
 const axios = require('axios')
