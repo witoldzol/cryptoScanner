@@ -3,6 +3,7 @@ const { app, BrowserWindow } = require('electron')
 const fs = require('fs')
 const https = require('https')
 const luno = require('./luno.js')
+const async = require('async')
 
 //MISC
 let cl = x=>cl(x)
@@ -54,7 +55,8 @@ app.on('activate', function() {
 
 // let a =  ()=>luno.getPrice('XBTIDR').then(res=>console.log(res)).catch(e=>console.log(e))
 // console.log('ok')
-luno.getPrice('XBTIDR').then( res=>console.log(res) ).catch(e=>console.log(e))
+luno.getPrices().then( res=>console.log(res) ).catch(e=>console.log(e))
 
 
-// ---------------------------  api
+
+
