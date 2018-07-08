@@ -10,8 +10,9 @@ exports.delay = (time, value)=>
 {
     return new Promise( resolve=>setTimeout( resolve.bind(null, value), time))
 }
-// takes a bunch of args specific to each crypto market, and returns promise of price arrays
-exports.getPrices = (urlPath, pairs, requestDelay, retryDelay, ax )=>
+
+// ======================================== GET PRICES 
+exports.getPrices = (urlPath, pairs, requestDelay, retryDelay, ax, maxConcurrentRequests )=>
     {
 	let delay = (time, value)=>
 	    {
@@ -60,10 +61,29 @@ exports.getPrices = (urlPath, pairs, requestDelay, retryDelay, ax )=>
 	return new Promise( (resolve, reject)=>
 			    {
 				
-				async.mapLimit(pairs,2, outerPromise,(e,res)=>
+				async.mapLimit(pairs, maxConcurrentRequests, outerPromise,(e,res)=>
 					       {
 						   if(e){reject(e)}
 						   resolve(res)
 					       })
 			    })
     }
+
+
+
+//============================================================
+//------------------------------ not used
+//get pairs ( don't use -- they don't change much)
+// let getPairs = ax.get('/tickers')
+// 	.then(res=>
+// 	  {
+// 	      let urlArray = res.data.tickers.map(x=> x.pair)
+// 	})
+
+// //takes in array , returns array of urls
+// //we feed them to 'call maker' to obtain prices for each pair
+// let urlArray = pairs=>
+// {
+// 	return pairs.map(x=>urlPath + x)
+// }
+// //------------------------------

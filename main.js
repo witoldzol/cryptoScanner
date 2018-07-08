@@ -1,6 +1,7 @@
 // Modules to control application life and create native browser window
 const { app, BrowserWindow } = require('electron')
 const luno = require('./luno.js')
+const binance = require('./binance.js')
 const async = require('async')
 const axios = require('axios')
 
@@ -58,10 +59,10 @@ let wrap = async ()=>
 	let res = await luno.getPrices()
 	cl(res)
     }
-
+let start = Date.now()
 // luno.getPrices().then(x=>console.log(x)).catch(e=>console.log('omg err'))
-luno.lunoPrices.then(x=>console.log(x)).catch(e=>console.log('omg err'))
-
+// luno.lunoPrices.then(x=>console.log(x)).catch(e=>console.log('omg err'))
+binance.bianancePrices.then(x=>console.log(x)).catch(e=>console.log('omg err'))
 
 
 

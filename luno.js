@@ -30,24 +30,7 @@ const pairs = [ 'XBTIDR', 'XBTMYR', 'XBTNGN', 'XBTZAR', 'ETHXBT' ]
 //it gets contatenated to the default api url
 let urlPath = '/orderbook?pair='
 
-exports.lunoPrices = util.getPrices(urlPath, pairs, requestDelay, retryDelay, ax)
+exports.lunoPrices = util.getPrices(urlPath, pairs, requestDelay, retryDelay, ax, 2)
 
 
 
-
-//============================================================
-//------------------------------ not used
-//get pairs ( don't use -- they don't change much)
-// let getPairs = ax.get('/tickers')
-// 	.then(res=>
-// 	  {
-// 	      let urlArray = res.data.tickers.map(x=> x.pair)
-// 	})
-
-// //takes in array , returns array of urls
-// //we feed them to 'call maker' to obtain prices for each pair
-// let urlArray = pairs=>
-// {
-// 	return pairs.map(x=>urlPath + x)
-// }
-// //------------------------------
