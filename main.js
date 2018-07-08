@@ -1,12 +1,14 @@
+//============================== MAIN ==============================
 // Modules to control application life and create native browser window
 const { app, BrowserWindow } = require('electron')
 const luno = require('./luno.js')
 const binance = require('./binance.js')
+const gdax = require('./gdax.js')
 const async = require('async')
 const axios = require('axios')
 
 //MISC
-let cl = x=>cl(x)
+let cl = x=>console.log(x)
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -60,9 +62,10 @@ let wrap = async ()=>
 	cl(res)
     }
 let start = Date.now()
-// luno.getPrices().then(x=>console.log(x)).catch(e=>console.log('omg err'))
+
 // luno.lunoPrices.then(x=>console.log(x)).catch(e=>console.log('omg err'))
-binance.bianancePrices.then(x=>console.log(x)).catch(e=>console.log('omg err'))
+// binance.bianancePrices.then(x=>console.log(x)).catch(e=>console.log('omg err'))
+// gdax.gdaxPrices.then(x=>console.log(x)).catch(e=>console.log('omg err'))
 
 
 
