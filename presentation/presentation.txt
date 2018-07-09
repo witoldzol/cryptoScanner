@@ -1,0 +1,69 @@
+==============================
+Test
+==============================
+
+Unit testing:
+
+Mocha + chai (library) + sinon (test spies/stubs/mocks)
+
+==============================
+Intro
+==============================
+There are roughly 1600 currencies traded on 11600 markets aro0und globe
+Total market cap : 250 billion dollars
+
+My problem is : I can't arbitrage manually anymore because it's too much work.
+I need a quick and efficient solution.
+
+Becuase crypto markets are relatively new, markets are relatively inefficient, which means theres still opportunity for arbitrage.
+
+Main motivation for this project is to MAKE MONEY$$ => penthouse & lambo => make money with  MINIMUM RISK 
+
+***What is an arbitrage and why would you want some of it?!
+
+
+==============================
+GOALS
+==============================
+- efficient way to identifiy arbitrage opportunities
+- ability to act on those opportunities
+- record the findings for future analysis
+- learn JavaScript and related technologies
+
+==============================
+SOLUTIONS
+==============================
+- build an application that will handle all the mundane tasks and leave decision making to me
+
+==============================
+SYSTEM
+==============================
+Stack: Linux + Nodejs + MongoDB
+
+Because I'm building electron application, I will be able to package it for any operating system.
+
+MongoDB is a non relational database that will be a good fit because most of the data will be in JSON format
+
+Nodejs allows us to write both front and back end in a single language, which enhances code clarity and overall project simplicity.
+
+Maing algorithm will have to do with analysing data in JSON format. It will attempt to analyse data between two markets, as well as, between multiple markets by building chains.
+
+JS packages: 
+electron => cross-system platform for desktop application 
+
+
+==============================
+REQUIREMENTS
+==============================
+- Query markets for current data
+- Transform data into usable/ uniform format
+- Analyse data and identify actionable price differences between markets
+- Save output for future reference
+- Schedule tasks 
+
+==============================
+CLASS DESIGN
+==============================
+
+
+
