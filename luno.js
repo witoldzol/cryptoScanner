@@ -32,8 +32,9 @@ const pairs = [ 'XBTIDR', 'XBTMYR', 'XBTNGN', 'XBTZAR', 'ETHXBT' ]
 //it gets contatenated to the default api url
 let urlPath = ['/orderbook?pair=', '']
 
-// exports.lunoPrices = util.getPrices(urlPath, pairs, requestDelay, retryDelay, ax, 2)
-let t=
+// EXPORT
+// ==============================
+let settings=
     {
 	urlPath: urlPath,
 	pairs:pairs,
@@ -43,4 +44,4 @@ let t=
 	maxConcurrentRequests: 2
     }
 
-exports.lunoPrices = util.getPrices(t)
+exports.settings = settings

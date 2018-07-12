@@ -6,6 +6,7 @@ const binance = require('./binance.js')
 const gdax = require('./gdax.js')
 const async = require('async')
 const axios = require('axios')
+const util = require('./util.js')
 
 //MISC
 let cl = x=>console.log(x)
@@ -63,9 +64,8 @@ let wrap = async ()=>
     }
 let start = Date.now()
 
-// luno.lunoPrices.then(x=>console.log(x)).catch(e=>console.log('omg err'))
-// binance.bianancePrices.then(x=>console.log(x)).catch(e=>console.log('omg err'))
-// gdax.gdaxPrices.then(x=>console.log(x)).catch(e=>console.log('omg err'))
-
+util.getPrices(luno.settings).then(x=>console.log(x)).catch(e=>console.log('LUNO-GET_PRICE_FUNCTION ERROR ===> ' + e))
+util.getPrices(gdax.settings).then(x=>console.log(x)).catch(e=>console.log('GDAX-GET_PRICE_FUNCTION ERROR ===>' + e))
+util.getPrices(binance.settings).then(x=>console.log(x)).catch(e=>console.log('BINANCE-GET_PRICE_FUNCTION ERROR ===>' + e))
 
 

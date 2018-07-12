@@ -27,4 +27,14 @@ const pairs = [ 'BCH-BTC','BCH-USD','BTC-EUR','BTC-GBP','BTC-USD','ETH-BTC','ETH
 
 // EXPORT
 // ==============================
-// exports.gdaxPrices = util.getPrices(urlPath, pairs, requestDelay, retryDelay, ax, 3)
+let settings=
+    {
+	urlPath: urlPath,
+	pairs:pairs,
+	requestDelay:requestDelay,
+	retryDelay:retryDelay,
+	ax:ax,
+	maxConcurrentRequests: 4
+    }
+
+exports.settings = settings
