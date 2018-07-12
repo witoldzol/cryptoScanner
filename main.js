@@ -17,7 +17,7 @@ let mainWindow
 
 function createWindow() {
   // Create the browser window.
-  mainWindow = new BrowserWindow({ width: 800, height: 600 })
+    mainWindow = new BrowserWindow({ width: 200, height: 200 })
 
   // and load the index.html of the app.
   mainWindow.loadFile('index.html')
@@ -65,7 +65,7 @@ let wrap = async ()=>
 let start = Date.now()
 
 util.getPrices(luno.settings).then(x=>console.log(x)).catch(e=>console.log('LUNO-GET_PRICE_FUNCTION ERROR ===> ' + e))
-util.getPrices(gdax.settings).then(x=>console.log(x)).catch(e=>console.log('GDAX-GET_PRICE_FUNCTION ERROR ===>' + e))
-util.getPrices(binance.settings).then(x=>console.log(x)).catch(e=>console.log('BINANCE-GET_PRICE_FUNCTION ERROR ===>' + e))
+// util.getPrices(gdax.settings).then(x=>console.log(x)).catch(e=>console.log('GDAX-GET_PRICE_FUNCTION ERROR ===>' + e))
+// util.getPrices(binance.settings).then(x=>console.log(x)).catch(e=>console.log('BINANCE-GET_PRICE_FUNCTION ERROR ===>' + e))
 
 

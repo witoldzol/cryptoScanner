@@ -24,7 +24,8 @@ let ax = axios.create(
 	})
 
 //currency pairs available on this exchang //XBT = BTC
-const pairs = [ 'XBTIDR', 'XBTMYR', 'XBTNGN', 'XBTZAR', 'ETHXBT' ]
+// const pairs = [ 'XBTIDR', 'XBTMYR', 'XBTNGN', 'XBTZAR', 'ETHXBT' ]
+const pairs = [ 'XBTIDR', 'XBTMYR', 'XBTNGN', 'ETHXBT' ]
 
 
 //template for querying the prices
@@ -43,5 +44,16 @@ let settings=
 	ax:ax,
 	maxConcurrentRequests: 2
     }
+
+let formatSetting = 
+    {
+	
+    }
+
+let formatData = ()=>
+    {
+	
+    }
+
 
 exports.settings = settings
