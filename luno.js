@@ -25,14 +25,13 @@ let ax = axios.create(
 
 //currency pairs available on this exchang //XBT = BTC
 // const pairs = [ 'XBTIDR', 'XBTMYR', 'XBTNGN', 'XBTZAR', 'ETHXBT' ]
-const pairs = [ 'XBTIDR', 'XBTMYR', 'XBTNGN', 'ETHXBT' ]
-
+const pairs = ['ETHXBT', 'XBTIDR' ]
 
 //template for querying the prices
 //(array in order to handle more complex queries, first ele + currency + second ele of query)
 //it gets contatenated to the default api url
 let urlPath = ['/orderbook?pair=', '']
-
+let combineObjects = (arr,obj)=>arr.map( x=>Object.assign(obj,x) )
 // EXPORT
 // ==============================
 let settings=
@@ -42,7 +41,9 @@ let settings=
 	requestDelay:requestDelay,
 	retryDelay:retryDelay,
 	ax:ax,
-	maxConcurrentRequests: 2
+	maxConcurrentRequests: 2,
+	marketName: 'luno',
+	formatData: (arr,obj)=>arr.map( x=>Object.assign(obj,x) )
     }
 
 let formatSetting = 

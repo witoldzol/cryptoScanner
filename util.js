@@ -1,3 +1,5 @@
+//====================================================== UTILS =================================
+
 //MODULES
 // ==============================
 const axios = require('axios')
@@ -19,7 +21,8 @@ exports.getPrices = (options)=>
 	    {
 		return new Promise( resolve=>setTimeout( resolve.bind(null, value), time))
 	    }
-
+	// let combineObjects = (arr,obj)=>arr.map( x=>Object.assign(obj,x) )
+	
 	let makeUrl = x=>options.urlPath[0] + x + options.urlPath[1]
 	
 	// try without async / await
@@ -30,23 +33,12 @@ exports.getPrices = (options)=>
 
 	let formatData = (pair,response)=>
 	    {
-		let obj=[]
-		obj[pair] = {}
-		cl(obj[pair])
-		// obj[pair]['asks']=response.data.asks.slice(0,10)
-		// cl(obj)
-		// obj[pair]['bids']=response.data.bids.slice(0,10)
+		let asks = response.data.asks.slice(0,10)
+		let bids = response.data.bids.slice(0,10)
+		let obj = {}
+		obj[pair] = {asks,bids}
 		return obj
 	    }
-
-// this is what i want --- array or object
-
-	// RESULTS = [LUNO, GDAX]
-	// LUNO = [BTCEUR, BTCUSD]
-	// BTCEUR = [bids,asks]
-	// bids = [b1,b2,b3]
-	// b1=[price, volume]
-
 	
 	let outerPromise = async (pair)=>
 	    {
@@ -84,10 +76,15 @@ exports.getPrices = (options)=>
 	return new Promise( (resolve, reject)=>
 			    {
 				
-				async.mapLimit(options.pairs, options.maxConcurrentRequests, outerPromise, (e,res)=>
+				async.mapLimit( options.pairs, options.maxConcurrentRequests, outerPromise, (e,res)=>
 					       {
-						   if(e){reject(e)}
-						   resolve(res)
+						   if(e){reject(e)}					
+						   // cl(res[0].ETHXBT.asks[0].price)
+						   let obj = {}
+						   let a = {}
+						   options.formatData(res,obj)
+						   a[options.marketName] = obj
+						   resolve(a)
 					       })
 			    })
     }
