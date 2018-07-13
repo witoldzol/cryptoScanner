@@ -32,6 +32,16 @@ const pairs = ['ETHXBT', 'XBTIDR' ]
 //it gets contatenated to the default api url
 let urlPath = ['/orderbook?pair=', '']
 let combineObjects = (arr,obj)=>arr.map( x=>Object.assign(obj,x) )
+let marketName = 'luno'
+exports.formatData = (data)=>
+    {
+	let obj = {}
+	let a = {}
+	combineObjects(data,obj)
+	a[marketName] = obj
+ 	// return a
+	cl(a)
+    }
 // EXPORT
 // ==============================
 let settings=
@@ -42,19 +52,7 @@ let settings=
 	retryDelay:retryDelay,
 	ax:ax,
 	maxConcurrentRequests: 2,
-	marketName: 'luno',
-	formatData: (arr,obj)=>arr.map( x=>Object.assign(obj,x) )
     }
-
-let formatSetting = 
-    {
-	
-    }
-
-let formatData = ()=>
-    {
-	
-    }
-
-
 exports.settings = settings
+
+
