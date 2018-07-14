@@ -64,8 +64,8 @@ let wrap = async ()=>
     }
 let start = Date.now()
 
-util.getPrices(luno.settings).then(x=>luno.formatData(x)).catch(e=>console.log('LUNO-GET_PRICE_FUNCTION ERROR ===> ' + e))
-// util.getPrices(gdax.settings).then(x=>console.log(x)).catch(e=>console.log('GDAX-GET_PRICE_FUNCTION ERROR ===>' + e))
-// util.getPrices(binance.settings).then(x=>console.log(x)).catch(e=>console.log('BINANCE-GET_PRICE_FUNCTION ERROR ===>' + e))
+// util.getPrices(luno.settings).then(x=>luno.formatData(x)).then(x=>cl(x)).catch(e=>console.log('LUNO-GET_PRICE_FUNCTION ERROR ===> ' + e))
+util.getPrices(gdax.settings).then(x=>cl(gdax.formatData(x))).catch(e=>console.log('GDAX-GET_PRICE_FUNCTION ERROR ===>' + e))
+// util.getPrices(binance.settings).then(x=>console.log(binance.formatData(x))).catch(e=>console.log('BINANCE-GET_PRICE_FUNCTION ERROR ===>' + e))
 
 

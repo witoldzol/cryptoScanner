@@ -33,18 +33,10 @@ const pairs = ['ETHXBT', 'XBTIDR' ]
 let urlPath = ['/orderbook?pair=', '']
 let combineObjects = (arr,obj)=>arr.map( x=>Object.assign(obj,x) )
 let marketName = 'luno'
-exports.formatData = (data)=>
-    {
-	let obj = {}
-	let a = {}
-	combineObjects(data,obj)
-	a[marketName] = obj
- 	// return a
-	cl(a)
-    }
-// EXPORT
+
+// EXPORTS
 // ==============================
-let settings=
+exports.settings =
     {
 	urlPath: urlPath,
 	pairs:pairs,
@@ -53,6 +45,13 @@ let settings=
 	ax:ax,
 	maxConcurrentRequests: 2,
     }
-exports.settings = settings
 
+exports.formatData = (data)=>
+    {
+	let obj = {}
+	let a = {}
+	combineObjects(data,obj)
+	a[marketName] = obj
+ 	return a
+    }
 
