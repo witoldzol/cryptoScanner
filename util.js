@@ -7,6 +7,16 @@ const async = require('async')
 const cl = x=>console.log(x)
 // EXPORTS
 // ==============================
+let combineObjects = (arr,obj)=>arr.map( x=>Object.assign(obj,x) )
+exports.formatData = (data)=>
+    {
+	let obj = {}
+	combineObjects(data,obj)
+	return obj
+    }
+
+
+
 //returns promise that waits for specific time and returns specified value (can be null)
 exports.delay = (time, value)=>
 {
