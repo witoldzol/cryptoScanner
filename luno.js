@@ -52,6 +52,32 @@ exports.formatData = (data)=>
 	let a = {}
 	combineObjects(data,obj)
 	a[marketName] = obj
- 	return a
+
+	//get all currencies
+	let l = a['luno']
+	//swap objects with arrays that hold
+	//value at index 0
+	//volume at index 1
+	let objectToArray = obj=>
+	    {
+		//keys = asks/bids
+		Object.keys(obj)
+		    .forEach(x=>
+			     {
+				 let arr = []
+				 //iterate over asks/bids elements
+				 obj[x].forEach( y=>
+						 {
+						     let a = [y['price'],y['volume']]
+						     arr.push(a)
+						 })
+				 //replace object[ask/bid] with an array of results
+				 obj[x] = arr
+				 arr = []
+			     })
+	    }
+	//keys = pairs
+	Object.keys(l).forEach(x=>objectToArray( l[x] ) )
+	return l
     }
 
