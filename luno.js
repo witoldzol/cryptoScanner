@@ -56,8 +56,6 @@ exports.formatData = (data)=>
 	//get all currencies
 	let l = a['luno']
 	//swap objects with arrays that hold
-	//value at index 0
-	//volume at index 1
 	let objectToArray = obj=>
 	    {
 		//keys = asks/bids
@@ -78,6 +76,6 @@ exports.formatData = (data)=>
 	    }
 	//keys = pairs
 	Object.keys(l).forEach(x=>objectToArray( l[x] ) )
-	return l
+	return a
     }
 
