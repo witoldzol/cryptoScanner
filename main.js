@@ -57,24 +57,25 @@ app.on('activate', function() {
   }
 })
 
-//we need to use async to await results?
-let wrap = async ()=>
-    {
-	let res = await luno.getPrices()
-	cl(res)
-    }
-let start = Date.now()
-
+// LUNO
 let lunoPrices =  util.getPrices(luno.settings)
     .then(x=>luno.formatData(x))
-// .then(x=>cl(x))
-    .then(x=>graph.buildGraph(x) )
     .catch(e=>console.log('LUNO-GET_PRICE_FUNCTION ERROR ===> ' + e))
 
+// GDAX
+let gdaxPrices = util.getPrices(gdax.settings)
+    .then(x=>gdax.formatData(x))
+    .catch(e=>console.log('GDAX-GET_PRICE_FUNCTION ERROR ===>' + e))
 
-// let gdaxPrices = util.getPrices(gdax.settings)
-//     .then(x=>gdax.formatData(x))
-//     .catch(e=>console.log('GDAX-GET_PRICE_FUNCTION ERROR ===>' + e))
-// let binancePrices = util.getPrices(binance.settings).then(x=>binance.formatData(x)).catch(e=>console.log('BINANCE-GET_PRICE_FUNCTION ERROR ===>' + e))
-// Promise.all([lunoPrices,gdaxPrices,binancePrices]).then(x=>cl(JSON.stringify(util.formatData(x)))).catch(e=>cl('error from main pricess ALL.Promise: ' + e))
+// BINANCE
+let binancePrices = util.getPrices(binance.settings)
+    .then(x=>binance.formatData(x))
+    .catch(e=>console.log('BINANCE-GET_PRICE_FUNCTION ERROR ===>' + e))
+
+// RESOLVE ALL REQUESTS
+Promise.all([lunoPrices,gdaxPrices,binancePrices])
+    .then(x=>util.formatData(x))
+    .then(x=>graph.buildGraph(x))
+// .then(x=>cl(JSON.stringify(util.formatData(x))))
+    .catch(e=>cl('error from main pricess ALL.Promise: ' + e))
 
