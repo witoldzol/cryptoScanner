@@ -8,7 +8,7 @@ const async = require('async')
 const axios = require('axios')
 const util = require('./util.js')
 const fs = require('fs')
-
+const graph = require('./graph.js')
 //MISC
 let cl = x=>console.log(x)
 
@@ -67,7 +67,8 @@ let start = Date.now()
 
 let lunoPrices =  util.getPrices(luno.settings)
     .then(x=>luno.formatData(x))
-    // .then(x=>cl(x))
+// .then(x=>cl(x))
+    .then(x=>graph.buildGraph(x) )
     .catch(e=>console.log('LUNO-GET_PRICE_FUNCTION ERROR ===> ' + e))
 
 
