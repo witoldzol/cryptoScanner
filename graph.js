@@ -17,30 +17,30 @@ let cl = x=>console.log(x)
 let pairOne = pair=>pair.substring(0,3)
 let pairTwo = pair=>pair.substring(3,7)
 
-let createEdges = (graph, pair, values)=>
-{
-    //create edge with PAIR1,PAIR2,PROPERTIES [amount,volume,market name]
-    //you are buying pair2 with pair 1 => use asks 
-    graph.addEdge(pairOne(pair), pairTwo(pair), getValues( getAsks(values) ))
-    //you are buying p1 with p2 ==> use bids
-    graph.addEdge(pairTwo(pair), pairOne(pair), getValues( getBids(values) ))
-}
-
-//combine price, volume, and market name into one array
-//we create new array because some markets have varied array format
-//its easier to get what we need rather than fix data format of each market
-let getValues = (values, market)=>
-    {
-	return [values[0],values[1],market]
-    }
-
 //take first element of array (it has price, volume)
 let getAsks = data=>data['asks'][0]
 let getBids = data=>data['bids'][0]
 
+//combine price, volume, and market name into one array
+//we create new array because some markets have varied array format
+//its easier to get what we need rather than fix data format of each market
+//transaction  = buy or sell
+let getValues = (values, market, transaction)=>
+    {
+	return [values[0],values[1],market, transaction]
+    }
+
+let createEdges = (graph, pair, values, marketName)=>
+{
+    //create edge with PAIR1,PAIR2,PROPERTIES [amount,volume,market name]
+    //you are buying pair1 with pair 2 => use bids (ex BTC-ETH bids => they will buy btc for eth)
+    graph.addEdge(pairOne(pair), pairTwo(pair), getValues( getBids(values), marketName ))
+    //you are buying p2 with p1 ==> use asks (reverse of above)
+    graph.addEdge(pairTwo(pair), pairOne(pair), getValues( getAsks(values), marketName ))
+}
+
 //----------------------------------------------------- build graph function / iterator
 
-// let g = data=>
 exports.buildGraph = data=>
     {
 	//create graph
@@ -56,29 +56,11 @@ exports.buildGraph = data=>
 			 //iterate over currencies in the market
 			 Object.keys(data[x]).forEach(pair=>
 						      {
-							  createEdges( g,pair,data[x][pair] )
+							  createEdges( g,pair,data[x][pair], marketName )
 						      })
 		     })
 	cl(g.topologicalSort())
 	cl(g.serialize())
+	cl('weight of btc => eth' + g.getEdgeWeight('BTC','ETH') )
 	// return g
     }
-
-
-
-
-
-/*
-//or traverse the whole tree ONCE ! and update graph as you go!
-                // 9 - go to 'ASKS'
-                    // 10 - when in asks select first item
-                    // 11 - insertEdge( node 1, node 2, firstItem (lowest ask), market name)
-                        // 12 = IF edge (node 1, node 2) exists, check value, if NEW edge is HIGHER, replace old with new
-                // 13 - go to 'BIDS'
-                    // 14 - when in bids, select first item
-                    // 15 - insert edge ( NODE 2, NODE 1, ONE OVER first ITEM (highest bid) , marketName ) !!!! (REVERSE)  and  1/price  !!!!!
-                        // 16 - IF EDGE exists, check value , if its lower, replace with new value ( remember values are 1/ over so 1/4000 is HIGHER than 1/5000)
-
-Object.keys(data).forEach(x=>cl(x))
-
-*/
