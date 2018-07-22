@@ -33,7 +33,17 @@ const pairs = ['ETHXBT', 'XBTIDR' ]
 let urlPath = ['/orderbook?pair=', '']
 let combineObjects = (arr,obj)=>arr.map( x=>Object.assign(obj,x) )
 let marketName = 'luno'
-
+let pairOne = pair=>pair.substring(0,3)
+let pairTwo = pair=>pair.substring(3,7)
+let replaceXBT = x=>
+    {
+	Object.keys(x).forEach(y=>
+		  {
+		      let newKey = y.replace('XBT','BTC')
+		      x[newKey] = x[y]
+		      delete x[y]
+		  })
+    }
 // EXPORTS
 // ==============================
 exports.settings =
@@ -55,6 +65,8 @@ exports.formatData = (data)=>
 
 	//get all currencies
 	let l = a['luno']
+	//replce XBT with BTC code (they are interchangeable)
+
 	//swap objects with arrays that hold
 	let objectToArray = obj=>
 	    {
@@ -76,6 +88,7 @@ exports.formatData = (data)=>
 	    }
 	//keys = pairs
 	Object.keys(l).forEach(x=>objectToArray( l[x] ) )
+	replaceXBT(a['luno'])
 	return a
     }
 

@@ -8,6 +8,7 @@ const cl = x=>console.log(x)
 // EXPORTS
 // ==============================
 let combineObjects = (arr,obj)=>arr.map( x=>Object.assign(obj,x) )
+
 exports.formatData = (data)=>
     {
 	let obj = {}
