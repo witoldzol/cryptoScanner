@@ -24,19 +24,19 @@ let getBids = data=>data['bids'][0]
 //combine price, volume, and market name into one array
 //we create new array because some markets have varied array format
 //its easier to get what we need rather than fix data format of each market
-//transaction  = buy or sell
+//transaction  = bid or ask
 let getValues = (values, market, transaction)=>
     {
-	return [values[0],values[1],market, transaction]
+	return [values[0],values[1], market, transaction]
     }
 
 let createEdges = (graph, pair, values, marketName)=>
 {
     //create edge with PAIR1,PAIR2,PROPERTIES [amount,volume,market name]
-    //you are buying pair1 with pair 2 => use bids (ex BTC-ETH bids => they will buy btc for eth)
-    graph.addEdge(pairOne(pair), pairTwo(pair), getValues( getBids(values), marketName ))
-    //you are buying p2 with p1 ==> use asks (reverse of above)
-    graph.addEdge(pairTwo(pair), pairOne(pair), getValues( getAsks(values), marketName ))
+    //BID - we sell pair 1
+    graph.addEdge(pairOne(pair), pairTwo(pair), getValues( getBids(values), marketName, 'bid' ))
+    //ASK - we buy pair 1
+    graph.addEdge(pairTwo(pair), pairOne(pair), getValues( getAsks(values), marketName, 'ask' ))
 }
 
 //----------------------------------------------------- build graph function / iterator
