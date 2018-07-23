@@ -5,6 +5,7 @@ const axios = require('axios')
 const util = require('./util.js')
 const retryDelay = 5000 // dependent on the server settings ( this one is fussy, needs time )
 const requestDelay = 1000
+const transactionCost = 1
 // UTILITY FUNCTIONS
 // ==================================================
 let cl = x=>console.log(x)
@@ -44,6 +45,10 @@ let replaceXBT = x=>
 		      delete x[y]
 		  })
     }
+
+
+
+
 // EXPORTS
 // ==============================
 exports.settings =
