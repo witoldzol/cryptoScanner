@@ -71,7 +71,7 @@ let addRoot = graph=>
     {
 	graph.topologicalSort().map(x=>
 				{
-				    graph.addEdge('root', x, [0,0,'root','ask'])  
+				    graph.addEdge('rot', x, [0,0,'rot','ask'])  
 				})
 
     }
