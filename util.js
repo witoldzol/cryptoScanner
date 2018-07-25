@@ -9,6 +9,19 @@ const cl = x=>console.log(x)
 // ==============================
 let combineObjects = (arr,obj)=>arr.map( x=>Object.assign(obj,x) )
 
+// let filterBadData = data=>
+//     {
+// 	Object.keys(data)
+// 	    .forEach(market=>
+// 		     {
+// 			 Object.keys(market)
+// 			     .forEach(pair=>
+// 				      {
+					  
+// 				      })
+// 		     })
+//     }
+
 exports.formatData = (data)=>
     {
 	let obj = {}
@@ -46,6 +59,8 @@ exports.getPrices = (options)=>
 	    {
 		let asks = response.data.asks.slice(0,10)
 		let bids = response.data.bids.slice(0,10)
+		//REMOVES EMPTY || FAILED REQUEST
+		if (asks.length == 0 || bids.length == 0){return}
 		let obj = {}
 		obj[pair] = {asks,bids}
 		return obj

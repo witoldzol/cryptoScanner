@@ -44,30 +44,29 @@ let getAsks = data=>calculateAskRate(data['asks'][0])
 let getBids = data=>data['bids'][0]
 let toLog = x=>Math.log(x)
 let toNegative =x=>x*(-1)
+
 //combine price, volume, and market name into one array
 //we create new array because some markets have varied array format
 //its easier to get what we need rather than fix data format of each market
 //transaction  = bid or ask
 let getCurrencyRate = (values, market, transaction)=>
     {
-	//old version of code
-	// return [toNegative( toLog(values[0]) ),values[1], market, transaction]
-	return [toNegative ( 
-	        toLog ( 
-		transactionCostAdjustment( values[0], allMarketRates, market, transaction ) ) ), values[1], market, transaction]
+	//return if values are undefined ( happens for some reason )
+	return [toNegative (  toLog ( transactionCostAdjustment( values[0], allMarketRates, market, transaction ) ) ), values[1], market, transaction]
 
     }
 
 let createEdges = (graph, pair, values, marketName)=>
-{
-    //create edge with PAIR1,PAIR2,PROPERTIES [amount,volume,market name]
-    //BID - we sell pair 1
-    //GRAPH REPRESENTATION :    CURR1 ====== > CURR2
-    graph.addEdge(pairOne(pair), pairTwo(pair), getCurrencyRate( getBids(values), marketName, 'bid' ))
-    //ASK - we buy pair 1
-    graph.addEdge(pairTwo(pair), pairOne(pair), getCurrencyRate( getAsks(values), marketName, 'ask' ))
+    {
+	//create edge with PAIR1,PAIR2,PROPERTIES [amount,volume,market name]
+	//BID - we sell pair 1
+	//GRAPH REPRESENTATION :    CURR1 ====== > CURR2
+	graph.addEdge(pairOne(pair), pairTwo(pair), getCurrencyRate( getBids(values), marketName, 'bid' ))
+	//ASK - we buy pair 1
+	graph.addEdge(pairTwo(pair), pairOne(pair), getCurrencyRate( getAsks(values), marketName, 'ask' ))
 
-}
+    }
+
 let addRoot = graph=>
     {
 	graph.topologicalSort().map(x=>
@@ -76,7 +75,13 @@ let addRoot = graph=>
 				})
 
     }
+
+
+
+
+
 //----------------------------------------------------- build graph function / iterator
+
 
 exports.buildGraph = data=>
     {
@@ -92,15 +97,16 @@ exports.buildGraph = data=>
 			 //iterate over currencies in the market
 			 Object.keys(data[x]).forEach(pair=>
 						      {
-							  createEdges( g,pair,data[x][pair], marketName )
+							  createEdges( g,pair,data[x][pair], marketName ) 
 						      })
 		     })
 	//add ROOT node with zero weight edges to ALL other nodes
 	//list all nodes / array /
 	addRoot(g)
-	let a = g.serialize()
-	cl('weight of btc => eth' + g.getEdgeWeight('BTC','ETH') )
-
+	
+	g.bellmanFord()
+	
+	
 	
 	//lists all weights 
 	// a['links']

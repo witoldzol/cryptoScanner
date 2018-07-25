@@ -25,8 +25,8 @@ let ax = axios.create(
 	})
 
 //currency pairs available on this exchang //XBT = BTC
-// const pairs = [ 'XBTIDR', 'XBTMYR', 'XBTNGN', 'XBTZAR', 'ETHXBT' ]
-const pairs = ['ETHXBT', 'XBTIDR' ]
+const pairs = [ 'XBTIDR', 'XBTMYR', 'XBTNGN', 'XBTZAR', 'ETHXBT' ]
+// const pairs = ['ETHXBT', 'XBTIDR' ]
 
 //template for querying the prices
 //(array in order to handle more complex queries, first ele + currency + second ele of query)
