@@ -1,3 +1,5 @@
+const fs = require('fs')
+
 // A graph data structure with depth-first search and topological sort.
 module.exports = function Graph(serialized){
 
@@ -20,7 +22,8 @@ module.exports = function Graph(serialized){
 	shortestPath: shortestPath,
 	bellmanFord: bellmanFord,
 	serialize: serialize,
-	deserialize: deserialize
+	deserialize: deserialize,
+	getAllElements: getAllElements
     };
 
     // The adjacency list of the graph.
@@ -179,7 +182,9 @@ module.exports = function Graph(serialized){
 	    allEdges.push(u+v)
 
 	    if (weight !== undefined) {
-		setEdgeWeight(u, v, weight);
+		setEdgeWeight(u, v, weight)
+	    } else {
+		console.log('THIS EDGE HAS NO WEIGHT ' + (u+v) )
 	    }
 	}
 	return graph;
@@ -392,6 +397,27 @@ module.exports = function Graph(serialized){
 	return serialized;
     }
     
+    // Gets all nodes & edges with weights
+    function getAllElements(){
+	let  serialized = {
+	    nodes: nodes().map(function (id){
+		return { id: id };
+	    }),
+	    links: []
+	};
+
+	serialized.nodes.forEach(function (node){
+	    let source = node.id;
+	    adjacent(source).forEach(function (target){
+		serialized.links.push([
+		    source+target,getEdgeWeight(source, target)[0]
+		]);
+	    });
+	});
+	return serialized
+
+    }
+    
     // Deserializes the given serialized graph.
     function deserialize(serialized){
 	serialized.nodes.forEach(function (node){ addNode(node.id); });
@@ -455,16 +481,15 @@ module.exports = function Graph(serialized){
 		let arbitrage = false
 		let cyclic = {}
 		//iterate over all edges and relax them
-		
-		    allEdges.map(edge=>
+		allEdges.map(edge=>
 			     {
 				 let currency1= getCurrency1(edge)
 				 let currency2= getCurrency2(edge)
-				 // cl(`currency 1 is  ${currency1}`)
-				 // cl(`currency 2 is  ${currency2}`)
+
 				 let w = getEdgeWeight(currency1, currency2)[0]
-				 // cl(`distance of c2 ${d[currency2]}`)
-				 // cl(`distance of c1 ${d[currency1]}`)
+				 //check if weight is ok
+				 if( w === undefined ){cl('from tester of negative cycles: invalid weight obtained');cl(edge + '  ' + w); return}
+
 				 if( d[currency2] > d[currency1] + w)
 				 {
 				     arbitrage = true
@@ -472,14 +497,13 @@ module.exports = function Graph(serialized){
 				     cyclic[currency2] = true
 				 }
 			     })
-		// cl(`cyclic =======>`)
-		// cl(cyclic)
 		if(!arbitrage){ console.log('NO ARBITRAGE OPPORTUNITY FOUND :<')}
-		else { return cyclic }
+		else { cl('cycle'); cl(cyclic); return cyclic }
 	    }
 
 	    
 	    //builds (concatenates) currency pairs from cycle path
+	    //takes first two and joins them, then second and third etc
 	    function buildEdgesFromSequences(arr){
 		let a = []
 		arr.map((x,i)=>{
@@ -508,13 +532,17 @@ module.exports = function Graph(serialized){
 				     p = prede[p]
 				     if(visited[p]){break}
 				 }
-				 //reverse the order and push first ele to the end
+				 cl('sequence before reversal')
+				 cl(seq)
+				 //reverse the order (first!)
+				 //push first ele to the end (second)
 				 //this creates cycle
 				 seq.reverse().push(seq[0])
-				 let currencyPairs = buildEdgesFromSequences( seq )
-				 sequences.push( currencyPairs )
+				 let cycleSequence = buildEdgesFromSequences( seq )
+				 sequences.push( cycleSequence )
 			     })
-
+		cl('all dep')
+		cl(prede)
 		//returns array of sequences
 		//sequence holds currency codes only!
 		return sequences
@@ -523,13 +551,29 @@ module.exports = function Graph(serialized){
 	    //calculates arbitrage rate
 	    function calculateArbitrageAmount(array){
 		//gets rates from edge weights array 
-		// let reducer = (acc,curr)=>getEdgeWeight( getCurrency1(acc), getCurrency2(acc) ) * getEdgeWeight( getCurrency1(curr),getCurrency2(curr) )
-		let weights = array.map(pair=>{
-		    getEdgeWeight( getCurrency1(pair), getCurrency2(pair) )[0]
+		let weights = []
+		
+		array.map(pair=>{
+		    let c1 = getCurrency1(pair)
+		    let c2 = getCurrency2(pair)
+		    let w = getEdgeWeight( c1, c2 )[0]
+
+		    //test
+		    //because we have directed graph, that means not every 'sequence' will be a cycle
+		    //as it will not 'close'
+		    //if we get undefined weight, that means we have sequence that doesn't 'close'
+		    //because we created edge that doesn't exist => weight = undefined
+		    if( w === undefined) return 0
+		    weights.push(w)
 		})
-		cl(weights)
-		let reducer = (acc,curr)=>acc*curr
-		return weights.reduce(reducer)		
+		
+		let reducer = (acc,curr)=>acc+curr
+
+		let sum = weights.reduce(reducer)
+
+		let result = Math.pow(10,sum)
+		cl(result)
+		return result
 	    }
 	    
 	    function getResults (sequences){
