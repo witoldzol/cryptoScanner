@@ -36,9 +36,11 @@ let cl = x=>console.log(x)
 let oneOver = x=>1/x
 let calculateAskRate = arr=>
     {
+	
 	let a=arr[0]
-	arr[0]=oneOver(a)
-	return arr
+	let ar = arr
+	ar[0]=oneOver(a)
+	return ar
     }
 let getAsks = data=>calculateAskRate(data['asks'][0])
 let getBids = data=>data['bids'][0]
@@ -49,21 +51,30 @@ let toNegative =x=>x*(-1)
 //we create new array because some markets have varied array format
 //its easier to get what we need rather than fix data format of each market
 //transaction  = bid or ask
-let getCurrencyRate = (values, market, transaction)=>
+let setWeights = (values, market, transaction, pair)=>
     {
-	//return if values are undefined ( happens for some reason )
-	return [toNegative (  toLog ( transactionCostAdjustment( values[0], allMarketRates, market, transaction ) ) ), values[1], market, transaction]
+	// sets weights in an array that will be stored in the edge
+	//holds negative log of first rate, volume, market name, type of transaction
+	cl(pair +  '  ======> ' + values[0])
+	let arr = []
+	arr[0] = toNegative (  toLog ( transactionCostAdjustment( values[0], allMarketRates, market, transaction ) ) )
+	arr[1] = values[0]
+	arr[2] = market
+	arr[3] = transaction
+	
+	// return [toNegative (  toLog ( transactionCostAdjustment( values[0], allMarketRates, market, transaction ) ) ), values[1], market, transaction ]
+	return arr
 
     }
 
-let createEdges = (graph, pair, values, marketName)=>
+let createEdges = (graph, pair, values, marketName, allValues)=>
     {
 	//create edge with PAIR1,PAIR2,PROPERTIES [amount,volume,market name]
 	//BID - we sell pair 1
 	//GRAPH REPRESENTATION :    CURR1 ====== > CURR2
-	graph.addEdge(pairOne(pair), pairTwo(pair), getCurrencyRate( getBids(values), marketName, 'bid' ))
+	graph.addEdge(pairOne(pair), pairTwo(pair), setWeights( getBids(values), marketName, 'bid', pair))
 	//ASK - we buy pair 1
-	graph.addEdge(pairTwo(pair), pairOne(pair), getCurrencyRate( getAsks(values), marketName, 'ask' ))
+	graph.addEdge(pairTwo(pair), pairOne(pair), setWeights( getAsks(values), marketName, 'ask', pair))
 
     }
 
@@ -71,7 +82,7 @@ let addRoot = graph=>
     {
 	graph.topologicalSort().map(x=>
 				{
-				    graph.addEdge('rot', x, [0,0,'rot','ask'])  
+				    graph.addEdge('rot', x, [0,0,'rot','ask',0])  
 				})
 
     }
@@ -100,21 +111,12 @@ exports.buildGraph = data=>
 							  createEdges( g,pair,data[x][pair], marketName ) 
 						      })
 		     })
+
 	//add ROOT node with zero weight edges to ALL other nodes
 	//list all nodes / array /
 	addRoot(g)
 	
 	g.bellmanFord()
-	
-	
-	
-	//lists all weights 
-	// a['links']
-	//     .map(x=>
-	// 	     {
-	// 		 cl(x['weight'])
-	// 	     })
-
 
 	// return g
     }
