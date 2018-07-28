@@ -75,7 +75,7 @@ let binancePrices = util.getPrices(binance.settings)
 // RESOLVE ALL REQUESTS
 Promise.all([lunoPrices,gdaxPrices,binancePrices])
     .then(x=>util.formatData(x))
+//builds graph, calculates arbitrage, return results 
     .then(x=>graph.buildGraph(x))
-// .then(x=>cl(JSON.stringify(util.formatData(x))))
     .catch(e=>cl('error from main pricess ALL.Promise: ' + e.stack))
 

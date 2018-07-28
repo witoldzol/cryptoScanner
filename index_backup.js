@@ -640,15 +640,13 @@ module.exports = function Graph(serialized){
 		if(cyclic !== undefined){
 		    //array of cycle sequences
 		    let sequences = buildSequences(cyclic, p)
-		    let results = getResults(sequences) 
-		    console.log(results)
+		    let results = getResults(sequences)
+		    //return results to main process
+	
 		}
+		return results
 	    }
-
-	    runBellmanFord()
-
+	 
 	}
-
-    
     return graph;
 }

@@ -114,8 +114,7 @@ exports.buildGraph = data=>
 	//add ROOT node with zero weight edges to ALL other nodes
 	//list all nodes / array /
 	addRoot(g)
-	
-	g.bellmanFord()
+	//return results
+	return g.bellmanFord()
 
-	// return g
     }
