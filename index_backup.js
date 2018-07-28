@@ -489,7 +489,7 @@ module.exports = function Graph(serialized){
 				 let w = getEdgeWeight(currency1, currency2)[0]
 				 //check if weight is ok
 				 if( w === undefined ){cl('from tester of negative cycles: invalid weight obtained');cl(edge + '  ' + w); return}
-
+				 
 				 if( d[currency2] > d[currency1] + w)
 				 {
 				     arbitrage = true
@@ -498,7 +498,7 @@ module.exports = function Graph(serialized){
 				 }
 			     })
 		if(!arbitrage){ console.log('NO ARBITRAGE OPPORTUNITY FOUND :<')}
-		else { cl('cycle'); cl(cyclic); return cyclic }
+		else { return cyclic }
 	    }
 
 	    
@@ -532,8 +532,6 @@ module.exports = function Graph(serialized){
 				     p = prede[p]
 				     if(visited[p]){break}
 				 }
-				 cl('sequence before reversal')
-				 cl(seq)
 				 //reverse the order (first!)
 				 //push first ele to the end (second)
 				 //this creates cycle
@@ -548,6 +546,30 @@ module.exports = function Graph(serialized){
 		return sequences
 	    }
 
+	    function calculatePercent(array){
+
+		let rates = []
+		array.map(pair=>{
+		    let c1 = getCurrency1(pair)
+		    let c2 = getCurrency2(pair)
+		    let w = getEdgeWeight( c1, c2 )[1]
+
+		    
+		    cl('PAIR: ' + pair)
+		    cl('rate  ' + w)
+		    rates.push(w)
+		})
+
+		
+		let reducer = (acc,curr)=>acc*curr
+
+		let result = rates.reduce(reducer)
+
+		return result
+		
+	    }
+
+	    
 	    //calculates arbitrage rate
 	    function calculateArbitrageAmount(array){
 		//gets rates from edge weights array 
@@ -556,6 +578,7 @@ module.exports = function Graph(serialized){
 		array.map(pair=>{
 		    let c1 = getCurrency1(pair)
 		    let c2 = getCurrency2(pair)
+
 		    let w = getEdgeWeight( c1, c2 )[0]
 
 		    //test
@@ -579,7 +602,9 @@ module.exports = function Graph(serialized){
 	    function getResults (sequences){
 		let results = {}
 		sequences.map(arr=>{
-		    let amount = calculateArbitrageAmount(arr)
+		    //test
+		    // let amount = calculateArbitrageAmount(arr)
+		    let amount = calculatePercent(arr)
 		    //TODO -- ADD NAME OF MARKET 
 		    results[amount]=arr
 		})

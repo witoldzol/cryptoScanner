@@ -55,14 +55,15 @@ let setWeights = (values, market, transaction, pair)=>
     {
 	// sets weights in an array that will be stored in the edge
 	//holds negative log of first rate, volume, market name, type of transaction
+	cl(pair +  '  ======> ' + values[0])
 	let arr = []
-	let adjustedRate =transactionCostAdjustment( values[0], allMarketRates, market, transaction ) 
-	arr[0] = toNegative (  toLog ( adjustedRate) )
-	arr[1] = [adjustedRate, values[1] ]
+	arr[0] = toNegative (  toLog ( transactionCostAdjustment( values[0], allMarketRates, market, transaction ) ) )
+	arr[1] = values[0]
 	arr[2] = market
 	arr[3] = transaction
+	
 	// return [toNegative (  toLog ( transactionCostAdjustment( values[0], allMarketRates, market, transaction ) ) ), values[1], market, transaction ]
- 	return arr
+	return arr
 
     }
 
