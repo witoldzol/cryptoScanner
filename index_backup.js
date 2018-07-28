@@ -511,6 +511,19 @@ module.exports = function Graph(serialized){
 		})
 		return a
 	    }
+
+	    
+	    //checks if last edge in the array that holds cyclic path is valid
+	    //returns boolean
+	    function isLastEdgeValid(arr){
+
+		let lastEdge = arr[arr.length-1]
+		let c1 = getCurrency1(lastEdge)
+		let c2 = getCurrency2(lastEdge)
+		let w = getEdgeWeight( c1, c2 )[1]
+		if( w!==undefined ) {return true}
+		else return false
+	    }
 	    
 	    //we will need access to predecesors and array of currencies in cycle
 	    function buildSequences(cyclic, prede){
@@ -537,27 +550,25 @@ module.exports = function Graph(serialized){
 				 //this creates cycle
 				 seq.reverse().push(seq[0])
 				 let cycleSequence = buildEdgesFromSequences( seq )
-				 sequences.push( cycleSequence )
+				 //check if the last edge in sequence actually exists
+				 if( isLastEdgeValid(cycleSequence) ) sequences.push( cycleSequence )
 			     })
-		cl('all dep')
-		cl(prede)
 		//returns array of sequences
 		//sequence holds currency codes only!
+		cl('sequences')
+		cl(sequences)
 		return sequences
 	    }
-
+	    //multiply rates
 	    function calculatePercent(array){
 
 		let rates = []
 		array.map(pair=>{
 		    let c1 = getCurrency1(pair)
 		    let c2 = getCurrency2(pair)
-		    let w = getEdgeWeight( c1, c2 )[1]
-
-		    
-		    cl('PAIR: ' + pair)
-		    cl('rate  ' + w)
-		    rates.push(w)
+		    //position 1 is array with [rate, volume]
+		    let w = getEdgeWeight( c1, c2 )[1][0]
+		    if(w !== undefined) rates.push(w)
 		})
 
 		
@@ -568,50 +579,42 @@ module.exports = function Graph(serialized){
 		return result
 		
 	    }
-
-	    
-	    //calculates arbitrage rate
-	    function calculateArbitrageAmount(array){
-		//gets rates from edge weights array 
-		let weights = []
-		
-		array.map(pair=>{
-		    let c1 = getCurrency1(pair)
-		    let c2 = getCurrency2(pair)
-
-		    let w = getEdgeWeight( c1, c2 )[0]
-
-		    //test
-		    //because we have directed graph, that means not every 'sequence' will be a cycle
-		    //as it will not 'close'
-		    //if we get undefined weight, that means we have sequence that doesn't 'close'
-		    //because we created edge that doesn't exist => weight = undefined
-		    if( w === undefined) return 0
-		    weights.push(w)
-		})
-		
-		let reducer = (acc,curr)=>acc+curr
-
-		let sum = weights.reduce(reducer)
-
-		let result = Math.pow(10,sum)
-		cl(result)
-		return result
+	    // one argument version of getEdgeWeight
+	    //returns array with weights
+	    function getWeights(edge){
+		let c1 = getCurrency1(edge)
+		let c2 = getCurrency2(edge)
+		let w = getEdgeWeight( c1, c2 )
+		if(w === undefined) {cl('invalid edge weight')}
+		else{ return w}
 	    }
 	    
+	    //maps over array and returns object
+	    //edge:[weights]
+	    function arrayToObject(arr){
+		let obj = {}
+		arr.map(edge=>{
+		    obj[edge] = getWeights(edge)
+		})
+		return obj
+	    }
+	    
+	    //
 	    function getResults (sequences){
 		let results = {}
 		sequences.map(arr=>{
-		    //test
-		    // let amount = calculateArbitrageAmount(arr)
+
 		    let amount = calculatePercent(arr)
-		    //TODO -- ADD NAME OF MARKET 
-		    results[amount]=arr
+		    //creates object
+		    //key:percent , value: object with edges & weights
+		    results[amount] = arrayToObject(arr)
 		})
-
-		return results
+		
+		return sortObject( results )
 	    }
-
+	    
+	    //sorts results object
+	    //highest results at the bottom
 	    function sortObject(obj){
 		let sortedObject ={}
 		let amountsArray =[]
@@ -623,7 +626,7 @@ module.exports = function Graph(serialized){
 		sortedArray.map(amount=>{
 		    sortedObject[amount] = obj[amount]
 		})
-
+		
 		return sortedObject
 	    }
 	    
@@ -637,7 +640,7 @@ module.exports = function Graph(serialized){
 		if(cyclic !== undefined){
 		    //array of cycle sequences
 		    let sequences = buildSequences(cyclic, p)
-		    let results = sortObject( getResults(sequences) )
+		    let results = getResults(sequences) 
 		    console.log(results)
 		}
 	    }
