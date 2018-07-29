@@ -68,7 +68,6 @@ let setWeights = (values, market, transaction, pair)=>
 
 let createEdges = (graph, pair, values, marketName, allValues)=>
     {
-	cl('building edges')
 	//create edge with PAIR1,PAIR2,PROPERTIES [amount,volume,market name]
 	//BID - we sell pair 1
 	//GRAPH REPRESENTATION :    CURR1 ====== > CURR2
@@ -80,8 +79,6 @@ let createEdges = (graph, pair, values, marketName, allValues)=>
 
 let addRoot = graph=>
     {
-
-	cl('adding root')
 	graph.topologicalSort().map(x=>
 				{
 				    graph.addEdge('rot', x, [0,0,'rot','ask'])  

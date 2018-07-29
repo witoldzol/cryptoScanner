@@ -60,18 +60,10 @@ app.on('activate', function() {
     }
 })
 
+// ================================================== SCAN 
+// =======================================================
 
-
-
-// // RESOLVE ALL REQUESTS
-// Promise.all([lunoPrices,gdaxPrices,binancePrices])
-//     .then(x=>util.formatData(x))
-// //builds graph, calculates arbitrage, return results 
-//     .then(x=>graph.buildGraph(x))
-//     .then( data=>{cl('sending data') })
-//     .catch(e=>cl('error from main pricess ALL.Promise: ' + e.stack))
-
-
+//perform scan when receive message from renderer
 ipcMain.on('scan-button-clicked', (event, arg) => {
     // LUNO
     let lunoPrices =  util.getPrices(luno.settings)
@@ -95,7 +87,7 @@ ipcMain.on('scan-button-clicked', (event, arg) => {
 	.then(x=>util.formatData(x))
     //builds graph, calculates arbitrage, return results 
 	.then(x=>graph.buildGraph(x))
-	.then( data=>{cl('sending data'); event.sender.send('scan-data', data) })
+	.then( data=>{cl(data); event.sender.send('scan-data', data) })
 	.catch(e=>cl('error from main pricess ALL.Promise: ' + e.stack))
 
 })
