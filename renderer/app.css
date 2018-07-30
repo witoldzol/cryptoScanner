@@ -1,3 +1,133 @@
-.result {
-    background-color: dodgerblue;
+html,body{
+  height:100%;
 }
+body{
+  text-align:center;
+}
+
+/*SCAN BUTTON*/
+
+#scan{
+  background:#1AAB8A;
+  color:#fff;
+  border:none;
+  position:relative;
+  height:60px;
+  font-size:1.6em;
+  padding:0 2em;
+  cursor:pointer;
+  transition:800ms ease all;
+  outline:none;
+  margin-bottom: 5%;
+  margin-top: 2%;
+}
+#scan:hover{
+  background:#ffff99;
+  color:#1AAB8A;
+}
+#scan:before,#scan:after{
+  content:'';
+  position:absolute;
+  top:0;
+  right:0;
+  height:2px;
+  width:0;
+  background: #1AAB8A;
+  transition:400ms ease all;
+}
+#scan:after{
+  right:inherit;
+  top:inherit;
+  left:0;
+  bottom:0;
+}
+#scan:hover:before,#scan:hover:after{
+  width:100%;
+  transition:800ms ease all;
+}
+
+/*effect on click*/
+#scan:active {
+	background-color: red;
+}
+/*END OF BUTTON*/
+
+#results 
+{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+	
+
+}
+
+#results-container 
+{
+	min-height: 150px;
+	display:grid;
+	grid-template-columns: 1fr;
+	min-width: 50%;
+	
+}
+
+#results-container > :nth-child(1){background-color: #aaa;}
+#results-container > :nth-child(2){background-color: #eee;}
+
+.result
+{
+	transition: background-color 0.5s ease;
+	display: grid;	
+	grid-template-areas: 
+	"rate jumps"
+	"details details";
+	margin-bottom: 10px;
+}
+
+.result:hover 
+{
+	background-color: dodgerblue!important;
+}
+
+.result-rate
+{
+	text-align: center;
+	grid-area: rate;
+}
+
+.result-jumps
+{
+	text-align: center;
+	grid-area: jumps;
+}
+
+.result-button
+{
+	color: #fff !important;
+	text-transform: uppercase;
+	background: coral;
+	border-radius: 5px;
+	display: inline-block;
+	border: none;
+	width: 75%;
+	min-height: 30px;
+	max-height: 30px;
+}
+
+.result-button:hover 
+{
+	background: #1AAB8A;
+	width: 90%;
+	-webkit-box-shadow: 0px 5px 40px -10px rgba(0,0,0,0.57);
+	-moz-box-shadow: 0px 5px 40px -10px rgba(0,0,0,0.57);
+	box-shadow: 5px 40px -10px rgba(0,0,0,0.57);
+	transition: all 0.4s ease 0s;
+}
+.results-details
+{
+	text-align: center;
+	border: solid orange 1px;
+	grid-area: details;
+}
+.results-details{display: none;}
+
