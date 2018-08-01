@@ -72,13 +72,12 @@ body{
     grid-gap: 20px;
 }
 
-#results-container > :nth-child(odd){background-color: #aaa;}
-#results-container > :nth-child(even){background-color: #eee;}
+#results-container > :nth-child(1){background-color: #aaa;}
+#results-container > :nth-child(2){background-color: #eee;}
 
 .result
 {
-    display: grid;
-    padding: 10px;
+    display: grid;      
     grid-template-columns: repeat(2, 1fr);
     min-height: 80px;
     transition: background-color 0.5s ease;
@@ -87,10 +86,34 @@ body{
         "button button"
         "details details";
     border-radius: 5px;
+    
+#results-container 
+{
+    min-height: 150px;
+    display:grid;
+    grid-template-columns: 1fr;
+    min-width: 50%;
+    grid-gap: 20px;
+}
+
+#results-container > :nth-child(1){background-color: #aaa;}
+#results-container > :nth-child(2){background-color: #eee;}
+
+.result
+{
+    display: grid;      
+    grid-template-columns: repeat(2, 1fr);
+    min-height: 80px;
+    transition: background-color 0.5s ease;
+    grid-template-areas:
+    "rate jumps"
+        "button button"
+        "details details";
+ 
 }
 .result:hover
 {
-    background-color: #61b1ff!important;
+    background-color: dodgerblue!important;
 }
 .result-rate
 {
@@ -138,7 +161,7 @@ body{
     grid-gap: 10px;
     justify-content: center;
 }
-.result-details{display: none;}
+/* .result-details{display: none;} */
 
 .result-jump
 {

@@ -14,6 +14,7 @@ function scan()
 // needs to be BELOW the listener (ipcRenderer.on)
 document.getElementById("scan").addEventListener("click", scan);
 
+
 // ======================================== DISPLAY DATA FUNCTIONS
 
 //remove all child elements
@@ -27,7 +28,8 @@ function deleteChildren (myNode){
 //multiply by 100 to get %
 //multiply by 100 again and divide by 100 to round 
 let ratePercent =rate=>Math.round((rate-1) *100 * 100) / 100
-
+//round to 2 decimal places
+let roundToTwo =x=>x*100/100
 //creates and appends attributes with values to elements
 let addAttribute = (att,value,element)=>
     {
@@ -62,69 +64,68 @@ const getCurrency2 = pair=>pair.substring(3,7)
 //returns number of keys
 let getNumberOfKeys = obj=>Object.keys(obj).length
 
-
-
 let insertResults = obj=>
     {
 	//save data for future reference
 	let data = obj
 	//loop over all keys (rates)
+	cl('this is the whole object after it gets passed to function ==========' )
+	cl(obj)
 	Object.keys(obj)
 	    .forEach(rate=>{
 		let ele = createElement(resultsContainer,'div','','class','result')
-		cl(ele)
-		createElement( ele, 'div', ratePercent(rate), 'class', 'result-rate')
-		createElement( ele, 'div', getNumberOfKeys(data[rate]), 'class', 'result-jumps')
+		createElement( ele, 'div', ('RETURN : ' + ratePercent(rate)  + ' %' ), 'class', 'result-rate')
+		createElement( ele, 'div', ('JUMPS : ' + getNumberOfKeys(data[rate]) ), 'class', 'result-numberOfJumps')
+		createElement( ele, 'button', 'DETAILS', 'class', 'result-button')
 
 		//create handle to details element (starts hidden )
-		let details = createElement( ele, 'div', 'Details','class','results-details')
+		let details = createElement( ele, 'div', '' ,'class','result-details')
 		Object.keys(data[rate])
 		    .forEach(pair=>{
-			let jump = createElement( details, 'div', '','class','results-jump')
+			let jump = createElement( details, 'div', '','class','result-jump')
 			let getMarketName = obj=>data[rate][pair][2]
 			let getRate = obj=>data[rate][pair][1][0]
-			
-			createElement( jump, 'div', getMarketName(data), 'class', 'results-jumps-market')
-			createElement( jump, 'span', getCurrency1(pair), 'class', 'results-jump-currency')
-			createElement( jump, 'span', '   ===>   ', 'class', 'results-jump-currency')
-			createElement( jump, 'span', getCurrency2(pair), 'class', 'results-jump-currency')
-			createElement( jump, 'div', getRate(data), 'class', 'results-jumps-market')			
-		    // 	//split pair into separate currency codes
-		    // 	let c1 = getCurrency1(pair)
-		    // 	let c2 = getCurrency2(pair)
-			
-		    // 	createElement( details, 'div', , 'class', 'result-jumps')
-		    // }
+			createElement( jump, 'span', getCurrency1(pair), 'class', 'result-jump-currency-1')
+			createElement( jump, 'span', (  getRate(data) ), 'class', 'result-jump-rate')		
+			createElement( jump, 'span', getCurrency2(pair), 'class', 'result-jump-currency-2')
+			createElement( jump, 'div', getMarketName(data).toUpperCase(), 'class', 'result-jump-market')
 		    })
 		
 	    })
+	getHandlesToButtons()
     }
 // ============================== DATA FROM SCAN
 
 //receives scan data from main process
 ipcRenderer.on('scan-data', (event, data) => {
-    insertResults(data)
+
+    insertResults(JSON.parse(data))
 })
 
 
-// ---------------- NEW STUFF
-// let resultArray = document.getElementsByClassName('result')
-let resultArray = document.getElementsByClassName('result-button')
 
-for (var i = 0; i < resultArray.length; i++) {
-	resultArray[i].addEventListener('click', toggleResults, false)
-}
 
-function toggleResults(e)
+function getHandlesToButtons()
 {
+    
+    function toggleResults(e)
+    {
 	//get the target of the event (click in this case)
 	//and then get second sibling of this (button) element 
 	//first is Text, seoncd is the details div
-	let x = e.target.nextSibling.nextSibling
+	let x = e.target.nextSibling
 	//toggle between visible and not 
-    if (x.style.display === "") {
-        x.style.display = "block";
-    } else {
-        x.style.display = "";
+	if (x.style.display === "") {
+            x.style.display = "block";
+	} else {
+            x.style.display = "";
+	}
     }
+
+
+    let resultArray = document.getElementsByClassName('result-button')
+    for (var i = 0; i < resultArray.length; i++) {
+	resultArray[i].addEventListener('click', toggleResults)
+    }
+
 }
