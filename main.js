@@ -80,6 +80,11 @@ ipcMain.on('scan-button-clicked', (event, arg) => {
 	.then(x=>binance.formatData(x))
 	.catch(e=>console.log('BINANCE-GET_PRICE_FUNCTION ERROR ===>' + e))
 
+    let stagerSendObject = obj=>
+	{
+	    event.sender.send('scan-data', JSON.stringify(obj) )   
+
+	}
 
     
     // RESOLVE ALL REQUESTS
@@ -87,7 +92,8 @@ ipcMain.on('scan-button-clicked', (event, arg) => {
 	.then(x=>util.formatData(x))
     //builds graph, calculates arbitrage, return results 
 	.then(x=>graph.buildGraph(x))
-	.then( data=>{cl(data); event.sender.send('scan-data', data) })
+	// .then( data=>{cl(data); event.sender.send('scan-data', data) })
+	.then( data=>{cl(data); stagerSendObject(data) })
 	.catch(e=>cl('error from main pricess ALL.Promise: ' + e.stack))
 
 })
