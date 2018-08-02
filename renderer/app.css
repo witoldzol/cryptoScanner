@@ -53,6 +53,22 @@ body{
 }
 /*END OF BUTTON*/
 
+/* INPUT FIELDS */
+#input-wrapper {
+    margin-left: 30%;
+    margin-right: 30%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+input {
+    text-align: center;
+    font-size: large;
+    width: 135px;
+    height: 50px;
+}
+
+/* END OF INPUT FIELDS */
 #results 
 {
     display: flex;

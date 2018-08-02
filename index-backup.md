@@ -606,6 +606,9 @@ module.exports = function Graph(serialized){
 		sequences.map(arr=>{
 
 		    let amount = calculatePercent(arr)
+		    //ignore negative results
+		    cl('amount before test : =====> ' + amount)
+		    if( amount < 1 ) return
 		    //creates object
 		    //key:percent , value: object with edges & weights
 		    results[amount] = arrayToObject(arr)
@@ -613,7 +616,7 @@ module.exports = function Graph(serialized){
 		
 		return sortObject( results )
 	    }
-	    
+
 	    //sorts results object
 	    //highest results at the bottom
 	    function sortObject(obj){
