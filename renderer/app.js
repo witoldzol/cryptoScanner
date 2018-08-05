@@ -2,12 +2,31 @@
 //between back end and front end
 const {ipcRenderer} = require('electron')
 const cl = x=> console.log(x)
+
+
+// ========================================
+// SPINNER
+
+var loadingDiv = document.getElementById('loading');
+
+function showSpinner() {
+  loadingDiv.style.visibility = 'visible';
+}
+
+function hideSpinner() {
+  loadingDiv.style.visibility = 'hidden';
+}
+
+// ========================================
+// SCAN
 function scan()
 {
     let resultsElement = document.getElementById("results-container");
     deleteChildren(resultsElement)
     //send message to main process to perform scan
     ipcRenderer.send('scan-button-clicked', 'click')
+    //turn on spinner (loading)
+    showSpinner()
 }
 
 // SCAN button listener
@@ -66,6 +85,8 @@ let getNumberOfKeys = obj=>Object.keys(obj).length
 
 let insertResults = obj=>
     {
+	//turn off spinner (loading)
+	hideSpinner()
 	//save data for future reference
 	let data = obj
 	//loop over all keys (rates)
@@ -129,3 +150,62 @@ function getHandlesToButtons()
     }
 
 }
+
+
+// ========================================
+// FILTER RESULTS BY RETURN
+
+
+function testRate(text, min)
+{
+    let key = /[0-9]*\.[0-9]*/g
+    let result = text.match(key)
+    let minimum = parseFloat(min)
+
+    //hide element if its below minimum
+    return (result < minimum)? true : false
+
+}
+
+function testJumps(text, max)
+{
+    let key = /[0-9]/g
+    let result = text.match(key)
+    let maximum = parseInt(max)
+    cl(`result jump ${result}`)
+    cl(`maximum  ${maximum}`)
+    //hide element if over max
+    cl( result > maximum)
+    // return (result > maximum)? true : false
+    if(result > maximum) { return true } else { return false }
+}
+
+
+let filterButton = document.getElementById('filterButton')
+let minReturn = document.getElementById('min-return')
+let maxJumps = document.getElementById('max-jumps')
+
+function filterResults()
+{
+    //minimum return
+    let minR = minReturn.children[1].value
+    //max jumps
+    let maxJ = maxJumps.children[1].value
+    
+    let arr = document.querySelectorAll('.result')
+    
+    arr.forEach(ele=>{
+	let children = ele.children
+	let rate = children[0].textContent
+	let jumps = children[1].textContent	
+	let isReturnUnderMinimum = testRate( rate , minR )
+	let areJumpsOverMaximum = testJumps( jumps , maxJ )
+	if(isReturnUnderMinimum || areJumpsOverMaximum){ele.style.display= "none"}
+	else{ele.style.display= ""}
+    })
+
+    
+}
+//listener
+filterButton.addEventListener('click', filterResults)
+

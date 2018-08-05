@@ -1,38 +1,46 @@
 <html>
 
-<head>
+  <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>cryptoScanner</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" media="screen" href="./app.css">
 
-</head>
+  </head>
 
-<body>
+  <body>
     <section id="header">
       <h1>CRYPTO SCANNER</h1>
-      <button id="scan">SCAN</button>
+      <div id="buttonWrapper">
+	<button id="scan" class="button">SCAN</button>
+	<button id="filterButton" class="button">FILTER</button>
+
+      </div>
       <div id="input-wrapper">
 	<form id="min-return" action="">
-	Minimum return:<br>
-	<input name="minreturn" type="text" value=""/>
-      </form>
-      <form id="max-jumps" action="">
-	Maximum jumps:<br>
-	<input name="maxjumps" type="text" value=""/>
-      </form>
+	  Minimum return:<br>
+	  <input name="minreturn" type="text" value=""/>
+	</form>
+	<form id="max-jumps" action="">
+	  Maximum jumps:<br>
+	  <input name="maxjumps" type="text" value=""/>
+	</form>
+	
+      </div>
+
+    </section>
+    <!-- spinner -->
+    <div class="container"> 
+      <div id="loading" class="loading">
+	Loading&#8230;     
+      </div>
+    </div>
+    <!-- results -->
+    <section id="results">
+      <div id="results-container">
       </div>
     </section>
-    <section id="results">
-        <div id="results-container">
-            
-        </div>
-    </section>
-
     <script src="./app.js"></script>
-
-
-</body>
-
+  </body>
 </html>
