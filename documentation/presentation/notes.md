@@ -8,3 +8,9 @@ test nodes length
 test nodes cl
 iterate over all edges
 
+//spinner from:
+
+https://codepen.io/AshutoshD/pen/dMEGqM
+
+//navbar
+https://codepen.io/arcadie2k/pen/BPrpXR?page=1&n
