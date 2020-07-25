@@ -38,19 +38,8 @@ let replaceXBT = x => {
 	})
 }
 
-// EXPORTS
-// ==============================
-exports.settings =
-{
-	urlPath: urlPath,
-	pairs: pairs,
-	requestDelay: requestDelay,
-	retryDelay: retryDelay,
-	axiosInstance: axiosInstance,
-	maxConcurrentRequests: 2,
-}
 
-exports.formatData = (data) => {
+function formatData(data){
 	let a = {}
 	let obj = util.mapDataToObject(data)
 	a[marketName] = obj
@@ -81,3 +70,15 @@ exports.formatData = (data) => {
 	return a
 }
 
+
+exports.options =
+{
+	baseURL: 'https://api.mybitx.com/api/1',
+	urlPath: urlPath,
+	pairs: pairs,
+	requestDelay: requestDelay,
+	retryDelay: retryDelay,
+	axiosInstance: axiosInstance,
+	maxConcurrentRequests: 2,
+	formatData: formatData
+}

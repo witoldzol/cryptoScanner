@@ -53,30 +53,21 @@ const graph = require('./graph.js')
 // //perform scan when receive message from renderer
 // ipcMain.on('scan-button-clicked', (event, arg) => {
 
-    // let lunoPrices =  luno.getPrices(luno.settings)
-    // .then(x=>luno.formatData(x))
-    // .catch(e=>console.log('LUNO-GET_PRICE_FUNCTION ERROR ===> ' + e))
+let lunoPrices = marketService.getPrices(luno.options)
+let gdaxPrices = marketService.getPrices(gdax.options)
+let binancePrices = marketService.getPrices(binance.options)
 
-    // GDAX
+let stagerSendObject = obj => {
+    event.sender.send('scan-data', JSON.stringify(obj))
+}
 
-    let gdaxPrices = marketService.getPrices(gdax.options)
-
-
-    // BINANCE
-    let binancePrices = marketService.getPrices(binance.options)
-
-    let stagerSendObject = obj => {
-        event.sender.send('scan-data', JSON.stringify(obj))
-    }
-
-    // RESOLVE ALL REQUESTS
-    // Promise.all([lunoPrices,gdaxPrices,binancePrices])
-    Promise.all([gdaxPrices, binancePrices])
-        .then(data => marketService.mapDataToObject(data))
-        .then(data => {console.log(JSON.stringify(data)); return data})
-        .then(data => graph.buildGraph(data))
-        // .then(data => { console.log(data); stagerSendObject(data) })
-        .catch(e => console.log('error from main pricess ALL.Promise: ' + e.stack))
+// RESOLVE ALL REQUESTS
+Promise.all([lunoPrices, gdaxPrices, binancePrices])
+    .then(data => marketService.mapDataToObject(data))
+    .then(data => { console.log(JSON.stringify(data)); return data })
+    .then(data => graph.buildGraph(data))
+    // .then(data => { console.log(data); stagerSendObject(data) })
+    .catch(e => console.log('error from main pricess ALL.Promise: ' + e.stack))
 
 // })
 
