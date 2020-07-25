@@ -1,15 +1,8 @@
 const util = require('./marketService.js')
-const retryDelay = 5000 // dependent on the server settings ( this one is fussy, needs time )
-const requestDelay = 1000
 
-//currency pairs available on this exchang //XBT = BTC
 const pairs = ['XBTIDR', 'XBTMYR', 'XBTNGN', 'XBTZAR', 'ETHXBT']
 
-//template for querying the prices
-//(array in order to handle more complex queries, first ele + currency + second ele of query)
-//it gets contatenated to the default api url
-let urlPath = ['/orderbook?pair=', '']
-let marketName = 'luno'
+// luno refers to BTC as XBT, rename for uniformity ( this value will be used in graph)
 let replaceXBT = x => {
 	Object.keys(x).forEach(y => {
 		let newKey = y.replace('XBT', 'BTC')
@@ -18,14 +11,13 @@ let replaceXBT = x => {
 	})
 }
 
-
 function formatData(data){
 	let a = {}
 	let obj = util.mapDataToObject(data)
-	a[marketName] = obj
+	a[this.marketName] = obj
 
 	//get all currencies
-	let l = a['luno']
+	let l = a[this.marketName]
 	//replce XBT with BTC code (they are interchangeable)
 
 	//swap objects with arrays that hold
@@ -46,18 +38,16 @@ function formatData(data){
 	}
 	//keys = pairs
 	Object.keys(l).forEach(x => objectToArray(l[x]))
-	replaceXBT(a['luno'])
+	replaceXBT(a[this.marketName])
 	return a
 }
 
-
 exports.options =
 {
+	marketName:'LUNO',
 	baseURL: 'https://api.mybitx.com/api/1',
-	urlPath: urlPath,
+	urlPath: ['/orderbook?pair=', ''],
 	pairs: pairs,
-	requestDelay: requestDelay,
-	retryDelay: retryDelay,
 	maxConcurrentRequests: 2,
 	formatData: formatData
 }
