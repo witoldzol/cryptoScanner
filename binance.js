@@ -1,9 +1,5 @@
 //============================== BINANCE ==============================
 const axios = require('axios')
-const marketService = require('./marketService.js')
-
-// CONFIG
-// ==================================================
 
 //instance of axios 
 let axiosInstance = axios.create({
@@ -15,18 +11,12 @@ let axiosInstance = axios.create({
 	}
 })
 
-//url path[0] + currency pair + path[1]
-let urlPath = ['/depth?limit=10&symbol=', '']
-let requestDelay = 250
-let retryDelay = 5000
-const marketName = 'binance'
+const marketName = 'BINANCE'
 
 let pairsUnfiltered = ['ETHBTC', 'LTCBTC']
-//let pairsUnfiltered = ['ETHBTC','LTCBTC','BNBBTC','NEOBTC','QTUMETH','EOSETH','SNTETH','BNTETH','BCCBTC','GASBTC','BNBETH','BTCUSDT','ETHUSDT','HSRBTC','OAXETH','DNTETH','MCOETH','ICNETH','MCOBTC','WTCBTC','WTCETH','LRCBTC','LRCETH','QTUMBTC','YOYOBTC','OMGBTC','OMGETH','ZRXBTC','ZRXETH','STRATBTC','STRATETH','SNGLSBTC','SNGLSETH','BQXBTC','BQXETH','KNCBTC','KNCETH','FUNBTC','FUNETH','SNMBTC','SNMETH','NEOETH','IOTABTC','IOTAETH','LINKBTC','LINKETH','XVGBTC','XVGETH','SALTBTC','SALTETH','MDABTC','MDAETH','MTLBTC','MTLETH','SUBBTC','SUBETH','EOSBTC','SNTBTC','ETCETH','ETCBTC','MTHBTC','MTHETH','ENGBTC','ENGETH','DNTBTC','ZECBTC','ZECETH','BNTBTC','ASTBTC','ASTETH','DASHBTC']
+// let pairsUnfiltered = ['ETHBTC','LTCBTC','BNBBTC','NEOBTC','QTUMETH','EOSETH','SNTETH','BNTETH','BCCBTC','GASBTC','BNBETH','BTCUSDT','ETHUSDT','HSRBTC','OAXETH','DNTETH','MCOETH','ICNETH','MCOBTC','WTCBTC','WTCETH','LRCBTC','LRCETH','QTUMBTC','YOYOBTC','OMGBTC','OMGETH','ZRXBTC','ZRXETH','STRATBTC','STRATETH','SNGLSBTC','SNGLSETH','BQXBTC','BQXETH','KNCBTC','KNCETH','FUNBTC','FUNETH','SNMBTC','SNMETH','NEOETH','IOTABTC','IOTAETH','LINKBTC','LINKETH','XVGBTC','XVGETH','SALTBTC','SALTETH','MDABTC','MDAETH','MTLBTC','MTLETH','SUBBTC','SUBETH','EOSBTC','SNTBTC','ETCETH','ETCBTC','MTHBTC','MTHETH','ENGBTC','ENGETH','DNTBTC','ZECBTC','ZECETH','BNTBTC','ASTBTC','ASTETH','DASHBTC']
 
-//filter out cryptos that have more than 3 letters
 let pairs = pairsUnfiltered.filter(ele => ele.length == 6)
-
 
 function formatData(data){
 	let combineObjects = (arr, obj) => arr.map(x => Object.assign(obj, x))
@@ -39,10 +29,8 @@ function formatData(data){
 
 exports.options =
 {
-	urlPath: urlPath,
+	urlPath: ['/depth?limit=10&symbol=', ''],
 	pairs: pairs,
-	requestDelay: requestDelay,
-	retryDelay: retryDelay,
 	axiosInstance: axiosInstance,
 	maxConcurrentRequests: 20,
 	formatData: formatData

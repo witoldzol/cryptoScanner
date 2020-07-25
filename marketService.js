@@ -36,7 +36,7 @@ function fetchPrices(options) {
 		} catch (err) {
 			if (tries <= 3) {
 				tries++
-				response = setTimeout(await options.axiosInstance.get(url), tries * 1000)
+				response = setTimeout(await options.axiosInstance.get(url), tries * 2000)
 			}
 			else return err
 		}

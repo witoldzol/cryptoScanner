@@ -9,9 +9,6 @@ let axiosInstance = axios.create({
 	}
 })
 
-let urlPath = ['/products/', '/book?level=2']
-let requestDelay = 1500
-let retryDelay = 5000
 // const pairs = [ 'BCH-BTC','BCH-USD','BTC-EUR','BTC-GBP','BTC-USD','ETH-BTC','ETH-EUR','ETH-USD','LTC-BTC','LTC-EUR','LTC-USD','BCH-EUR']
 const pairs = ['ETH-BTC', 'BCH-USD']
 const marketName = 'GDAX'
@@ -36,10 +33,8 @@ function formatData(data){
 }
 
 exports.options = {
-	urlPath: urlPath,
+	urlPath: ['/products/', '/book?level=2'],
 	pairs: pairs,
-	requestDelay: requestDelay,
-	retryDelay: retryDelay,
 	axiosInstance: axiosInstance,
 	maxConcurrentRequests: 4,
 	formatData: formatData
