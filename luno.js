@@ -1,26 +1,6 @@
-//============================== LUNO ==============================
-// CONSTANTS
-// ==================================================
-const axios = require('axios')
 const util = require('./marketService.js')
 const retryDelay = 5000 // dependent on the server settings ( this one is fussy, needs time )
 const requestDelay = 1000
-const transactionCost = 1
-
-// CONFIG
-// ==================================================
-
-//instance of axios 
-let axiosInstance = axios.create(
-	{
-		baseURL: 'https://api.mybitx.com/api/1',
-		timeout: 5000,
-		headers:
-		{
-			'User-Agent': 'linux chrome',
-			'CB-ACCESS-KEY': 'lol'
-		}
-	})
 
 //currency pairs available on this exchang //XBT = BTC
 const pairs = ['XBTIDR', 'XBTMYR', 'XBTNGN', 'XBTZAR', 'ETHXBT']
@@ -78,7 +58,6 @@ exports.options =
 	pairs: pairs,
 	requestDelay: requestDelay,
 	retryDelay: retryDelay,
-	axiosInstance: axiosInstance,
 	maxConcurrentRequests: 2,
 	formatData: formatData
 }

@@ -42,7 +42,7 @@ function fetchPrices(options) {
 		let response = null
 
 		try {
-			response = await options.axiosInstance.get(url)
+			response = await axios.get(url)
 		} catch (err) {
 			if (tries <= 3) {
 				tries++

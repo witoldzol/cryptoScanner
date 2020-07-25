@@ -1,16 +1,3 @@
-//============================== BINANCE ==============================
-const axios = require('axios')
-
-//instance of axios 
-let axiosInstance = axios.create({
-	baseURL: 'https://api.binance.com/api/v1',
-	timeout: 5000,
-	headers: {
-		'User-Agent': 'linux chrome',
-		'CB-ACCESS-KEY': 'lol',
-	}
-})
-
 const marketName = 'BINANCE'
 
 let pairsUnfiltered = ['ETHBTC', 'LTCBTC']
@@ -32,7 +19,6 @@ exports.options =
 	baseURL: 'https://api.binance.com/api/v1',
 	urlPath: ['/depth?limit=10&symbol=', ''],
 	pairs: pairs,
-	axiosInstance: axiosInstance,
 	maxConcurrentRequests: 20,
 	formatData: formatData
 }

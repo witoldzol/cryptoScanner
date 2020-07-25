@@ -1,14 +1,3 @@
-const axios = require('axios')
-
-let axiosInstance = axios.create({
-	baseURL: 'https://api.pro.coinbase.com',
-	timeout: 5000,
-	headers: {
-		'User-Agent': 'linux chrome',
-		'CB-ACCESS-KEY': 'lol'
-	}
-})
-
 // const pairs = [ 'BCH-BTC','BCH-USD','BTC-EUR','BTC-GBP','BTC-USD','ETH-BTC','ETH-EUR','ETH-USD','LTC-BTC','LTC-EUR','LTC-USD','BCH-EUR']
 const pairs = ['ETH-BTC', 'BCH-USD']
 const marketName = 'GDAX'
@@ -36,7 +25,6 @@ exports.options = {
 	baseURL: 'https://api.pro.coinbase.com',
 	urlPath: ['/products/', '/book?level=2'],
 	pairs: pairs,
-	axiosInstance: axiosInstance,
 	maxConcurrentRequests: 4,
 	formatData: formatData
 }
