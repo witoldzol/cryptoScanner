@@ -86,10 +86,6 @@ let addRoot = graph=>
 
     }
 
-
-
-
-
 //----------------------------------------------------- build graph function / iterator
 
 
@@ -116,5 +112,5 @@ exports.buildGraph = data=>
 	addRoot(g)
 	//return results
 	return g.bellmanFord()
-
+	// return g.serialize()
     }
