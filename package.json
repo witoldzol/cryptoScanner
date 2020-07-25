@@ -4,7 +4,9 @@
   "description": "scanner for crypto arbitrage",
   "main": "main.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "test": "jasmine",
+    "temp": "node temp.js"
   },
   "repository": {
     "type": "git",
@@ -20,12 +22,14 @@
     "electron": "^2.0.3",
     "electron-packager": "^12.1.0",
     "eslint": "^5.0.1",
+    "jasmine": "^3.5.0",
     "prettier": "^1.13.7"
   },
   "dependencies": {
-    "async": "^2.6.1",
+    "async": "^3.2.0",
     "axios": "^0.18.0",
     "bottleneck": "^2.5.1",
-    "graph-data-structure": "^1.8.0"
+    "graph-data-structure": "^1.8.0",
+    "rewire": "^5.0.0"
   }
 }

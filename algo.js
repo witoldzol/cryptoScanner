@@ -1,9 +1,10 @@
 // ======================================== ALGO ==============================
-const getCurrency1 = pair=>pair.substring(0,3)
-const getCurrency2 = pair=>pair.substring(3,7)
 
-let bellmanFord = (source, destination)=>
-    {
+function bellmanFord(source='rot', destination='BTC') {
+				
+	const getCurrency1 = pair=>pair.substring(0,3)
+	const getCurrency2 = pair=>pair.substring(3,7)
+   
 	//upper bounds for shortest path weight from source
 	let d = {}
 	//predecessors
@@ -67,59 +68,18 @@ let bellmanFord = (source, destination)=>
 				 }
 			     })
 
-		if(!arbitrage){ cl('NO ARBITRAGE OPPORTUNITY FOUND :<')}
-		else { return cyclic }
+		if(!arbitrage){ 
+			cl('NO ARBITRAGE OPPORTUNITY FOUND :<')
+		}
+		return cyclic
 	    }
 
-
-	//work in progress 
-// 	let calculateArbitrage = (cyclic, pred)=>
-// {
-// 	let sequences = []
-// 	let visited
-// 	Object.keys(cyclic).forEach(x=>
-// 	{
-// 		visited = {x:true}
-// 		seq = []
-// 		let p = x
-
-// 		seq.push(p)
-// 		visited[p] = true
-// 		p = pred[p]
-// 		if( p.length!=0 && visited[p] == false)
-// 	})
-
-
-
-	
 	function runBellmanFord(){
 	    initializeSingleSource();
 	    relaxAllEdges()
-	    testForNegativeCycle()
+	    return testForNegativeCycle()
 	}
-	
 
-	
-	// // ????????
-	// // Assembles the shortest path by traversing the
-	// // predecessor subgraph from destination to source.
-	// function path(){
-	//     var nodeList = [];
-	//     var weight = 0;
-	//     var node = destination;
-	//     while(p[node]){
-	// 	nodeList.push(node);
-	// 	weight += getEdgeWeight(p[node], node);
-	// 	node = p[node];
-	//     }
-	//     if (node !== source) {
-	// 	throw new Error("No path found");
-	//     }
-	//     nodeList.push(node);
-	//     nodeList.reverse();
-	//     nodeList.weight = weight;
-	//     return nodeList;
-	// }
+	return runBellmanFord()
 
-
-    }
+}
