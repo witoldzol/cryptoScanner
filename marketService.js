@@ -1,4 +1,5 @@
 const async = require('async')
+const axios = require('axios')
 
 exports.mapDataToObject = (data) => {
 	let target = {}
@@ -25,7 +26,16 @@ function selectFirst10Prices(pair, response) {
 	return obj
 }
 
+function getAxios(options) {
+	return axios.create({
+		baseURL: options.baseURL,
+		timeout: 5000
+	})
+}
+
 function fetchPrices(options) {
+	const axios = getAxios(options)
+
 	return async (pair) => {
 		let url = generateUrl(pair, options)
 		let tries = 1
@@ -36,7 +46,7 @@ function fetchPrices(options) {
 		} catch (err) {
 			if (tries <= 3) {
 				tries++
-				response = setTimeout(await options.axiosInstance.get(url), tries * 2000)
+				response = setTimeout(await axios.get(url), tries * 2000)
 			}
 			else return err
 		}
@@ -44,6 +54,7 @@ function fetchPrices(options) {
 		return selectFirst10Prices(pair, response)
 	}
 }
+
 
 
 exports.getPrices = async (options) => {

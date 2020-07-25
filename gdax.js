@@ -33,6 +33,7 @@ function formatData(data){
 }
 
 exports.options = {
+	baseURL: 'https://api.pro.coinbase.com',
 	urlPath: ['/products/', '/book?level=2'],
 	pairs: pairs,
 	axiosInstance: axiosInstance,

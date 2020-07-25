@@ -29,6 +29,7 @@ function formatData(data){
 
 exports.options =
 {
+	baseURL: 'https://api.binance.com/api/v1',
 	urlPath: ['/depth?limit=10&symbol=', ''],
 	pairs: pairs,
 	axiosInstance: axiosInstance,
