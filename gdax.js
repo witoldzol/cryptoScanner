@@ -1,5 +1,4 @@
 const axios = require('axios')
-const marketService = require('./marketService.js')
 
 let axiosInstance = axios.create({
 	baseURL: 'https://api.pro.coinbase.com',
@@ -15,8 +14,7 @@ let requestDelay = 1500
 let retryDelay = 5000
 // const pairs = [ 'BCH-BTC','BCH-USD','BTC-EUR','BTC-GBP','BTC-USD','ETH-BTC','ETH-EUR','ETH-USD','LTC-BTC','LTC-EUR','LTC-USD','BCH-EUR']
 const pairs = ['ETH-BTC', 'BCH-USD']
-const marketName = 'gdax'
-let combineObjects = (arr, obj) => arr.map(x => Object.assign(obj, x))
+const marketName = 'GDAX'
 
 //removes dash from object KEYS - doesn't return, modifies original object
 let removeDash = obj => {
@@ -27,16 +25,8 @@ let removeDash = obj => {
 	})
 }
 
-settings = {
-	urlPath: urlPath,
-	pairs: pairs,
-	requestDelay: requestDelay,
-	retryDelay: retryDelay,
-	axiosInstance: axiosInstance,
-	maxConcurrentRequests: 4
-}
-
-formatData = (data) => {
+function formatData(data){
+	let combineObjects = (arr, obj) => arr.map(x => Object.assign(obj, x))
 	let obj = {}
 	let a = {}
 	combineObjects(data, obj)
@@ -45,8 +35,12 @@ formatData = (data) => {
 	return a
 }
 
-exports.getPrices = () => {
-	return marketService
-		.getPrices(settings)
-		.then(prices => formatData(prices))
+exports.options = {
+	urlPath: urlPath,
+	pairs: pairs,
+	requestDelay: requestDelay,
+	retryDelay: retryDelay,
+	axiosInstance: axiosInstance,
+	maxConcurrentRequests: 4,
+	formatData: formatData
 }

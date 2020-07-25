@@ -6,10 +6,6 @@ exports.mapDataToObject = (data) => {
 	return target
 }
 
-function delay(time, value) {
-	return new Promise(resolve => setTimeout(resolve.bind(null, value), time))
-}
-
 // we have to query prices of each currency pair separately with a unique url
 function generateUrl(currencyPair, options) {
 	// my-url-ETH-BTC-something-bla
@@ -29,7 +25,7 @@ function selectFirst10Prices(pair, response) {
 	return obj
 }
 
-function getPairBidsAndAsks(options) {
+function fetchPrices(options) {
 	return async (pair) => {
 		let url = generateUrl(pair, options)
 		let tries = 1
@@ -37,8 +33,8 @@ function getPairBidsAndAsks(options) {
 
 		try {
 			response = await options.axiosInstance.get(url)
-		} catch(err) {
-			if(tries <= 3) {
+		} catch (err) {
+			if (tries <= 3) {
 				tries++
 				response = setTimeout(await options.axiosInstance.get(url), tries * 1000)
 			}
@@ -51,9 +47,9 @@ function getPairBidsAndAsks(options) {
 
 
 exports.getPrices = async (options) => {
-	const fetchPrices = getPairBidsAndAsks(options)
-	
+	const fetchPricesWithOptions = fetchPrices(options)
 	//last arg must be a promise, that's why async is used
-	return await async.mapLimit(options.pairs, options.maxConcurrentRequests, fetchPrices)
+	return await async.mapLimit(options.pairs, options.maxConcurrentRequests, fetchPricesWithOptions)
+		.then(data => options.formatData(data))
 }
 
