@@ -1,4 +1,4 @@
-const util = require('./marketService.js')
+const util = require('./util.js')
 
 const pairs = ['XBTIDR', 'XBTMYR', 'XBTNGN', 'XBTZAR', 'ETHXBT']
 
@@ -12,8 +12,10 @@ let replaceXBT = x => {
 }
 
 function formatData(data){
+	let combineObjects = (arr, obj) => arr.map(x => Object.assign(obj, x))
 	let a = {}
-	let obj = util.mapDataToObject(data)
+	let obj = {}
+	combineObjects(data, obj)
 	a[this.marketName] = obj
 
 	//get all currencies
