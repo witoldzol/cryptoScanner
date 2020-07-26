@@ -4,9 +4,8 @@
   "description": "scanner for crypto arbitrage",
   "main": "main.js",
   "scripts": {
-    "start": "electron .",
-    "test": "jasmine",
-    "temp": "node temp.js"
+    "start": "node ./built/main.js",
+    "test": "jasmine"
   },
   "repository": {
     "type": "git",

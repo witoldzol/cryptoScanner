@@ -1,4 +1,4 @@
-const util = require('../util')
+const util = require('../src/util')
 
 describe('Util', () => {
     it('mapDataToObject assigns properties to target object', () => {
@@ -19,7 +19,7 @@ describe('Util', () => {
         let marketName = 'EASYMONEY'
 
         let wrappedData = util.wrapDataInObjectWithMarketName(data, marketName)
-        
+
         expect(wrappedData.hasOwnProperty(marketName)).toBe(true)
         expect(wrappedData[marketName]).toBe(data)
     })
