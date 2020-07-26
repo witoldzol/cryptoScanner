@@ -38,21 +38,28 @@ function fetchPrices(options) {
 		} catch (err) {
 			if (tries <= 3) {
 				tries++
+				// re-try query with an exponential backoff
 				response = setTimeout(await axios.get(url), tries * 2000)
 			}
 			else return err
 		}
-
+		// todo: refactor it out of here
 		return selectFirst10Prices(pair, response)
 	}
 }
 
-
-
 exports.getPrices = async (options) => {
 	const fetchPricesWithOptions = fetchPrices(options)
-	//last arg must be a promise, that's why async is used
-	return await async.mapLimit(options.pairs, options.maxConcurrentRequests, fetchPricesWithOptions)
-		.then(data => options.formatData(data))
-}
 
+	//last arg must be a promise, that's why async is used
+	let result = 
+	await async.mapLimit(
+		options.pairs, 
+		options.maxConcurrentRequests, 
+		// async doesn't play nice with typescript -> use asyncify to make it work
+		// https://stackoverflow.com/questions/45572743/how-to-enable-async-maplimit-to-work-with-typescript-async-await
+		async.asyncify(async pair => fetchPricesWithOptions(pair)))
+	.then(data => options.formatData(data))		
+
+	return result
+}

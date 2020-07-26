@@ -1,6 +1,6 @@
 // used for testing unexported functions
 const rewire = require('rewire')
-const marketService = rewire('../marketService')
+const marketService = rewire('../src/marketService')
 const generateUrl = marketService.__get__('generateUrl')
 const selectFirst10Prices = marketService.__get__('selectFirst10Prices')
 

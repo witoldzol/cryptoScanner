@@ -1,8 +1,6 @@
 const rewire = require('rewire')
-const gdax = rewire('../gdax')
+const gdax = rewire('../src/gdax')
 const removeDash = gdax.__get__('removeDash')
-
-
 
 describe('GDAX', () => {
 
