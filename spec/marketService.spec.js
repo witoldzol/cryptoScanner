@@ -1,12 +1,8 @@
 // used for testing unexported functions
-// const util = rewire('../util.js')
-// const combineObjects = util.__get__('combineObjects')
 const rewire = require('rewire')
 const marketService = rewire('../marketService')
 const generateUrl = marketService.__get__('generateUrl')
 const selectFirst10Prices = marketService.__get__('selectFirst10Prices')
-
-const utilModule = require('../marketService')
 
 describe('Market Service', () => {
     it('generateUrl returns valid URL', () => {
@@ -19,19 +15,6 @@ describe('Market Service', () => {
         let result = generateUrl(pair, options)
 
         expect(result).toContain('ETH-BTC')
-    })
-
-    it('formatData assigns properties to target object', () => {
-        let a = { a: 1 }
-        let b = { b: 2 }
-        let c = { f: 3 }
-        let sourceArray = [a, b, c]
-
-        let f = utilModule.mapDataToObject(sourceArray)
-
-        expect(f['a']).toBe(1)
-        expect(f['b']).toBe(2)
-        expect(f['f']).toBe(3)
     })
 
     it('selectFirst10Prices', () => {
@@ -73,9 +56,9 @@ describe('Market Service', () => {
 
         let pair = 'BTC-ETH'
 
-        let result = selectFirst10Prices('BTC-ETH', response)
+        let result = selectFirst10Prices(pair, response)
 
-        expect(result.hasOwnProperty('BTC-ETH')).toBe(true)
+        expect(result.hasOwnProperty(pair)).toBe(true)
         expect(result[pair]['asks'].length).toBe(10)
         expect(result[pair]['bids'].length).toBe(10)
     })
