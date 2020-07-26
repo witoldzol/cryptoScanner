@@ -1,15 +1,8 @@
 const async = require('async')
 const axios = require('axios')
 
-exports.mapDataToObject = (data) => {
-	let target = {}
-	data.map(source => Object.assign(target, source))
-	return target
-}
-
 // we have to query prices of each currency pair separately with a unique url
 function generateUrl(currencyPair, options) {
-	// my-url-ETH-BTC-something-bla
 	let firstPartOfUrl = options.urlPath[0]
 	let secondPartOfUrl = options.urlPath[1]
 	return firstPartOfUrl + currencyPair + secondPartOfUrl
@@ -20,7 +13,6 @@ function selectFirst10Prices(pair, response) {
 	let bids = response.data.bids.slice(0, 10)
 
 	if (asks.length == 0 || bids.length == 0) { return null }
-	// wrap bids and asks in object
 	let obj = {}
 	obj[pair] = { asks, bids }
 	return obj
