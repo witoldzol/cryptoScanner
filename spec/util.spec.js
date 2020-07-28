@@ -1,4 +1,4 @@
-const util = require('../src/util')
+const util = require('../built/util')
 
 describe('Util', () => {
     it('mapDataToObject assigns properties to target object', () => {
@@ -22,5 +22,16 @@ describe('Util', () => {
 
         expect(wrappedData.hasOwnProperty(marketName)).toBe(true)
         expect(wrappedData[marketName]).toBe(data)
+    })
+
+    it('removeSpecialChars removes dashes from strings', () => {
+
+        const data = { "ETH-BTC": { "asks": [["0.03133600", "0.01500000"]], "bids": [["0.03133200", "32.57300000"]] }, "LTC-BTC": { "asks": [["0.00501200", "3.92000000"]], "bids": [["0.00501000", "50.51000000"]] } }
+        noDashData = util.removeSpecialChars(data)
+
+        expect(noDashData.hasOwnProperty("ETHBTC")).toBe(true)
+        expect(noDashData.hasOwnProperty("ETH-BTC")).toBe(false)
+        expect(noDashData.hasOwnProperty("LTCBTC")).toBe(true)
+        expect(noDashData.hasOwnProperty("LTC-BTC")).toBe(false)
     })
 })

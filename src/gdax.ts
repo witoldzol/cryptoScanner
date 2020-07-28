@@ -1,5 +1,5 @@
 import util = require('./util')
-import { MarketOptions } from './MarketOptions'
+import { MarketOptions } from './models/MarketOptions'
 
 // const pairs: string[] = [ 'BCH-BTC','BCH-USD','BTC-EUR','BTC-GBP','BTC-USD','ETH-BTC','ETH-EUR','ETH-USD','LTC-BTC','LTC-EUR','LTC-USD','BCH-EUR']
 const pairs: string[] = ['ETH-BTC', 'BCH-USD']
@@ -14,7 +14,7 @@ function removeSpecialChars(obj: object): object {
 	return newObject
 }
 
-function formatData(data: object): object {
+function formatData(data: object[]): object {
 	let combinedData: object = util.mapDataToObject(data)
 	combinedData = removeSpecialChars(combinedData)
 	return util.wrapDataInObjectWithMarketName(combinedData, this.marketName)

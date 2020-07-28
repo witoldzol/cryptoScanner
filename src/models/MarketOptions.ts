@@ -1,9 +1,10 @@
-export interface MarketOptions {
-    
+interface MarketOptions {
 	marketName: string,
 	baseURL: string,
 	urlPath: string[],
 	pairs: string[],
 	maxConcurrentRequests: number,
-	formatData: (data: unknown)
+	formatData(data: object): object
 }
+
+export { MarketOptions }
