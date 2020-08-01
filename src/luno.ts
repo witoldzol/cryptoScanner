@@ -3,7 +3,7 @@ import { MarketOptions } from './models/MarketOptions'
 
 const pairs = ['XBTIDR', 'XBTMYR', 'XBTNGN', 'XBTZAR', 'ETHXBT']
 
-function formatData(data: object[]){
+function formatData(data: object[]) {
 	let combinedData = util.mapDataToObject(data)
 	// TODO: keep object key:value format - update other merkets to convert arrays to more meaningful objects
 	let formattedData = util.convertObjectToArray(combinedData)
@@ -16,7 +16,7 @@ function formatData(data: object[]){
 
 const options: MarketOptions =
 {
-	marketName:'LUNO',
+	marketName: 'LUNO',
 	baseURL: 'https://api.mybitx.com/api/1',
 	urlPath: ['/orderbook?pair=', ''],
 	pairs: pairs,
@@ -24,4 +24,4 @@ const options: MarketOptions =
 	formatData: formatData
 }
 
-export {options}
+export { options }

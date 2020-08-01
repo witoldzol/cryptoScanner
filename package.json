@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/witoldzol/CryptoScanner#readme",
   "devDependencies": {
+    "@types/async": "^3.2.3",
     "electron": "^2.0.3",
     "electron-packager": "^12.1.0",
     "eslint": "^5.0.1",
