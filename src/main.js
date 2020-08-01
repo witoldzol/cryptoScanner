@@ -53,7 +53,7 @@ const graph = require('./graph.js')
 // //perform scan when receive message from renderer
 // ipcMain.on('scan-button-clicked', (event, arg) => {
 
-// let lunoPrices = marketService.getPrices(luno.options)
+let lunoPrices = marketService.getPrices(luno.options)
 let gdaxPrices = marketService.getPrices(gdax.options)
 let binancePrices = marketService.getPrices(binance.options)
 
@@ -64,7 +64,7 @@ let binancePrices = marketService.getPrices(binance.options)
 // RESOLVE ALL REQUESTS
 // Promise.all([lunoPrices, gdaxPrices, binancePrices])
 
-Promise.all([gdaxPrices, binancePrices])
+Promise.all([gdaxPrices, binancePrices, lunoPrices])
     .then(data => util.mapDataToObject(data))
     .then(data => { console.log(' MAIN \n' + JSON.stringify(data)); return data })
     .then(data => graph.buildGraph(data))
