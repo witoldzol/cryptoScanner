@@ -65,4 +65,4 @@ async function getPrices (options: MarketOptions) {
 				.then( (data: object) => options.formatData(data))
 }
 
-export { getPrices } 
+export { getPrices }

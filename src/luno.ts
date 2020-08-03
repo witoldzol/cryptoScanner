@@ -1,9 +1,10 @@
 import util = require('./util')
 import { MarketOptions } from './models/MarketOptions'
+import { MarketData } from './models/MarketData'
 
 const pairs = ['XBTIDR', 'XBTMYR', 'XBTNGN', 'XBTZAR', 'ETHXBT']
 
-function formatData(data: object[]) {
+function formatData(data: object[]): MarketData {
 	let combinedData = util.mapDataToObject(data)
 	// TODO: keep object key:value format - update other merkets to convert arrays to more meaningful objects
 	let formattedData = util.convertObjectToArray(combinedData)
