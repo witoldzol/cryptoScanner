@@ -62,11 +62,10 @@ let binancePrices = marketService.getPrices(binance.options)
 // }
 
 // RESOLVE ALL REQUESTS
-// Promise.all([lunoPrices, gdaxPrices, binancePrices])
-
-Promise.all([gdaxPrices, binancePrices, lunoPrices])
-    .then(data => util.mapDataToObject(data))
+Promise.all([lunoPrices, gdaxPrices, binancePrices])
     .then(data => { console.log(' MAIN \n' + JSON.stringify(data)); return data })
+    .then(data => util.mapDataToObject(data))
+    // .then(data => { console.log(' MAIN \n' + JSON.stringify(data)); return data })
     .then(data => graph.buildGraph(data))
     .catch(e => console.log('error from main pricess ALL.Promise: ' + e.stack))
 
