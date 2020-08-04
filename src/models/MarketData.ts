@@ -2,9 +2,11 @@ interface MarketData extends Record<string, CurrencyPair> { }
 
 interface CurrencyPair extends Record<string, AsksBids> { }
 
+interface MarketRates extends Record<string, number> { }
+
 interface AsksBids {
-    asks: (string | number)[][]
-    bids: (string | number)[][]
+    asks: number[][]
+    bids: number[][]
 }
 
-export { MarketData, CurrencyPair, AsksBids }
+export { MarketData, CurrencyPair, AsksBids, MarketRates }

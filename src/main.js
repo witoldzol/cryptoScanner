@@ -3,7 +3,7 @@ const binance = require('./binance.js')
 const gdax = require('./gdax.js')
 const marketService = require('./marketService.js')
 const util = require('./util')
-const graph = require('./graph.js')
+const graph = require('./graphService.js')
 
 let lunoPrices = marketService.getPrices(luno.options)
 let gdaxPrices = marketService.getPrices(gdax.options)
