@@ -11,8 +11,8 @@ function generateUrl(currencyPair: string, options: MarketOptions): string {
 }
 
 function selectFirst10Prices(pair: string, response: object): object {
-	let asks = response['data']['asks'].slice(0, 10)
-	let bids = response['data']['asks'].slice(0, 10)
+	let asks = response['data']['asks'].slice(0, 1)
+	let bids = response['data']['asks'].slice(0, 1)
 
 	if (asks.length == 0 || bids.length == 0) { return null }
 	let obj = {}
