@@ -27,7 +27,7 @@
     "async": "^3.2.0",
     "axios": "^0.18.0",
     "bottleneck": "^2.5.1",
-    "graph-data-structure": "^1.8.0",
+    "graph-data-structure": "^1.12.1",
     "rewire": "^5.0.0"
   }
 }

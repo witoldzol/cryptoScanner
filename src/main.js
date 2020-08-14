@@ -3,15 +3,16 @@ const binance = require('./binance.js')
 const gdax = require('./gdax.js')
 const marketService = require('./marketService.js')
 const util = require('./util')
-const graph = require('./graphService.js')
+const graphService = require('./graphService.js')
+import MyGraph from './bellmanFord'
 
 let lunoPrices = marketService.getPrices(luno.options)
 let gdaxPrices = marketService.getPrices(gdax.options)
 let binancePrices = marketService.getPrices(binance.options)
 
 Promise.all([lunoPrices, gdaxPrices, binancePrices])
-    .then(data => { console.log(' MAIN \n' + JSON.stringify(data)); return data })
     .then(data => util.mapDataToObject(data))
-    // .then(data => { console.log(' MAIN \n' + JSON.stringify(data)); return data })
-    .then(data => graph.buildGraph(data))
+    .then(data => { console.log(' MAIN \n' + JSON.stringify(data)); return data })
+    .then(data => graphService.buildGraph(data))
     .catch(e => console.log('error from main pricess ALL.Promise: ' + e.stack))
+

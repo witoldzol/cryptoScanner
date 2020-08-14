@@ -1,5 +1,4 @@
-// import graph = require('graph-data-structure')
-import graph = require('../src/graph-structure')
+import graph = require('graph-data-structure')
 import { AsksBids, MarketRates, MarketData } from './models/MarketData'
 
 // transaction rates for all markets
@@ -65,13 +64,13 @@ let createEdges = (graph, pair: string, values: AsksBids, marketName: string): v
 	//create edge with PAIR1,PAIR2,PROPERTIES [amount,volume,market name]
 	//BID - we sell pair 1
 	graph.addEdge(pairOne(pair), pairTwo(pair), calculateEdgeValues(getBidsFirstElement(values), marketName, 'bid'))
-	//ASK - we buy 
+	//ASK - we buy
 	graph.addEdge(pairTwo(pair), pairOne(pair), calculateEdgeValues(getAsksFirstElement(values), marketName, 'ask'))
 }
 
 // add root node to graph
 // it has distance = 0 to all other nodes
-// necessary for bellman-ford algo to work 
+// necessary for bellman-ford algo to work
 // we are looking for cycles ie. paths that start & end at the same node = root
 let addRoot = graph => {
 	graph.topologicalSort().map((currencyNode: string) => {
@@ -92,8 +91,7 @@ function buildGraph(data: MarketData) {
 		})
 
 	addRoot(GRAPH)
-	return GRAPH.bellmanFord()
+	// return GRAPH.bellmanFord()
 }
 
 export { buildGraph }
-

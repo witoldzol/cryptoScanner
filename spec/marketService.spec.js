@@ -59,7 +59,7 @@ describe('Market Service', () => {
         let result = selectFirst10Prices(pair, response)
 
         expect(result.hasOwnProperty(pair)).toBe(true)
-        expect(result[pair]['asks'].length).toBe(10)
-        expect(result[pair]['bids'].length).toBe(10)
+        expect(result[pair]['asks'].length).toBe(1)
+        expect(result[pair]['bids'].length).toBe(1)
     })
 })
