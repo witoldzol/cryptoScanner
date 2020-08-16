@@ -1,5 +1,3 @@
-// ======================================== ALGO ==============================
-
 function bellmanFord(source='rot', destination='BTC') {
 				
 	const getCurrency1 = pair=>pair.substring(0,3)
