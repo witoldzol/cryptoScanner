@@ -4,7 +4,6 @@ const gdax = require('./gdax.js')
 const marketService = require('./marketService.js')
 const util = require('./util')
 const graphService = require('./graphService.js')
-import MyGraph from './bellmanFord'
 
 let lunoPrices = marketService.getPrices(luno.options)
 let gdaxPrices = marketService.getPrices(gdax.options)
