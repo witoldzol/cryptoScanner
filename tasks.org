@@ -1,3 +1,5 @@
 #+TITLE: crypto-scanner tasks
-* TODO Rename files & reformat styles
+* DONE Rename files & reformat styles
 Use prettier default settings to reformat files
+* STRT Refactor graph service
+Break up big functions into smaller chunks & test them

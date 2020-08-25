@@ -1,6 +1,5 @@
 import Graph = require("../src/graph-library");
 import { AsksBids, MarketRates, MarketData } from "./models/MarketData";
-
 interface EdgeValues {
   priceToLogAndNegative: number;
   priceWithFees: number;
@@ -10,7 +9,9 @@ interface EdgeValues {
 }
 
 class GraphService {
-  constructor() {}
+  constructor(private graph) {
+    this.graph = Graph();
+  }
 
   getOneOverValue(value: number): number {
     return 1 / value;
@@ -45,7 +46,7 @@ class GraphService {
     const MARKET_FEES: MarketRates = {
       luno: 1,
       binance: 0.1,
-      gdax: 0.5,
+      gdax: 0.5
     };
     let priceWithFee;
     marketName = marketName.toLocaleLowerCase();
@@ -86,7 +87,7 @@ class GraphService {
       priceWithFees: null,
       volume: null,
       marketName: null,
-      askOrBid: null,
+      askOrBid: null
     };
 
     const price = +arrWithPriceAndVolume[0];
@@ -112,16 +113,18 @@ class GraphService {
     return edgeValues;
   }
 
-  addRoot(graph) {
-    graph.topologicalSort().map((currencyNode: string) => {
-      graph.addEdge("ROOT_NODE", currencyNode, [0, 0, "ROOT_NODE", "ask"]);
+  addEdgesToRoot() {
+    this.graph.topologicalSort().map((node: string) => {
+      // edges are created for the purpose of bellman ford algo
+      // we add ask only (buying) because we 'leave' the root/source towards other nodes
+      this.graph.addEdge("ROOT_NODE", node, [0, 0, "ROOT_NODE", "ask"]);
     });
-    return graph;
   }
-  createEdges(graph, pair: string, values: AsksBids, marketName: string): any {
-    //create edge with PAIR1,PAIR2,PROPERTIES [amount,volume,market name]
+
+  createBidEdge(pair: string, values: AsksBids, marketName: string): void {
+    // create edge with PAIR1,PAIR2,PROPERTIES [amount,volume,market name]
     //BID - we sell pair 1
-    graph.addEdge(
+    this.graph.addEdge(
       this.pairOne(pair),
       this.pairTwo(pair),
       this.calculateEdgeValues(
@@ -130,8 +133,11 @@ class GraphService {
         "bid"
       )
     );
+  }
+
+  createAskEdge(pair: string, values: AsksBids, marketName: string): void {
     //ASK - we buy
-    graph.addEdge(
+    this.graph.addEdge(
       this.pairTwo(pair),
       this.pairOne(pair),
       this.calculateEdgeValues(
@@ -140,26 +146,19 @@ class GraphService {
         "ask"
       )
     );
-    return graph;
   }
 
-  buildGraph(data: MarketData) {
-    let graph = Graph();
-
+  populateGraph(data: MarketData): any {
     Object.keys(data).forEach((marketName: string) => {
       //iterate over currencies in the market
       Object.keys(data[marketName]).forEach((pair: string) => {
-        graph = this.createEdges(
-          graph,
-          pair,
-          data[marketName][pair],
-          marketName
-        );
+        this.createBidEdge(pair, data[marketName][pair], marketName);
+        this.createAskEdge(pair, data[marketName][pair], marketName);
       });
     });
 
-    graph = this.addRoot(graph);
-    return graph;
+    this.addEdgesToRoot();
+    return this.graph;
   }
 }
 export { GraphService };
