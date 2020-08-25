@@ -21,7 +21,10 @@ function Graph(serialized) {
     serialize: serialize,
     deserialize: deserialize,
     getEdges: getEdges,
+    negativeCycles: negativeCycles,
   };
+
+  function negativeCycles() {}
   // The adjacency list of the graph.
   // Keys are node ids.
   // Values are adjacent node id arrays.
@@ -343,4 +346,4 @@ function Graph(serialized) {
   // The returned graph instance.
   return graph;
 }
-module.exports = Graph;
+export default Graph;

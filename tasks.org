@@ -1,5 +1,6 @@
 #+TITLE: crypto-scanner tasks
 * DONE Rename files & reformat styles
 Use prettier default settings to reformat files
-* STRT Refactor graph service
+* DONE Refactor graph service
 Break up big functions into smaller chunks & test them
+* STRT implement-bellman-ford-algorithm

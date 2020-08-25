@@ -1,4 +1,4 @@
-import Graph = require("../src/graph-library");
+import Graph from "../src/graph-library";
 import { AsksBids, MarketRates, MarketData } from "./models/MarketData";
 interface EdgeValues {
   priceToLogAndNegative: number;
