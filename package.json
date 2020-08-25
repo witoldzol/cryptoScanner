@@ -5,7 +5,7 @@
   "main": "main.js",
   "scripts": {
     "start": "node ./built/main.js",
-    "test": "jasmine"
+    "test": "ts-node node_modules/jasmine/bin/jasmine --config=jasmine.json"
   },
   "repository": {
     "type": "git",
@@ -19,13 +19,16 @@
   "homepage": "https://github.com/witoldzol/CryptoScanner#readme",
   "devDependencies": {
     "@types/async": "^3.2.3",
+    "@types/jasmine": "^3.5.13",
     "eslint": "^5.0.1",
-    "jasmine": "^3.5.0"
+    "jasmine": "^3.5.0",
+    "ts-node": "^9.0.0"
   },
   "dependencies": {
     "async": "^3.2.0",
     "axios": "^0.18.0",
     "bottleneck": "^2.5.1",
-    "rewire": "^5.0.0"
+    "rewire": "^5.0.0",
+    "typescript": "^4.0.2"
   }
 }

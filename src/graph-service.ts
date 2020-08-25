@@ -9,7 +9,8 @@ interface EdgeValues {
 }
 
 class GraphService {
-  constructor(private graph) {
+  private graph;
+  constructor() {
     this.graph = Graph();
   }
 
@@ -46,7 +47,7 @@ class GraphService {
     const MARKET_FEES: MarketRates = {
       luno: 1,
       binance: 0.1,
-      gdax: 0.5
+      gdax: 0.5,
     };
     let priceWithFee;
     marketName = marketName.toLocaleLowerCase();
@@ -87,7 +88,7 @@ class GraphService {
       priceWithFees: null,
       volume: null,
       marketName: null,
-      askOrBid: null
+      askOrBid: null,
     };
 
     const price = +arrWithPriceAndVolume[0];
