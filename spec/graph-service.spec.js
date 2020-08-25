@@ -117,7 +117,7 @@ describe("GraphService", () => {
     });
   });
 
-  describe("#buildGraph", () => {
+  describe("#populateGraph", () => {
     it("creates a valid graph", () => {
       let data = {
         LUNO: {
@@ -140,7 +140,7 @@ describe("GraphService", () => {
         },
       };
 
-      const graph = service.buildGraph(data);
+      const graph = service.populateGraph(data);
 
       expect(graph.nodes().length).toBe(5);
       expect(graph.adjacent("BTC").length).toBe(3);
