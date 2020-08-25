@@ -1,0 +1,3 @@
+#+TITLE: crypto-scanner tasks
+* TODO Rename files & reformat styles
+Use prettier default settings to reformat files
