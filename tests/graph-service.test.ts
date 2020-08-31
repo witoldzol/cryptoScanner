@@ -1,4 +1,4 @@
-const { GraphService } = require("../built/graph-service");
+import { GraphService } from "../src/graph-service";
 
 describe("GraphService", () => {
   let service;
@@ -99,9 +99,9 @@ describe("GraphService", () => {
     it("it calculates correct values", () => {
       spyOn(service, "transactionCostAdjustment").and.returnValue(333);
 
-      arrWithPriceAndVolume = [10, 2];
-      marketName = "luno";
-      askOrBid = "ask";
+      let arrWithPriceAndVolume = [10, 2];
+      let marketName = "luno";
+      let askOrBid = "ask";
 
       let expectedValue = {
         priceToLogAndNegative: -5.808142489980444,
