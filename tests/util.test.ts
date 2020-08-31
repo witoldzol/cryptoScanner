@@ -1,4 +1,4 @@
-const util = require("../built/util");
+import util = require("../src/util");
 
 describe("Util", () => {
   it("mapDataToObject assigns properties to target object", () => {
@@ -35,7 +35,7 @@ describe("Util", () => {
         bids: [["0.00501000", "50.51000000"]],
       },
     };
-    noDashData = util.removeSpecialChars(data);
+    let noDashData = util.removeSpecialChars(data);
 
     expect(noDashData.hasOwnProperty("ETHBTC")).toBe(true);
     expect(noDashData.hasOwnProperty("ETH-BTC")).toBe(false);
@@ -176,7 +176,7 @@ describe("Util", () => {
         ],
       },
     };
-    noDashData = util.updateObjectKeys(data, "XBT", "BTC");
+    let noDashData = util.updateObjectKeys(data, "XBT", "BTC");
 
     expect(noDashData.hasOwnProperty("BTCIDR")).toBe(true);
     expect(noDashData.hasOwnProperty("XBTIDR")).toBe(false);

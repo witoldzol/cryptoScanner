@@ -5,8 +5,9 @@ interface LunoAskOrBid {
 
 function mapDataToObject(data: object[]) {
   let objectWithCombinedData = {};
-  // @ts-ignore
   return data.map((sourceOfData) =>
+    // issue with Object.assign -> solution
+    // https://stackoverflow.com/questions/35959372/property-assign-does-not-exist-on-type-objectconstructor
     Object.assign(objectWithCombinedData, sourceOfData)
   )[0];
 }
