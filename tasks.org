@@ -5,5 +5,9 @@ Use prettier default settings to reformat files
 * TODO update comments
 once we relax edges n-1 times, there shouold be no changes for consquitive relaxations
 if we relax one more time && distance updates, that means we have a negative cycle
-
 once we know we have a negative cycle, we can plot & calculate the path
+* TODO figure out what we use as 'distance' in bellman ford
+is it the price? adjusted price?
+* TODO how do we normalize prices?
+create a sample drawn graph that explains the mechanics so that when we forget again how this works
+we will have an easy reminder
