@@ -2,3 +2,8 @@
 * DONE Rename files & reformat styles
 Use prettier default settings to reformat files
 * DONE Rp
+* TODO update comments
+once we relax edges n-1 times, there shouold be no changes for consquitive relaxations
+if we relax one more time && distance updates, that means we have a negative cycle
+
+once we know we have a negative cycle, we can plot & calculate the path
