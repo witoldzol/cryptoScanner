@@ -1,5 +1,5 @@
 // library from https://github.com/datavis-tech/graph-data-structure
-"use strict";
+("use strict");
 // A graph data structure with depth-first search and topological sort.
 function Graph(serialized) {
   // Returned graph instance
@@ -21,11 +21,92 @@ function Graph(serialized) {
     serialize: serialize,
     deserialize: deserialize,
     getEdges: getEdges,
+    findNegativeCycles: findNegativeCycles,
   };
   // The adjacency list of the graph.
   // Keys are node ids.
   // Values are adjacent node id arrays.
   var edges = {};
+
+  function getFirstCurrencyPair(pair) {
+    return pair.substring(0, 3);
+  }
+
+  function getSecondCurrencyPair(pair) {
+    return pair.substring(3, 6);
+  }
+
+  // ROT == ROOT NODE, we use 3 letters in order to match format of other nodes
+  function findNegativeCycles(source = "ROT", destination = "BTC") {
+    // upper bounds for shortest path weight from source
+    let d = {};
+    //predecessors
+    let p = {};
+
+    function initializeSingleSource() {
+      nodes().forEach(function (node) {
+        d[node] = Infinity;
+      });
+      if (d[source] !== Infinity) {
+        throw new Error("Source node is not in the graph");
+      }
+      if (d[destination] !== Infinity) {
+        throw new Error("Destination node is not in the graph");
+      }
+      d[source] = 0;
+    }
+
+    function relax(u, v) {
+      var w = getEdgeWeight(u, v)[0];
+      console.log("weight", w);
+      if (d[v] > d[u] + w) {
+        d[v] = d[u] + w;
+        p[v] = u;
+      }
+    }
+
+    function relaxAllEdges() {
+      // after N-1 relaxations MAX, there should be NO further improvements
+      // UNLESS there is a 'negative' cycle
+      let iterations = nodes().length - 1;
+      for (var i = 0; i < iterations; i++) {
+        for (edge in edges) {
+          console.log(getFirstCurrencyPair(edge));
+          relax(getFirstCurrencyPair(edge), getSecondCurrencyPair(edge));
+        }
+      }
+    }
+
+    // if distances 'd' still update after N-1 relaxations
+    // we have found a negative cycle
+    function returnNegativeCycles() {
+      let arbitrage = false;
+      let negativeCycles = {};
+      console.log(edges);
+      for (firstCurrency in edges) {
+        for (secondCurrency of edges[firstCurrency]) {
+          console.log("second", secondCurrency, firstCurrency);
+          let weight = getEdgeWeight(firstCurrency, secondCurrency)
+            .priceWithFees;
+          if (d[secondCurrency] > d[firstCurrency] + weight) {
+            arbitrage = true;
+            d[secondCurrency] = d[firstCurrency] + weight;
+            negativeCycles[secondCurrency] = true;
+          }
+        }
+      }
+
+      if (!arbitrage) {
+        console.log("NO ARBITRAGE OPPORTUNITY FOUND");
+      }
+      console.log("distances", d);
+      return negativeCycles;
+    }
+
+    initializeSingleSource();
+    relaxAllEdges();
+    return returnNegativeCycles();
+  }
 
   function getEdges() {
     return edges;
@@ -84,6 +165,7 @@ function Graph(serialized) {
   }
   // Sets the weight of the given edge.
   function setEdgeWeight(u, v, weight) {
+    console.log("weight", weight);
     edgeWeights[encodeEdge(u, v)] = weight;
     return graph;
   }
@@ -343,4 +425,5 @@ function Graph(serialized) {
   // The returned graph instance.
   return graph;
 }
+
 module.exports = Graph;

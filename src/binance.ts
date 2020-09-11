@@ -11,7 +11,7 @@ function formatData(data: object[]): MarketData {
   return util.wrapDataInObjectWithMarketName(combinedData, this.marketName);
 }
 
-const options: MarketOptions = {
+const binanceOptions: MarketOptions = {
   marketName: "BINANCE",
   baseURL: "https://api.binance.com/api/v1",
   urlPath: ["/depth?limit=10&symbol=", ""],
@@ -20,4 +20,4 @@ const options: MarketOptions = {
   formatData: formatData,
 };
 
-export { options };
+export { binanceOptions };

@@ -11,7 +11,7 @@ function formatData(data: object[]): MarketData {
   return util.wrapDataInObjectWithMarketName(combinedData, this.marketName);
 }
 
-const options: MarketOptions = {
+const gdaxOptions: MarketOptions = {
   marketName: "GDAX",
   baseURL: "https://api.pro.coinbase.com",
   urlPath: ["/products/", "/book?level=2"],
@@ -20,4 +20,4 @@ const options: MarketOptions = {
   formatData: formatData,
 };
 
-export { options };
+export { gdaxOptions };

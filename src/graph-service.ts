@@ -1,12 +1,6 @@
 import Graph = require("../src/graph-library");
 import { AsksBids, MarketRates, MarketData } from "./models/MarketData";
-interface EdgeValues {
-  priceToLogAndNegative: number;
-  priceWithFees: number;
-  volume: number;
-  marketName: string;
-  askOrBid: string;
-}
+import { EdgeValues } from "./models/EdgeValues";
 
 class GraphService {
   private graph;
@@ -118,7 +112,14 @@ class GraphService {
     this.graph.topologicalSort().map((node: string) => {
       // edges are created for the purpose of bellman ford algo
       // we add ask only (buying) because we 'leave' the root/source towards other nodes
-      this.graph.addEdge("ROOT_NODE", node, [0, 0, "ROOT_NODE", "ask"]);
+      const rootEdge: EdgeValues = {
+        priceToLogAndNegative: 0,
+        priceWithFees: 0,
+        volume: 0,
+        marketName: "ROT",
+        askOrBid: "ask",
+      };
+      this.graph.addEdge("ROT", node, rootEdge);
     });
   }
 

@@ -22,7 +22,7 @@ function formatData(data: object[]): MarketData {
   return wrapper;
 }
 
-const options: MarketOptions = {
+const lunoOptions: MarketOptions = {
   marketName: "LUNO",
   baseURL: "https://api.mybitx.com/api/1",
   urlPath: ["/orderbook?pair=", ""],
@@ -31,4 +31,4 @@ const options: MarketOptions = {
   formatData: formatData,
 };
 
-export { options };
+export { lunoOptions };
