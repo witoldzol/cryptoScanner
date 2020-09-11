@@ -58,7 +58,6 @@ function Graph(serialized) {
 
     function relax(u, v) {
       var w = getEdgeWeight(u, v)[0];
-      console.log("weight", w);
       if (d[v] > d[u] + w) {
         d[v] = d[u] + w;
         p[v] = u;
@@ -71,7 +70,6 @@ function Graph(serialized) {
       let iterations = nodes().length - 1;
       for (var i = 0; i < iterations; i++) {
         for (edge in edges) {
-          console.log(getFirstCurrencyPair(edge));
           relax(getFirstCurrencyPair(edge), getSecondCurrencyPair(edge));
         }
       }
@@ -82,10 +80,8 @@ function Graph(serialized) {
     function returnNegativeCycles() {
       let arbitrage = false;
       let negativeCycles = {};
-      console.log(edges);
       for (firstCurrency in edges) {
         for (secondCurrency of edges[firstCurrency]) {
-          console.log("second", secondCurrency, firstCurrency);
           let weight = getEdgeWeight(firstCurrency, secondCurrency)
             .priceWithFees;
           if (d[secondCurrency] > d[firstCurrency] + weight) {
@@ -99,7 +95,6 @@ function Graph(serialized) {
       if (!arbitrage) {
         console.log("NO ARBITRAGE OPPORTUNITY FOUND");
       }
-      console.log("distances", d);
       return negativeCycles;
     }
 
@@ -165,7 +160,6 @@ function Graph(serialized) {
   }
   // Sets the weight of the given edge.
   function setEdgeWeight(u, v, weight) {
-    console.log("weight", weight);
     edgeWeights[encodeEdge(u, v)] = weight;
     return graph;
   }

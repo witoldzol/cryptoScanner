@@ -4,7 +4,7 @@
   "description": "scanner for crypto arbitrage",
   "main": "main.js",
   "scripts": {
-    "start": "node ./built/main.js",
+    "start": "node ./built/src/main.js",
     "test": "ts-node node_modules/jasmine/bin/jasmine --config=jasmine.json"
   },
   "repository": {

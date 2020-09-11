@@ -19,4 +19,5 @@ Promise.all([lunoPrices, gdaxPrices, binancePrices])
   })
   .then((data) => graphService.populateGraph(data))
   .then((graph) => graph.findNegativeCycles())
+  .then((result) => console.log(result))
   .catch((e) => console.log("error from main pricess ALL.Promise: " + e.stack));
