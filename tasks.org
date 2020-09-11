@@ -2,12 +2,137 @@
 * DONE Rename files & reformat styles
 Use prettier default settings to reformat files
 * DONE Rp
-* TODO update comments
+* DONE Refactor graph service
+* DONE rework tests as typescrip
+* DONE update comments
 once we relax edges n-1 times, there shouold be no changes for consquitive relaxations
 if we relax one more time && distance updates, that means we have a negative cycle
 once we know we have a negative cycle, we can plot & calculate the path
-* TODO figure out what we use as 'distance' in bellman ford
-is it the price? adjusted price?
-* TODO how do we normalize prices?
-create a sample drawn graph that explains the mechanics so that when we forget again how this works
-we will have an easy reminder
+* DONE iterating over edges duplicates the calls
+- BTCETH
+  BTCETH
+  ETHBTC
+  ETHBTC
+
+  answer: this is because we craete 2 edges per pair
+  : bid edge
+  : ask edge
+* DONE RESEARCH: article about arbitrage & why we need to use negative & log values of exchange rates
+https://reasonabledeviations.com/2019/03/02/currency-arbitrage-graphs/
+
+: TLDR
+BellmanFord works by ADDING weights, which doesn't apply to exchange rates
+Why?
+Exchange rates have to be multiplied
+Example:
+BTCETH has rates  0.03/0.025
+if we have one ETH and convert it to BTC, we will get
+1 * 0.03 = 0.03
+when we convert back
+0.025/0.03 = 0.83333
+(we just lost money)
+
+** if we take a natural log of rates, addition will be the same as multiplication of original values
+ln = log e (natural log)
+
+Example:
+ln(0.03) = −3.506557897
+ln(0.025) = −3.688879454
+sum = -7.1955
+e^-7.1955 = 0.000749953
+0.03*0.025 = 0.00075
+close enough!
+
+** we multiply ln values by -1, because BF algo looks for shortest path
+In arbitrage we look to end up with MORE than we started with
+BF algo looks for the SHORTEST path ie. the lowest value
+If we invert edge values, we can use BF and end up finding the same thing!
+
+* STRT updated tasks and how to implement algorithm
+* TODO #graph-service collapse all edges/markets/ to 'best value' bids & asks
+best value for Asks -> lower is better
+best value for Bids => higher is better
+* TODO #graph-service implement correct edge direction
+Exmple for BTCETH
+Asks BTC->ETH
+Bids BTC<-ETH
+* TODO #graph-service calculate edge weight as negative ln
+ASKS have to be divided by 1/ask & then ln * (-1)
+BIDS ln * (-1)
+* TODO #graph-service remove root node from graph service
+https://medium.com/@anilpai/currency-arbitrage-using-bellman-ford-algorithm-8938dcea56ea
+
+: TLDR
+we don't need a root node, just pick any node & set it's distance to 0 ( this will be our source node )
+
+sample implementation in python:
+#+BEGIN_SRC python
+from typing import Tuple, List
+from math import log
+
+rates = [
+    [1, 0.23, 0.25, 16.43, 18.21, 4.94],
+    [4.34, 1, 1.11, 71.40, 79.09, 21.44],
+    [3.93, 0.90, 1, 64.52, 71.48, 19.37],
+    [0.061, 0.014, 0.015, 1, 1.11, 0.30],
+    [0.055, 0.013, 0.014, 0.90, 1, 0.27],
+    [0.20, 0.047, 0.052, 3.33, 3.69, 1],
+]
+
+currencies = ('PLN', 'EUR', 'USD', 'RUB', 'INR', 'MXN')
+
+
+def negate_logarithm_convertor(graph: Tuple[Tuple[float]]) -> List[List[float]]:
+    ''' log of each rate in graph and negate it'''
+    result = [[-log(edge) for edge in row] for row in graph]
+    return result
+
+
+def arbitrage(currency_tuple: tuple, rates_matrix: Tuple[Tuple[float, ...]]):
+    ''' Calculates arbitrage situations and prints out the details of this calculations'''
+
+    trans_graph = negate_logarithm_convertor(rates_matrix)
+
+    # Pick any source vertex -- we can run Bellman-Ford from any vertex and get the right result
+
+    source = 0
+    n = len(trans_graph)
+    min_dist = [float('inf')] * n
+
+    pre = [-1] * n
+
+    min_dist[source] = source
+
+    # 'Relax edges |V-1| times'
+    for _ in range(n-1):
+        for source_curr in range(n):
+            for dest_curr in range(n):
+                if min_dist[dest_curr] > min_dist[source_curr] + trans_graph[source_curr][dest_curr]:
+                    min_dist[dest_curr] = min_dist[source_curr] + trans_graph[source_curr][dest_curr]
+                    pre[dest_curr] = source_curr
+
+    # if we can still relax edges, then we have a negative cycle
+    for source_curr in range(n):
+        for dest_curr in range(n):
+            if min_dist[dest_curr] > min_dist[source_curr] + trans_graph[source_curr][dest_curr]:
+                # negative cycle exists, and use the predecessor chain to print the cycle
+                print_cycle = [dest_curr, source_curr]
+                # Start from the source and go backwards until you see the source vertex again or any vertex that already exists in print_cycle array
+                while pre[source_curr] not in  print_cycle:
+                    print_cycle.append(pre[source_curr])
+                    source_curr = pre[source_curr]
+                print_cycle.append(pre[source_curr])
+                print("Arbitrage Opportunity: \n")
+                print(" --> ".join([currencies[p] for p in print_cycle[::-1]]))
+
+
+if __name__ == "__main__":
+    arbitrage(currencies, rates)
+
+# Time Complexity: O(N^3)
+# Space Complexity: O(N^2)
+#+END_SRC
+
+* TODO #graph-service filter out less then best rates when creating edge between two nodes
+Asks -> lower is best
+Bids -> highest is best
