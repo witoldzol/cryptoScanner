@@ -48,11 +48,8 @@ In arbitrage we look to end up with MORE than we started with
 BF algo looks for the SHORTEST path ie. the lowest value
 If we invert edge values, we can use BF and end up finding the same thing!
 
-* STRT updated tasks and how to implement algorithm
-* TODO #graph-service collapse all edges/markets/ to 'best value' bids & asks
-best value for Asks -> lower is better
-best value for Bids => higher is better
-* TODO #graph-service implement correct edge direction
+* DONE updated tasks and how to implement algorithm
+* STRT #graph-service implement correct edge direction
 Exmple for BTCETH
 Asks BTC->ETH
 Bids BTC<-ETH
@@ -136,3 +133,7 @@ if __name__ == "__main__":
 * TODO #graph-service filter out less then best rates when creating edge between two nodes
 Asks -> lower is best
 Bids -> highest is best
+
+* TODO #edgeValues remove-ask-bid-information-from-weight
+it is irrelevant, direction of the edges is easier way to handle weight
+remove all logic associated with bid/ask - its convoluted and unnecessary

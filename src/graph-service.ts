@@ -123,12 +123,12 @@ class GraphService {
     });
   }
 
+  // bid is a reversal of order of transaction
+  // BTCETH -> bid -> we sell ETH for BTC, edge direction is BTC <-- ETH
   createBidEdge(pair: string, values: AsksBids, marketName: string): void {
-    // create edge with PAIR1,PAIR2,PROPERTIES [amount,volume,market name]
-    //BID - we sell pair 1
     this.graph.addEdge(
-      this.pairOne(pair),
       this.pairTwo(pair),
+      this.pairOne(pair),
       this.calculateEdgeValues(
         this.getBidsFirstElement(values),
         marketName,
@@ -137,11 +137,13 @@ class GraphService {
     );
   }
 
+  // ask
+  // BTCETH -> ask -> we buy ETH for BTC, edge direction is BTC --> ETH
   createAskEdge(pair: string, values: AsksBids, marketName: string): void {
     //ASK - we buy
     this.graph.addEdge(
-      this.pairTwo(pair),
       this.pairOne(pair),
+      this.pairTwo(pair),
       this.calculateEdgeValues(
         this.getAsksFirstElement(values),
         marketName,
