@@ -105,20 +105,6 @@ class GraphService {
     return edgeValues;
   }
 
-  addEdgesToRoot() {
-    this.graph.topologicalSort().map((node: string) => {
-      // edges are created for the purpose of bellman ford algo
-      // we add ask only (buying) because we 'leave' the root/source towards other nodes
-      const rootEdge: EdgeValues = {
-        priceToLogAndNegative: 0,
-        volume: 0,
-        marketName: "ROT",
-        askOrBid: "ask",
-      };
-      this.graph.addEdge("ROT", node, rootEdge);
-    });
-  }
-
   // bid is a reversal of order of transaction
   // BTCETH -> bid -> we sell ETH for BTC, edge direction is BTC <-- ETH
   createBidEdge(pair: string, values: AsksBids, marketName: string): void {
@@ -157,7 +143,6 @@ class GraphService {
       });
     });
 
-    this.addEdgesToRoot();
     return this.graph;
   }
 }

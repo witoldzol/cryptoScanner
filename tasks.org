@@ -49,14 +49,14 @@ BF algo looks for the SHORTEST path ie. the lowest value
 If we invert edge values, we can use BF and end up finding the same thing!
 
 * DONE updated tasks and how to implement algorithm
-* STRT #graph-service implement correct edge direction
+* DONE #graph-service implement correct edge direction
 Exmple for BTCETH
 Asks BTC->ETH
 Bids BTC<-ETH
-* TODO #graph-service calculate edge weight as negative ln
+* DONE #graph-service calculate-edge-weight-as-negative-natural-log
 ASKS have to be divided by 1/ask & then ln * (-1)
 BIDS ln * (-1)
-* TODO #graph-service remove root node from graph service
+* TODO #graph-service remove-root-node-from-graph-service
 https://medium.com/@anilpai/currency-arbitrage-using-bellman-ford-algorithm-8938dcea56ea
 
 : TLDR
