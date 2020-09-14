@@ -78,10 +78,9 @@ class GraphService {
     askOrBid: string
   ): EdgeValues {
     let edgeValues = {
-      priceToLogAndNegative: null,
+      price: null,
       volume: null,
       marketName: null,
-      askOrBid: null,
     };
 
     const price = +arrWithPriceAndVolume[0];
@@ -97,10 +96,9 @@ class GraphService {
       this.valueToLog(priceWithFees)
     );
 
-    edgeValues.priceToLogAndNegative = priceToLogToNegative;
+    edgeValues.price = priceToLogToNegative;
     edgeValues.volume = volume;
     edgeValues.marketName = marketName;
-    edgeValues.askOrBid = askOrBid;
 
     return edgeValues;
   }

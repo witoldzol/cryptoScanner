@@ -1,6 +1,5 @@
 export interface EdgeValues {
-  priceToLogAndNegative: number;
+  price: number;
   volume: number;
   marketName: string;
-  askOrBid: string;
 }
