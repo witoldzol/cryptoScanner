@@ -105,7 +105,6 @@ describe("GraphService", () => {
 
       let expectedValue = {
         priceToLogAndNegative: -5.808142489980444,
-        priceWithFees: 333,
         volume: 2,
         marketName: marketName,
         askOrBid: askOrBid,

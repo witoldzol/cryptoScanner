@@ -79,7 +79,6 @@ class GraphService {
   ): EdgeValues {
     let edgeValues = {
       priceToLogAndNegative: null,
-      priceWithFees: null,
       volume: null,
       marketName: null,
       askOrBid: null,
@@ -98,8 +97,6 @@ class GraphService {
       this.valueToLog(priceWithFees)
     );
 
-    // TODO: do we need both normalisedRate && adjustedRateForMarketFee??
-    edgeValues.priceWithFees = priceWithFees;
     edgeValues.priceToLogAndNegative = priceToLogToNegative;
     edgeValues.volume = volume;
     edgeValues.marketName = marketName;
@@ -114,7 +111,6 @@ class GraphService {
       // we add ask only (buying) because we 'leave' the root/source towards other nodes
       const rootEdge: EdgeValues = {
         priceToLogAndNegative: 0,
-        priceWithFees: 0,
         volume: 0,
         marketName: "ROT",
         askOrBid: "ask",
