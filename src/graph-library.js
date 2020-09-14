@@ -36,8 +36,7 @@ function Graph(serialized) {
     return pair.substring(3, 6);
   }
 
-  // ROT == ROOT NODE, we use 3 letters in order to match format of other nodes
-  function findNegativeCycles(source = "ROT", destination = "BTC") {
+  function findNegativeCycles(source = "BTC") {
     // upper bounds for shortest path weight from source
     let d = {};
     //predecessors
@@ -47,12 +46,6 @@ function Graph(serialized) {
       nodes().forEach(function (node) {
         d[node] = Infinity;
       });
-      if (d[source] !== Infinity) {
-        throw new Error("Source node is not in the graph");
-      }
-      if (d[destination] !== Infinity) {
-        throw new Error("Destination node is not in the graph");
-      }
       d[source] = 0;
     }
 
