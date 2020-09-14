@@ -104,10 +104,9 @@ describe("GraphService", () => {
       let askOrBid = "ask";
 
       let expectedValue = {
-        priceToLogAndNegative: -5.808142489980444,
+        price: -5.808142489980444,
         volume: 2,
         marketName: marketName,
-        askOrBid: askOrBid,
       };
 
       expect(
@@ -141,7 +140,7 @@ describe("GraphService", () => {
 
       const graph = service.populateGraph(data);
 
-      expect(graph.nodes().length).toBe(5);
+      expect(graph.nodes().length).toBe(4);
       expect(graph.adjacent("BTC").length).toBe(3);
     });
   });
