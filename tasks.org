@@ -56,7 +56,7 @@ Bids BTC<-ETH
 * DONE #graph-service calculate-edge-weight-as-negative-natural-log
 ASKS have to be divided by 1/ask & then ln * (-1)
 BIDS ln * (-1)
-* TODO #graph-service remove-root-node-from-graph-service
+* DONE #graph-service remove-root-node-from-graph-service
 https://medium.com/@anilpai/currency-arbitrage-using-bellman-ford-algorithm-8938dcea56ea
 
 : TLDR
@@ -130,10 +130,19 @@ if __name__ == "__main__":
 # Space Complexity: O(N^2)
 #+END_SRC
 
-* TODO #graph-service filter out less then best rates when creating edge between two nodes
-Asks -> lower is best
-Bids -> highest is best
-
-* TODO #edgeValues remove-ask-bid-information-from-weight
+* DONE #edgeValues remove-ask-bid-information-from-weight
 it is irrelevant, direction of the edges is easier way to handle weight
 remove all logic associated with bid/ask - its convoluted and unnecessary
+* WAIT #graph-service filter-out-less-then-best-rates-when-creating-edge-between-two-nodes
+Asks -> lower is best
+Bids -> highest is best
+* STRT #graph-service calculate-prices-after-graph-is-populated
+currently we calculate negative log of price every time we iterate over data
+we should at first populate with unprocessed price value
+because when we iterate over next market that has the same edge, we want to first compare price values
+and pick better one
+if we calculate values at the end we make comparison easier, and avoid unnecessary calculations
+* TODO #graph-service #transactionCostAdjustment include-market-fees-in-edge-price-comparison
+Adjust assets price before comparing it with pre-existing edge
+* TODO #AskBid create-ask-bid-enum
+* TODO #refactor use-pure-functions

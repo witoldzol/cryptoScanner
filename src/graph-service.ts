@@ -12,19 +12,6 @@ class GraphService {
     return 1 / value;
   }
 
-  calculateAskRate(asksArray: number[]): number[] {
-    asksArray[0] = this.getOneOverValue(asksArray[0]);
-    return asksArray;
-  }
-
-  getAsksFirstElement(data: AsksBids): number[] {
-    return this.calculateAskRate(data["asks"][0]);
-  }
-
-  getBidsFirstElement(data: AsksBids): number[] {
-    return data["bids"][0];
-  }
-
   valueToNaturalLog(value: number): number {
     return Math.log(value);
   }
@@ -49,11 +36,11 @@ class GraphService {
     if (MARKET_FEES[marketName] == undefined)
       throw Error("Invalid market name");
 
-    if (transactionType === "ask") {
+    if (transactionType === "asks") {
       //increase the rate of the asset, which makes it less attrative
       priceWithFee = price * (1 + MARKET_FEES[marketName] / 100);
       return priceWithFee;
-    } else if (transactionType === "bid") {
+    } else if (transactionType === "bids") {
       //decrease the max rate at which people will pay for our asset
       priceWithFee = price * (1 - MARKET_FEES[marketName] / 100);
       return priceWithFee;
@@ -72,35 +59,30 @@ class GraphService {
     return Math.log(+value);
   }
 
-  calculateEdgeValues(
-    arrWithPriceAndVolume: number[],
-    marketName: string,
-    askOrBid: string
+  getFirstOffer(transactionType: string, data: AsksBids) {
+    if (transactionType === "asks" || transactionType === "bids") {
+      return transactionType === "asks" ? data["asks"][0] : data["bids"][0];
+    }
+
+    throw Error("Invalid transaction type");
+  }
+
+  createEdgeValues(
+    transactionType: string,
+    data: AsksBids,
+    marketName: string
   ): EdgeValues {
-    let edgeValues = {
-      price: null,
-      volume: null,
-      marketName: null,
-    };
+    const firstValue = this.getFirstOffer(transactionType, data);
+    const price = +firstValue[0];
+    const volume = +firstValue[1];
+    const isAsk = transactionType === "asks";
 
-    const price = +arrWithPriceAndVolume[0];
-    const volume = +arrWithPriceAndVolume[1];
-
-    let priceWithFees: number = this.transactionCostAdjustment(
+    return {
       price,
+      volume,
       marketName,
-      askOrBid
-    );
-
-    let priceToLogToNegative = this.valueToNegative(
-      this.valueToLog(priceWithFees)
-    );
-
-    edgeValues.price = priceToLogToNegative;
-    edgeValues.volume = volume;
-    edgeValues.marketName = marketName;
-
-    return edgeValues;
+      isAsk,
+    };
   }
 
   // bid is a reversal of order of transaction
@@ -109,26 +91,18 @@ class GraphService {
     this.graph.addEdge(
       this.pairTwo(pair),
       this.pairOne(pair),
-      this.calculateEdgeValues(
-        this.getBidsFirstElement(values),
-        marketName,
-        "bid"
-      )
+      this.createEdgeValues("bids", values, marketName)
     );
   }
 
   // ask
   // BTCETH -> ask -> we buy ETH for BTC, edge direction is BTC --> ETH
   createAskEdge(pair: string, values: AsksBids, marketName: string): void {
-    //ASK - we buy
+    //ASK
     this.graph.addEdge(
       this.pairOne(pair),
       this.pairTwo(pair),
-      this.calculateEdgeValues(
-        this.getAsksFirstElement(values),
-        marketName,
-        "ask"
-      )
+      this.createEdgeValues("asks", values, marketName)
     );
   }
 
@@ -142,6 +116,23 @@ class GraphService {
     });
 
     return this.graph;
+  }
+
+  recalculateEdgeWeights(): void {
+    let edges = this.graph.getEdges();
+    for (let sourceNode in edges) {
+      for (let targetNode of edges[sourceNode]) {
+        let currentWeight = this.graph.getEdgeWeight(sourceNode, targetNode);
+        let updatedPrice = currentWeight.price;
+
+        if (currentWeight.isAsk)
+          updatedPrice = this.getOneOverValue(updatedPrice);
+
+        updatedPrice = this.valueToNaturalLog(updatedPrice);
+        updatedPrice = this.valueToNegative(updatedPrice);
+        currentWeight.price = updatedPrice;
+      }
+    }
   }
 }
 export { GraphService };
