@@ -85,30 +85,71 @@ class GraphService {
     };
   }
 
-  // bid is a reversal of order of transaction
-  // BTCETH -> bid -> we sell ETH for BTC, edge direction is BTC <-- ETH
-  createBidEdge(pair: string, values: AsksBids, marketName: string): void {
-    this.graph.addEdge(
-      this.pairTwo(pair),
-      this.pairOne(pair),
-      this.createEdgeValues("bids", values, marketName)
-    );
+  isEdgeMissing(edgeValues) {
+    // if === 1, edge doesn't exist
+    return edgeValues === 1;
   }
 
-  // ask
+  getPriceFromEdgeValues(edgeValues: EdgeValues): number {
+    return edgeValues["price"];
+  }
+
+  isPriceBetter(
+    isAsk: boolean,
+    sourceNode: string,
+    targetNode: string,
+    newPrice: number
+  ): boolean {
+    const currentEdgeValues: EdgeValues = this.graph.getEdgeWeight(
+      sourceNode,
+      targetNode
+    );
+
+    if (this.isEdgeMissing(currentEdgeValues)) return true;
+
+    const currentPrice = this.getPriceFromEdgeValues(currentEdgeValues);
+    // we want lowest possible asking price
+    if (isAsk) {
+      return +currentPrice > +newPrice;
+    }
+    // wa want highest possible bidding price
+    return +currentPrice < +newPrice;
+  }
+
+  // BID
+  // BTCETH -> bid -> we sell ETH for BTC, edge direction is BTC <-- ETH
+  createBidEdge(pair: string, values: AsksBids, marketName: string): void {
+    const [price, volume] = this.getFirstOffer("bids", values);
+    const sourceNode = this.pairTwo(pair);
+    const targetNode = this.pairOne(pair);
+
+    if (this.isPriceBetter(false, sourceNode, targetNode, price)) {
+      this.graph.addEdge(
+        sourceNode,
+        targetNode,
+        this.createEdgeValues("bids", values, marketName)
+      );
+    }
+  }
+
+  // ASK
   // BTCETH -> ask -> we buy ETH for BTC, edge direction is BTC --> ETH
   createAskEdge(pair: string, values: AsksBids, marketName: string): void {
-    //ASK
-    this.graph.addEdge(
-      this.pairOne(pair),
-      this.pairTwo(pair),
-      this.createEdgeValues("asks", values, marketName)
-    );
+    const [price, volume] = this.getFirstOffer("asks", values);
+    const sourceNode = this.pairOne(pair);
+    const targetNode = this.pairTwo(pair);
+
+    if (this.isPriceBetter(true, sourceNode, targetNode, price)) {
+      this.graph.addEdge(
+        sourceNode,
+        targetNode,
+        this.createEdgeValues("asks", values, marketName)
+      );
+    }
   }
 
   populateGraph(data: MarketData): any {
     Object.keys(data).forEach((marketName: string) => {
-      //iterate over currencies in the market
       Object.keys(data[marketName]).forEach((pair: string) => {
         this.createBidEdge(pair, data[marketName][pair], marketName);
         this.createAskEdge(pair, data[marketName][pair], marketName);

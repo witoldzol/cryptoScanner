@@ -99,6 +99,64 @@ describe("GraphService", () => {
         service.getFirstOffer("bla", { asks: [1, 1], bids: [2, 2] });
       }).toThrowError("Invalid transaction type");
     });
+
+    it("#createBidEdge replace edge if the price is better", () => {
+      data = {
+        LUNO: {
+          AAABBB: {
+            asks: [["18", "2"]],
+            bids: [["12", "3"]],
+          },
+        },
+        BINANCE: {
+          AAABBB: {
+            asks: [["15", "2"]],
+            bids: [["13", "3"]],
+          },
+        },
+      };
+
+      service.populateGraph(data);
+      const expectedMarketName = "BINANCE";
+      const bidEdgeMarketName = service.graph.getEdgeWeight("BBB", "AAA")[
+        "marketName"
+      ];
+
+      const askEdgeMarketName = service.graph.getEdgeWeight("AAA", "BBB")[
+        "marketName"
+      ];
+      expect(bidEdgeMarketName).toBe(expectedMarketName);
+      expect(askEdgeMarketName).toBe(expectedMarketName);
+    });
+
+    it("#createBidEdge does not replace edge if the price is worse", () => {
+      data = {
+        LUNO: {
+          AAABBB: {
+            asks: [["18", "2"]],
+            bids: [["12", "3"]],
+          },
+        },
+        BINANCE: {
+          AAABBB: {
+            asks: [["19", "2"]],
+            bids: [["11", "3"]],
+          },
+        },
+      };
+
+      service.populateGraph(data);
+      const expectedMarketName = "LUNO";
+      const bidEdgeMarketName = service.graph.getEdgeWeight("BBB", "AAA")[
+        "marketName"
+      ];
+
+      const askEdgeMarketName = service.graph.getEdgeWeight("AAA", "BBB")[
+        "marketName"
+      ];
+      expect(bidEdgeMarketName).toBe(expectedMarketName);
+      expect(askEdgeMarketName).toBe(expectedMarketName);
+    });
   });
 
   describe("#calculateGraphWeights", () => {
@@ -113,6 +171,7 @@ describe("GraphService", () => {
         },
       };
     });
+
     it("calculates weights to negative natural log", () => {
       service.populateGraph(data);
       const askPrice = Math.log(1 / +data["LUNO"]["AAABBB"]["asks"][0][0]) * -1;
