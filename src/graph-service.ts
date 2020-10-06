@@ -1,6 +1,12 @@
 import Graph = require("../src/graph-library");
 import { AsksBids, MarketRates, MarketData } from "./models/MarketData";
 import { EdgeValues } from "./models/EdgeValues";
+import { MARKET_FEES } from "./models/MarketFees";
+
+export enum TransactionType {
+  ASKS = "asks",
+  BIDS = "bids",
+}
 
 class GraphService {
   private graph;
@@ -25,22 +31,17 @@ class GraphService {
     marketName: string,
     transactionType: string
   ): number {
-    const MARKET_FEES: MarketRates = {
-      luno: 1,
-      binance: 0.1,
-      gdax: 0.5,
-    };
-    let priceWithFee;
-    marketName = marketName.toLocaleLowerCase();
+    let priceWithFee: number;
+    marketName = marketName.toUpperCase();
 
     if (MARKET_FEES[marketName] == undefined)
       throw Error("Invalid market name");
 
-    if (transactionType === "asks") {
+    if (transactionType === TransactionType.ASKS) {
       //increase the rate of the asset, which makes it less attrative
       priceWithFee = price * (1 + MARKET_FEES[marketName] / 100);
       return priceWithFee;
-    } else if (transactionType === "bids") {
+    } else if (transactionType === TransactionType.BIDS) {
       //decrease the max rate at which people will pay for our asset
       priceWithFee = price * (1 - MARKET_FEES[marketName] / 100);
       return priceWithFee;
@@ -60,8 +61,13 @@ class GraphService {
   }
 
   getFirstOffer(transactionType: string, data: AsksBids) {
-    if (transactionType === "asks" || transactionType === "bids") {
-      return transactionType === "asks" ? data["asks"][0] : data["bids"][0];
+    if (
+      transactionType === TransactionType.ASKS ||
+      transactionType === TransactionType.BIDS
+    ) {
+      return transactionType === TransactionType.ASKS
+        ? data[TransactionType.ASKS][0]
+        : data[TransactionType.BIDS][0];
     }
 
     throw Error("Invalid transaction type");
@@ -74,11 +80,16 @@ class GraphService {
   ): EdgeValues {
     const firstValue = this.getFirstOffer(transactionType, data);
     const price = +firstValue[0];
+    const priceAdjustedByMarketFee = this.transactionCostAdjustment(
+      price,
+      marketName,
+      transactionType
+    );
     const volume = +firstValue[1];
-    const isAsk = transactionType === "asks";
+    const isAsk = transactionType === TransactionType.ASKS;
 
     return {
-      price,
+      price: priceAdjustedByMarketFee,
       volume,
       marketName,
       isAsk,
@@ -119,7 +130,7 @@ class GraphService {
   // BID
   // BTCETH -> bid -> we sell ETH for BTC, edge direction is BTC <-- ETH
   createBidEdge(pair: string, values: AsksBids, marketName: string): void {
-    const [price, volume] = this.getFirstOffer("bids", values);
+    const [price, volume] = this.getFirstOffer(TransactionType.BIDS, values);
     const sourceNode = this.pairTwo(pair);
     const targetNode = this.pairOne(pair);
 
@@ -127,7 +138,7 @@ class GraphService {
       this.graph.addEdge(
         sourceNode,
         targetNode,
-        this.createEdgeValues("bids", values, marketName)
+        this.createEdgeValues(TransactionType.BIDS, values, marketName)
       );
     }
   }
@@ -135,7 +146,7 @@ class GraphService {
   // ASK
   // BTCETH -> ask -> we buy ETH for BTC, edge direction is BTC --> ETH
   createAskEdge(pair: string, values: AsksBids, marketName: string): void {
-    const [price, volume] = this.getFirstOffer("asks", values);
+    const [price, volume] = this.getFirstOffer(TransactionType.ASKS, values);
     const sourceNode = this.pairOne(pair);
     const targetNode = this.pairTwo(pair);
 
@@ -143,7 +154,7 @@ class GraphService {
       this.graph.addEdge(
         sourceNode,
         targetNode,
-        this.createEdgeValues("asks", values, marketName)
+        this.createEdgeValues(TransactionType.ASKS, values, marketName)
       );
     }
   }
@@ -166,12 +177,15 @@ class GraphService {
         let currentWeight = this.graph.getEdgeWeight(sourceNode, targetNode);
         let updatedPrice = currentWeight.price;
 
-        if (currentWeight.isAsk)
+        if (currentWeight.isAsk) {
           updatedPrice = this.getOneOverValue(updatedPrice);
+        }
 
         updatedPrice = this.valueToNaturalLog(updatedPrice);
         updatedPrice = this.valueToNegative(updatedPrice);
         currentWeight.price = updatedPrice;
+
+        this.graph.setEdgeWeight(sourceNode, targetNode, currentWeight);
       }
     }
   }
