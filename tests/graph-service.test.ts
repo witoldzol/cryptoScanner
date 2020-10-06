@@ -82,18 +82,6 @@ describe("GraphService", () => {
       expect(graph.adjacent("AAA").length).toBe(1);
     });
 
-    it("#createEdgeValues returns original price", () => {
-      const graph = service.populateGraph(data);
-      const expectedOutput = {
-        price: +data["LUNO"]["AAABBB"]["asks"][0][0],
-        volume: +data["LUNO"]["AAABBB"]["asks"][0][1],
-        marketName: "LUNO",
-        isAsk: true,
-      };
-
-      expect(graph.getEdgeWeight("AAA", "BBB")).toEqual(expectedOutput);
-    });
-
     it("#getFirstOffer throws error if transaction type is not asks or bids", () => {
       expect(() => {
         service.getFirstOffer("bla", { asks: [1, 1], bids: [2, 2] });
@@ -159,6 +147,39 @@ describe("GraphService", () => {
     });
   });
 
+  it("#transactionCostAdjustment - market with high fees is rejected as the price is made worse", () => {
+    // Market fees -> binance is more attractive than luno
+    // LUNO: 1,
+    // BINANCE: 0.1,
+
+    let data = {
+      LUNO: {
+        AAABBB: {
+          asks: [["18", "2"]],
+          bids: [["12", "3"]],
+        },
+      },
+      BINANCE: {
+        AAABBB: {
+          asks: [["18", "2"]],
+          bids: [["12", "3"]],
+        },
+      },
+    };
+
+    service.populateGraph(data);
+    const expectedMarketName = "BINANCE";
+    const bidEdgeMarketName = service.graph.getEdgeWeight("BBB", "AAA")[
+      "marketName"
+    ];
+
+    const askEdgeMarketName = service.graph.getEdgeWeight("AAA", "BBB")[
+      "marketName"
+    ];
+    expect(bidEdgeMarketName).toBe(expectedMarketName);
+    expect(askEdgeMarketName).toBe(expectedMarketName);
+  });
+
   describe("#calculateGraphWeights", () => {
     let data;
     beforeEach(() => {
@@ -174,13 +195,30 @@ describe("GraphService", () => {
 
     it("calculates weights to negative natural log", () => {
       service.populateGraph(data);
-      const askPrice = Math.log(1 / +data["LUNO"]["AAABBB"]["asks"][0][0]) * -1;
-      const bidPrice = Math.log(+data["LUNO"]["AAABBB"]["bids"][0][0]) * -1;
+      const askPrice = +data["LUNO"]["AAABBB"]["asks"][0][0];
+      const bidPrice = +data["LUNO"]["AAABBB"]["bids"][0][0];
+      const adjustedAskPrice = service.transactionCostAdjustment(
+        askPrice,
+        "LUNO",
+        "asks"
+      );
+      const oneOverAskPrice = 1 / adjustedAskPrice;
+      const askPriceLoggedToNegative = Math.log(oneOverAskPrice) * -1;
+      const adjustedBidPrice = service.transactionCostAdjustment(
+        bidPrice,
+        "LUNO",
+        "bids"
+      );
+      const bidPriceLoggedToNegative = Math.log(adjustedBidPrice) * -1;
 
       service.recalculateEdgeWeights();
 
-      expect(service.graph.getEdgeWeight("AAA", "BBB").price).toEqual(askPrice);
-      expect(service.graph.getEdgeWeight("BBB", "AAA").price).toEqual(bidPrice);
+      expect(service.graph.getEdgeWeight("AAA", "BBB").price).toEqual(
+        askPriceLoggedToNegative
+      );
+      expect(service.graph.getEdgeWeight("BBB", "AAA").price).toEqual(
+        bidPriceLoggedToNegative
+      );
     });
   });
 });

@@ -133,17 +133,17 @@ if __name__ == "__main__":
 * DONE #edgeValues remove-ask-bid-information-from-weight
 it is irrelevant, direction of the edges is easier way to handle weight
 remove all logic associated with bid/ask - its convoluted and unnecessary
-* STRT #graph-service replace-edge-if-price-is-better
+* DONE #graph-service replace-edge-if-price-is-better
 Asks -> lower is best
 Bids -> highest is best
-* DONE #graph-service calculate-prices-after-graph-is-populated
-=======
-* TODO #graph-service filter-out-less-then-best-rates-when-creating-edge-between-two-nodes
-Asks -> lower is best
-Bids -> highest is best
-* TODO #graph-service #transactionCostAdjustment include-market-fees-in-edge-price-comparison
+* DONE #graph-service #transactionCostAdjustment include-market-fees-in-edge-price-comparison
 Adjust assets price before comparing it with pre-existing edge
-* TODO #AskBid create-ask-bid-enum
-* TODO #refactor use-pure-functions
+* TODO #graph-service refactor-price-calculations
+We are currently calculating price and then recalculating it once graph is built
+This might be more efficient, but is error prone and confusing
+Create single function that will handle price calculations
+: Remember! Order of calculations affects end price
+* #AskBid create-ask-bid-enum
+* #refactor use-pure-functions
 =======
 >>>>>>> interrim - tests not passing
