@@ -32,6 +32,32 @@ describe("Graph library", () => {
 
   it("#findNegativeCycles returns no cycles", () => {
     const negativeCycles = graph.findNegativeCycles();
-    // expect(negativeCycles).toEqual({});
+    expect(negativeCycles).toEqual({});
+  });
+
+  it("#findNegativeCycles returns negative cycles", () => {
+    // TODO not working !! fix it:w
+    //
+    const data = {
+      GDAX: {
+        ETHBTC: {
+          asks: [[0.03378, 59.59791775, 8]],
+          bids: [[0.03378, 59.59791775, 8]],
+        },
+      },
+      BINANCE: {
+        ETHBTC: {
+          asks: [[30.03378, 59.59791775, 8]],
+          bids: [[0.03378, 59.59791775, 8]],
+        },
+      },
+    };
+    let graph = Graph();
+    let graphService = new GraphService();
+    graph = graphService.populateGraph(data);
+    graph = graphService.recalculateEdgeWeights(graph);
+
+    const negativeCycles = graph.findNegativeCycles();
+    expect(negativeCycles).toEqual({});
   });
 });
