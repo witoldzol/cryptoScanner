@@ -11,7 +11,7 @@ describe("GraphService", () => {
     it("returns correct value", () => {
       let mockValue = 17;
       let expectedValue = 1 / 17;
-      expect(service.getOneOverValue(mockValue)).toBe(expectedValue);
+      expect(service.valueToReciprocal(mockValue)).toBe(expectedValue);
     });
   });
 
@@ -24,12 +24,12 @@ describe("GraphService", () => {
     });
   });
 
-  describe("#transactionCostAdjustment", () => {
+  describe("#adjustPriceWithMarketFee", () => {
     const price = 100;
     const market = "luno";
     it("increases price by market fee when buying (asks)", () => {
       const transaction = "asks";
-      const result = service.transactionCostAdjustment(
+      const result = service.adjustPriceWithMarketFee(
         price,
         market,
         transaction
@@ -39,7 +39,7 @@ describe("GraphService", () => {
 
     it("lowers price by market fee when selling (asks)", () => {
       const transaction = "bids";
-      const result = service.transactionCostAdjustment(
+      const result = service.adjustPriceWithMarketFee(
         price,
         market,
         transaction
@@ -51,14 +51,14 @@ describe("GraphService", () => {
       const transaction = "asks";
       const invalidMarket = "gimme yo mannie";
       expect(() => {
-        service.transactionCostAdjustment(price, invalidMarket, transaction);
+        service.adjustPriceWithMarketFee(price, invalidMarket, transaction);
       }).toThrowError("Invalid market name");
     });
 
     it("throws error when invalid transaction is given", () => {
       const invalidTransaction = "asks and you shall receive";
       expect(() => {
-        service.transactionCostAdjustment(price, market, invalidTransaction);
+        service.adjustPriceWithMarketFee(price, market, invalidTransaction);
       }).toThrowError("Invalid transaction type");
     });
   });
@@ -82,9 +82,9 @@ describe("GraphService", () => {
       expect(graph.adjacent("AAA").length).toBe(1);
     });
 
-    it("#getFirstOffer throws error if transaction type is not asks or bids", () => {
+    it("#getFirstOfferFromData throws error if transaction type is not asks or bids", () => {
       expect(() => {
-        service.getFirstOffer("bla", { asks: [1, 1], bids: [2, 2] });
+        service.getFirstOfferFromData("bla", { asks: [1, 1], bids: [2, 2] });
       }).toThrowError("Invalid transaction type");
     });
 
@@ -194,29 +194,29 @@ describe("GraphService", () => {
     });
 
     it("calculates weights to negative natural log", () => {
-      service.populateGraph(data);
+      let graph = service.populateGraph(data);
       const askPrice = +data["LUNO"]["AAABBB"]["asks"][0][0];
       const bidPrice = +data["LUNO"]["AAABBB"]["bids"][0][0];
-      const adjustedAskPrice = service.transactionCostAdjustment(
+      const adjustedAskPrice = service.adjustPriceWithMarketFee(
         askPrice,
         "LUNO",
         "asks"
       );
-      const oneOverAskPrice = 1 / adjustedAskPrice;
-      const askPriceLoggedToNegative = Math.log(oneOverAskPrice) * -1;
-      const adjustedBidPrice = service.transactionCostAdjustment(
+      const valueToReciprocal = 1 / adjustedAskPrice;
+      const askPriceLoggedToNegative = Math.log(valueToReciprocal) * -1;
+      const adjustedBidPrice = service.adjustPriceWithMarketFee(
         bidPrice,
         "LUNO",
         "bids"
       );
       const bidPriceLoggedToNegative = Math.log(adjustedBidPrice) * -1;
 
-      service.recalculateEdgeWeights();
+      graph = service.recalculateEdgeWeights(graph);
 
-      expect(service.graph.getEdgeWeight("AAA", "BBB").price).toEqual(
+      expect(graph.getEdgeWeight("AAA", "BBB").price).toEqual(
         askPriceLoggedToNegative
       );
-      expect(service.graph.getEdgeWeight("BBB", "AAA").price).toEqual(
+      expect(graph.getEdgeWeight("BBB", "AAA").price).toEqual(
         bidPriceLoggedToNegative
       );
     });

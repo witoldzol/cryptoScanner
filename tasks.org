@@ -138,12 +138,46 @@ Asks -> lower is best
 Bids -> highest is best
 * DONE #graph-service #transactionCostAdjustment include-market-fees-in-edge-price-comparison
 Adjust assets price before comparing it with pre-existing edge
-* TODO #graph-service refactor-price-calculations
+* DONE #graph-service refactor-price-calculations
 We are currently calculating price and then recalculating it once graph is built
 This might be more efficient, but is error prone and confusing
 Create single function that will handle price calculations
 : Remember! Order of calculations affects end price
-* #AskBid create-ask-bid-enum
+Order is:
+price
+market fee adjustment
+if(ask) 1/x
+ln
+multiply by (-1)
+* DONE #AskBid create-ask-bid-enum
+* TODO #graph-service graph-libary bugfix-duplicate-ETH-BTC-nodes
+graph creates duplicate ETHBTC nodes
+OR it's not duplicate, its merely adding nodes instead of overwritting them???
+Example:
+#+BEGIN_SRC
+links: [
+    { source: 'IDR', target: 'BTC', weight: [Object] },
+    { source: 'BTC', target: 'IDR', weight: [Object] },
+    { source: 'BTC', target: 'MYR', weight: [Object] },
+    { source: 'BTC', target: 'NGN', weight: [Object] },
+    { source: 'BTC', target: 'ZAR', weight: [Object] },
+-    { source: 'BTC', target: 'ETH', weight: [Object] },
+-    { source: 'BTC', target: 'ETH', weight: [Object] },
+-    { source: 'BTC', target: 'ETH', weight: [Object] },
+    { source: 'BTC', target: 'LTC', weight: [Object] },
+    { source: 'MYR', target: 'BTC', weight: [Object] },
+    { source: 'NGN', target: 'BTC', weight: [Object] },
+    { source: 'ZAR', target: 'BTC', weight: [Object] },
+-    { source: 'ETH', target: 'BTC', weight: [Object] },
+-    { source: 'ETH', target: 'BTC', weight: [Object] },
+-    { source: 'ETH', target: 'BTC', weight: [Object] },
+    { source: 'LTC', target: 'BTC', weight: [Object] },
+    { source: 'USD', target: 'BCH', weight: [Object] },
+    { source: 'BCH', target: 'USD', weight: [Object] }
+  ]
+
+#+END_SRC
+
 * #refactor use-pure-functions
-=======
->>>>>>> interrim - tests not passing
+refactor graph-service function and make them pure
+this should lower bug incidence

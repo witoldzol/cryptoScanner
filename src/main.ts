@@ -13,11 +13,15 @@ let binancePrices = getPrices(binanceOptions);
 
 Promise.all([lunoPrices, gdaxPrices, binancePrices])
   .then((data) => mapDataToObject(data))
-  .then((data) => {
-    console.log(" MAIN \n" + JSON.stringify(data));
-    return data;
-  })
+  // .then((data) => {
+  //   console.log(" MAIN \n" + JSON.stringify(data));
+  //   return data;
+  // })
   .then((data) => graphService.populateGraph(data))
-  .then((graph) => graph.findNegativeCycles())
-  .then((result) => console.log(result))
+  .then((graph) => graphService.recalculateEdgeWeights(graph))
+  .then((graph) => {
+    console.log(JSON.stringify("after recalculations", graph));
+    console.log(graph.serialize());
+    graph.findNegativeCycles();
+  })
   .catch((e) => console.log("error from main pricess ALL.Promise: " + e.stack));
