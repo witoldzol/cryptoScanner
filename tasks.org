@@ -177,7 +177,7 @@ links: [
   ]
 
 #+END_SRC
-
+* make-algorithm-work
 * #refactor use-pure-functions
 refactor graph-service function and make them pure
 this should lower bug incidence
