@@ -4,9 +4,7 @@ It took me 4 days to write re-try function wrapper around Promise that re-attemp
 
 //to do
 
-test nodes length
-test nodes cl
-iterate over all edges
+test nodes length test nodes cl iterate over all edges
 
 //spinner from:
 

@@ -4,7 +4,8 @@ interface MarketOptions {
   urlPath: string[];
   pairs: string[];
   maxConcurrentRequests: number;
-  formatData(data: object): object;
+
+  formatData (data: object): object;
 }
 
-export { MarketOptions };
+export { MarketOptions }

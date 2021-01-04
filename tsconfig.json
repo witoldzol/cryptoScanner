@@ -5,7 +5,13 @@
     "allowJs": true,
     "target": "es5",
     "esModuleInterop": true,
-    "lib": ["esnext", "dom"]
+    "lib": [
+      "esnext",
+      "dom"
+    ]
   },
-  "include": ["./src/**/*", "./tests/**/*"],
+  "include": [
+    "./src/**/*",
+    "./tests/**/*"
+  ]
 }
