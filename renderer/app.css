@@ -8,6 +8,7 @@ html,
 body {
   height: 100%;
 }
+
 body {
   text-align: center;
 }
@@ -100,6 +101,7 @@ nav .menu span:nth-child(3) {
   width: 50%;
   margin: auto;
 }
+
 .button {
   background: #1aab8a;
   color: #fff;
@@ -114,10 +116,12 @@ nav .menu span:nth-child(3) {
   margin-bottom: 5%;
   margin-top: 2%;
 }
+
 .button:hover {
   background: #ffff99;
   color: #1aab8a;
 }
+
 .button:before,
 .button:after {
   content: "";
@@ -129,12 +133,14 @@ nav .menu span:nth-child(3) {
   background: #1aab8a;
   transition: 400ms ease all;
 }
+
 .button:after {
   right: inherit;
   top: inherit;
   left: 0;
   bottom: 0;
 }
+
 .button:hover:before,
 .button:hover:after {
   width: 100%;
@@ -149,6 +155,7 @@ nav .menu span:nth-child(3) {
 #filterButton {
   background-color: coral;
 }
+
 /*END OF BUTTON*/
 
 /* INPUT FIELDS */
@@ -186,6 +193,7 @@ input {
 #results-container > :nth-child(odd) {
   background-color: #aaa;
 }
+
 #results-container > :nth-child(even) {
   background-color: #eee;
 }
@@ -202,9 +210,11 @@ input {
     "details details";
   border-radius: 5px;
 }
+
 .result:hover {
   background-color: #61b1ff !important;
 }
+
 .result-rate {
   padding: 10px;
   justify-content: right;
@@ -212,12 +222,14 @@ input {
   text-align: center;
   grid-area: rate;
 }
+
 .result-numberOfJumps {
   padding: 10px;
   font-size: 1.5em;
   text-align: center;
   grid-area: jumps;
 }
+
 .result-button {
   color: #fff !important;
   text-transform: uppercase;
@@ -232,6 +244,7 @@ input {
   justify-self: center;
   grid-area: button;
 }
+
 .result-button:hover {
   background: coral;
   width: 70%;
@@ -240,12 +253,14 @@ input {
   box-shadow: 5px 40px -10px rgba(0, 0, 0, 0.57);
   transition: all 0.4s ease 0s;
 }
+
 .result-details {
   text-align: center;
   grid-area: details;
   grid-gap: 10px;
   justify-content: center;
 }
+
 .result-details {
   display: none;
 }
@@ -263,10 +278,12 @@ input {
     "c1 currRate c2"
     "market market market";
 }
+
 .result-jump:hover {
   /*box-shadow: inset 0 0 100px 100px rgba(255, 255, 255, 0.1);*/
   background-color: palegreen;
 }
+
 .result-jump-currency-1 {
   grid-area: c1;
   font-weight: bold;
@@ -342,15 +359,15 @@ input {
   animation: spinner 1500ms infinite linear;
   border-radius: 0.5em;
   -webkit-box-shadow: rgba(0, 0, 0, 0.75) 1.5em 0 0 0,
-    rgba(0, 0, 0, 0.75) 1.1em 1.1em 0 0, rgba(0, 0, 0, 0.75) 0 1.5em 0 0,
-    rgba(0, 0, 0, 0.75) -1.1em 1.1em 0 0, rgba(0, 0, 0, 0.5) -1.5em 0 0 0,
-    rgba(0, 0, 0, 0.5) -1.1em -1.1em 0 0, rgba(0, 0, 0, 0.75) 0 -1.5em 0 0,
-    rgba(0, 0, 0, 0.75) 1.1em -1.1em 0 0;
+  rgba(0, 0, 0, 0.75) 1.1em 1.1em 0 0, rgba(0, 0, 0, 0.75) 0 1.5em 0 0,
+  rgba(0, 0, 0, 0.75) -1.1em 1.1em 0 0, rgba(0, 0, 0, 0.5) -1.5em 0 0 0,
+  rgba(0, 0, 0, 0.5) -1.1em -1.1em 0 0, rgba(0, 0, 0, 0.75) 0 -1.5em 0 0,
+  rgba(0, 0, 0, 0.75) 1.1em -1.1em 0 0;
   box-shadow: rgba(0, 0, 0, 0.75) 1.5em 0 0 0,
-    rgba(0, 0, 0, 0.75) 1.1em 1.1em 0 0, rgba(0, 0, 0, 0.75) 0 1.5em 0 0,
-    rgba(0, 0, 0, 0.75) -1.1em 1.1em 0 0, rgba(0, 0, 0, 0.75) -1.5em 0 0 0,
-    rgba(0, 0, 0, 0.75) -1.1em -1.1em 0 0, rgba(0, 0, 0, 0.75) 0 -1.5em 0 0,
-    rgba(0, 0, 0, 0.75) 1.1em -1.1em 0 0;
+  rgba(0, 0, 0, 0.75) 1.1em 1.1em 0 0, rgba(0, 0, 0, 0.75) 0 1.5em 0 0,
+  rgba(0, 0, 0, 0.75) -1.1em 1.1em 0 0, rgba(0, 0, 0, 0.75) -1.5em 0 0 0,
+  rgba(0, 0, 0, 0.75) -1.1em -1.1em 0 0, rgba(0, 0, 0, 0.75) 0 -1.5em 0 0,
+  rgba(0, 0, 0, 0.75) 1.1em -1.1em 0 0;
 }
 
 /* Animation */
@@ -371,6 +388,7 @@ input {
     transform: rotate(360deg);
   }
 }
+
 @-moz-keyframes spinner {
   0% {
     -webkit-transform: rotate(0deg);
@@ -387,6 +405,7 @@ input {
     transform: rotate(360deg);
   }
 }
+
 @-o-keyframes spinner {
   0% {
     -webkit-transform: rotate(0deg);
@@ -403,6 +422,7 @@ input {
     transform: rotate(360deg);
   }
 }
+
 @keyframes spinner {
   0% {
     -webkit-transform: rotate(0deg);

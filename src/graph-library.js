@@ -1,7 +1,8 @@
 // library from https://github.com/datavis-tech/graph-data-structure
-("use strict");
+('use strict')
+
 // A graph data structure with depth-first search and topological sort.
-function Graph(serialized) {
+function Graph (serialized) {
   // Returned graph instance
   var graph = {
     addNode: addNode,
@@ -22,186 +23,200 @@ function Graph(serialized) {
     deserialize: deserialize,
     getEdges: getEdges,
     findNegativeCycles: findNegativeCycles,
-  };
+  }
   // The adjacency list of the graph.
   // Keys are node ids.
   // Values are adjacent node id arrays.
-  var edges = {};
+  var edges = {}
 
-  function getFirstCurrencyPair(pair) {
-    return pair.substring(0, 3);
+  function getFirstCurrencyPair (pair) {
+    return pair.substring(0, 3)
   }
 
-  function getSecondCurrencyPair(pair) {
-    return pair.substring(3, 6);
+  function getSecondCurrencyPair (pair) {
+    return pair.substring(3, 6)
   }
 
-  function findNegativeCycles(source = "BTC") {
+  function findNegativeCycles (source = 'BTC') {
     // upper bounds for shortest path weight from source
-    let d = {};
+    let d = {}
     //predecessors
-    let p = {};
+    let p = {}
 
-    function initializeSingleSource() {
+    function initializeSingleSource () {
       nodes().forEach(function (node) {
-        d[node] = Infinity;
-      });
-      d[source] = 0;
+        d[node] = Infinity
+      })
+      d[source] = 0
     }
 
-    function relax(u, v) {
-      var w = getEdgeWeight(u, v)[0];
+    function relax (u, v) {
+      var w = getEdgeWeight(u, v)[0]
       if (d[v] > d[u] + w) {
-        d[v] = d[u] + w;
-        p[v] = u;
+        d[v] = d[u] + w
+        p[v] = u
       }
     }
 
-    function relaxAllEdges() {
+    function relaxAllEdges () {
       // after N-1 relaxations MAX, there should be NO further improvements
       // UNLESS there is a 'negative' cycle
-      let iterations = nodes().length - 1;
+      let iterations = nodes().length - 1
       for (var i = 0; i < iterations; i++) {
         for (edge in edges) {
-          relax(getFirstCurrencyPair(edge), getSecondCurrencyPair(edge));
+          relax(getFirstCurrencyPair(edge), getSecondCurrencyPair(edge))
         }
       }
     }
 
     // if distances 'd' still update after N-1 relaxations
     // we have found a negative cycle
-    function returnNegativeCycles() {
-      let arbitrage = false;
-      let negativeCycles = {};
+    function returnNegativeCycles () {
+      let arbitrage = false
+      let negativeCycles = {}
       for (firstCurrency in edges) {
         for (secondCurrency of edges[firstCurrency]) {
-          let weight = getEdgeWeight(firstCurrency, secondCurrency)
-            .priceWithFees;
+          let weight = getEdgeWeight(firstCurrency,
+            secondCurrency).priceWithFees
           if (d[secondCurrency] > d[firstCurrency] + weight) {
-            arbitrage = true;
-            d[secondCurrency] = d[firstCurrency] + weight;
-            negativeCycles[secondCurrency] = true;
+            arbitrage = true
+            d[secondCurrency] = d[firstCurrency] + weight
+            negativeCycles[secondCurrency] = true
           }
         }
       }
 
       if (!arbitrage) {
-        console.log("NO ARBITRAGE OPPORTUNITY FOUND");
+        console.log('NO ARBITRAGE OPPORTUNITY FOUND')
       }
-      return negativeCycles;
+      return negativeCycles
     }
 
-    initializeSingleSource();
-    relaxAllEdges();
-    return returnNegativeCycles();
+    initializeSingleSource()
+    relaxAllEdges()
+    return returnNegativeCycles()
   }
 
-  function getEdges() {
-    return edges;
+  function getEdges () {
+    return edges
   }
+
   // The weights of edges.
   // Keys are string encodings of edges.
   // Values are weights (numbers).
-  var edgeWeights = {};
+  var edgeWeights = {}
   // If a serialized graph was passed into the constructor, deserialize it.
   if (serialized) {
-    deserialize(serialized);
+    deserialize(serialized)
   }
   // Adds a node to the graph.
   // If node was already added, this function does nothing.
   // If node was not already added, this function sets up an empty adjacency list.
-  function addNode(node) {
-    edges[node] = adjacent(node);
-    return graph;
+  function addNode (node) {
+    edges[node] = adjacent(node)
+    return graph
   }
+
   // Removes a node from the graph.
   // Also removes incoming and outgoing edges.
-  function removeNode(node) {
+  function removeNode (node) {
     // Remove incoming edges.
     Object.keys(edges).forEach(function (u) {
       edges[u].forEach(function (v) {
         if (v === node) {
-          removeEdge(u, v);
+          removeEdge(u, v)
         }
-      });
-    });
+      })
+    })
     // Remove outgoing edges (and signal that the node no longer exists).
-    delete edges[node];
-    return graph;
+    delete edges[node]
+    return graph
   }
+
   // Gets the list of nodes that have been added to the graph.
-  function nodes() {
+  function nodes () {
     // TODO: Better implementation with set data structure
-    var nodeSet = {};
+    var nodeSet = {}
     Object.keys(edges).forEach(function (u) {
-      nodeSet[u] = true;
+      nodeSet[u] = true
       edges[u].forEach(function (v) {
-        nodeSet[v] = true;
-      });
-    });
-    return Object.keys(nodeSet);
+        nodeSet[v] = true
+      })
+    })
+    return Object.keys(nodeSet)
   }
+
   // Gets the adjacent node list for the given node.
   // Returns an empty array for unknown nodes.
-  function adjacent(node) {
-    return edges[node] || [];
+  function adjacent (node) {
+    return edges[node] || []
   }
+
   // Computes a string encoding of an edge,
   // for use as a key in an object.
-  function encodeEdge(u, v) {
-    return u + "|" + v;
+  function encodeEdge (u, v) {
+    return u + '|' + v
   }
+
   // Sets the weight of the given edge.
-  function setEdgeWeight(u, v, weight) {
-    edgeWeights[encodeEdge(u, v)] = weight;
-    return graph;
+  function setEdgeWeight (u, v, weight) {
+    edgeWeights[encodeEdge(u, v)] = weight
+    return graph
   }
+
   // Gets the weight of the given edge.
   // Returns 1 if no weight was previously set.
-  function getEdgeWeight(u, v) {
-    var weight = edgeWeights[encodeEdge(u, v)];
-    return weight === undefined ? 1 : weight;
+  function getEdgeWeight (u, v) {
+    var weight = edgeWeights[encodeEdge(u, v)]
+    return weight === undefined ? 1 : weight
   }
+
   // Adds an edge from node u to node v.
   // Implicitly adds the nodes if they were not already added.
-  function addEdge(u, v, weight) {
-    addNode(u);
-    addNode(v);
-    adjacent(u).push(v);
+  function addEdge (u, v, weight) {
+    addNode(u)
+    addNode(v)
+    adjacent(u).push(v)
     if (weight !== undefined) {
-      setEdgeWeight(u, v, weight);
+      setEdgeWeight(u, v, weight)
     }
-    return graph;
+    return graph
   }
+
   // Removes the edge from node u to node v.
   // Does not remove the nodes.
   // Does nothing if the edge does not exist.
-  function removeEdge(u, v) {
+  function removeEdge (u, v) {
     if (edges[u]) {
       edges[u] = adjacent(u).filter(function (_v) {
-        return _v !== v;
-      });
+        return _v !== v
+      })
     }
-    return graph;
+    return graph
   }
+
   // Computes the indegree for the given node.
   // Not very efficient, costs O(E) where E = number of edges.
-  function indegree(node) {
-    var degree = 0;
-    function check(v) {
+  function indegree (node) {
+    var degree = 0
+
+    function check (v) {
       if (v === node) {
-        degree++;
+        degree++
       }
     }
+
     Object.keys(edges).forEach(function (u) {
-      edges[u].forEach(check);
-    });
-    return degree;
+      edges[u].forEach(check)
+    })
+    return degree
   }
+
   // Computes the outdegree for the given node.
-  function outdegree(node) {
-    return node in edges ? edges[node].length : 0;
+  function outdegree (node) {
+    return node in edges ? edges[node].length : 0
   }
+
   // Depth First Search algorithm, inspired by
   // Cormen et al. "Introduction to Algorithms" 3rd Ed. p. 604
   // This variant includes an additional option
@@ -209,208 +224,227 @@ function Graph(serialized) {
   // exclude the source nodes from the result (true by default).
   // If `sourceNodes` is not specified, all nodes in the graph
   // are used as source nodes.
-  function depthFirstSearch(sourceNodes, includeSourceNodes) {
+  function depthFirstSearch (sourceNodes, includeSourceNodes) {
     if (includeSourceNodes === void 0) {
-      includeSourceNodes = true;
+      includeSourceNodes = true
     }
     if (!sourceNodes) {
-      sourceNodes = nodes();
+      sourceNodes = nodes()
     }
-    if (typeof includeSourceNodes !== "boolean") {
-      includeSourceNodes = true;
+    if (typeof includeSourceNodes !== 'boolean') {
+      includeSourceNodes = true
     }
-    var visited = {};
-    var nodeList = [];
-    function DFSVisit(node) {
+    var visited = {}
+    var nodeList = []
+
+    function DFSVisit (node) {
       if (!visited[node]) {
-        visited[node] = true;
-        adjacent(node).forEach(DFSVisit);
-        nodeList.push(node);
+        visited[node] = true
+        adjacent(node).forEach(DFSVisit)
+        nodeList.push(node)
       }
     }
+
     if (includeSourceNodes) {
-      sourceNodes.forEach(DFSVisit);
+      sourceNodes.forEach(DFSVisit)
     } else {
       sourceNodes.forEach(function (node) {
-        visited[node] = true;
-      });
+        visited[node] = true
+      })
       sourceNodes.forEach(function (node) {
-        adjacent(node).forEach(DFSVisit);
-      });
+        adjacent(node).forEach(DFSVisit)
+      })
     }
-    return nodeList;
+    return nodeList
   }
+
   // Least Common Ancestors
   // Inspired by https://github.com/relaxedws/lca/blob/master/src/LowestCommonAncestor.php code
   // but uses depth search instead of breadth. Also uses some optimizations
-  function lowestCommonAncestors(node1, node2) {
-    var node1Ancestors = [];
-    var lcas = [];
-    function CA1Visit(visited, node) {
+  function lowestCommonAncestors (node1, node2) {
+    var node1Ancestors = []
+    var lcas = []
+
+    function CA1Visit (visited, node) {
       if (!visited[node]) {
-        visited[node] = true;
-        node1Ancestors.push(node);
+        visited[node] = true
+        node1Ancestors.push(node)
         if (node == node2) {
-          lcas.push(node);
-          return false; // found - shortcut
+          lcas.push(node)
+          return false // found - shortcut
         }
         return adjacent(node).every(function (node) {
-          return CA1Visit(visited, node);
-        });
+          return CA1Visit(visited, node)
+        })
       } else {
-        return true;
+        return true
       }
     }
-    function CA2Visit(visited, node) {
+
+    function CA2Visit (visited, node) {
       if (!visited[node]) {
-        visited[node] = true;
+        visited[node] = true
         if (node1Ancestors.indexOf(node) >= 0) {
-          lcas.push(node);
+          lcas.push(node)
         } else if (lcas.length == 0) {
           adjacent(node).forEach(function (node) {
-            CA2Visit(visited, node);
-          });
+            CA2Visit(visited, node)
+          })
         }
       }
     }
+
     if (CA1Visit({}, node1)) {
       // No shortcut worked
-      CA2Visit({}, node2);
+      CA2Visit({}, node2)
     }
-    return lcas;
+    return lcas
   }
+
   // The topological sort algorithm yields a list of visited nodes
   // such that for each visited edge (u, v), u comes before v in the list.
   // Amazingly, this comes from just reversing the result from depth first search.
   // Cormen et al. "Introduction to Algorithms" 3rd Ed. p. 613
-  function topologicalSort(sourceNodes, includeSourceNodes) {
+  function topologicalSort (sourceNodes, includeSourceNodes) {
     if (includeSourceNodes === void 0) {
-      includeSourceNodes = true;
+      includeSourceNodes = true
     }
-    return depthFirstSearch(sourceNodes, includeSourceNodes).reverse();
+    return depthFirstSearch(sourceNodes, includeSourceNodes).reverse()
   }
+
   // Dijkstra's Shortest Path Algorithm.
   // Cormen et al. "Introduction to Algorithms" 3rd Ed. p. 658
   // Variable and function names correspond to names in the book.
-  function shortestPath(source, destination) {
+  function shortestPath (source, destination) {
     // Upper bounds for shortest path weights from source.
-    var d = {};
+    var d = {}
     // Predecessors.
-    var p = {};
+    var p = {}
     // Poor man's priority queue, keyed on d.
-    var q = {};
-    function initializeSingleSource() {
+    var q = {}
+
+    function initializeSingleSource () {
       nodes().forEach(function (node) {
-        d[node] = Infinity;
-      });
+        d[node] = Infinity
+      })
       if (d[source] !== Infinity) {
-        throw new Error("Source node is not in the graph");
+        throw new Error('Source node is not in the graph')
       }
       if (d[destination] !== Infinity) {
-        throw new Error("Destination node is not in the graph");
+        throw new Error('Destination node is not in the graph')
       }
-      d[source] = 0;
+      d[source] = 0
     }
+
     // Adds entries in q for all nodes.
-    function initializePriorityQueue() {
+    function initializePriorityQueue () {
       nodes().forEach(function (node) {
-        q[node] = true;
-      });
+        q[node] = true
+      })
     }
+
     // Returns true if q is empty.
-    function priorityQueueEmpty() {
-      return Object.keys(q).length === 0;
+    function priorityQueueEmpty () {
+      return Object.keys(q).length === 0
     }
+
     // Linear search to extract (find and remove) min from q.
-    function extractMin() {
-      var min = Infinity;
-      var minNode;
+    function extractMin () {
+      var min = Infinity
+      var minNode
       Object.keys(q).forEach(function (node) {
         if (d[node] < min) {
-          min = d[node];
-          minNode = node;
+          min = d[node]
+          minNode = node
         }
-      });
+      })
       if (minNode === undefined) {
         // If we reach here, there's a disconnected subgraph, and we're done.
-        q = {};
-        return null;
+        q = {}
+        return null
       }
-      delete q[minNode];
-      return minNode;
+      delete q[minNode]
+      return minNode
     }
-    function relax(u, v) {
-      var w = getEdgeWeight(u, v);
+
+    function relax (u, v) {
+      var w = getEdgeWeight(u, v)
       if (d[v] > d[u] + w) {
-        d[v] = d[u] + w;
-        p[v] = u;
+        d[v] = d[u] + w
+        p[v] = u
       }
     }
-    function dijkstra() {
-      initializeSingleSource();
-      initializePriorityQueue();
+
+    function dijkstra () {
+      initializeSingleSource()
+      initializePriorityQueue()
       while (!priorityQueueEmpty()) {
-        var u = extractMin();
-        if (u === null) return;
+        var u = extractMin()
+        if (u === null) return
         adjacent(u).forEach(function (v) {
-          relax(u, v);
-        });
+          relax(u, v)
+        })
       }
     }
+
     // Assembles the shortest path by traversing the
     // predecessor subgraph from destination to source.
-    function path() {
-      var nodeList = [];
-      var weight = 0;
-      var node = destination;
+    function path () {
+      var nodeList = []
+      var weight = 0
+      var node = destination
       while (p[node]) {
-        nodeList.push(node);
-        weight += getEdgeWeight(p[node], node);
-        node = p[node];
+        nodeList.push(node)
+        weight += getEdgeWeight(p[node], node)
+        node = p[node]
       }
       if (node !== source) {
-        throw new Error("No path found");
+        throw new Error('No path found')
       }
-      nodeList.push(node);
-      nodeList.reverse();
-      nodeList.weight = weight;
-      return nodeList;
+      nodeList.push(node)
+      nodeList.reverse()
+      nodeList.weight = weight
+      return nodeList
     }
-    dijkstra();
-    return path();
+
+    dijkstra()
+    return path()
   }
+
   // Serializes the graph.
-  function serialize() {
+  function serialize () {
     var serialized = {
       nodes: nodes().map(function (id) {
-        return { id: id };
+        return { id: id }
       }),
       links: [],
-    };
+    }
     serialized.nodes.forEach(function (node) {
-      var source = node.id;
+      var source = node.id
       adjacent(source).forEach(function (target) {
         serialized.links.push({
           source: source,
           target: target,
           weight: getEdgeWeight(source, target),
-        });
-      });
-    });
-    return serialized;
+        })
+      })
+    })
+    return serialized
   }
+
   // Deserializes the given serialized graph.
-  function deserialize(serialized) {
+  function deserialize (serialized) {
     serialized.nodes.forEach(function (node) {
-      addNode(node.id);
-    });
+      addNode(node.id)
+    })
     serialized.links.forEach(function (link) {
-      addEdge(link.source, link.target, link.weight);
-    });
-    return graph;
+      addEdge(link.source, link.target, link.weight)
+    })
+    return graph
   }
+
   // The returned graph instance.
-  return graph;
+  return graph
 }
 
-module.exports = Graph;
+module.exports = Graph

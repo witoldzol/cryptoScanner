@@ -1,73 +1,73 @@
 <html>
-  <head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>cryptoScanner</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <!-- stylesheet -->
-    <link rel="stylesheet" type="text/css" media="screen" href="./app.css" />
-    <!-- font awesome -->
-    <link
-      href="https://use.fontawesome.com/releases/v5.2.0/css/all.css"
-      rel="stylesheet"
-    />
-    <!-- fonts -->
-    <link
-      href="
+<head>
+  <meta charset="utf-8"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+  <title>cryptoScanner</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <!-- stylesheet -->
+  <link rel="stylesheet" type="text/css" media="screen" href="./app.css"/>
+  <!-- font awesome -->
+  <link
+          href="https://use.fontawesome.com/releases/v5.2.0/css/all.css"
+          rel="stylesheet"
+  />
+  <!-- fonts -->
+  <link
+          href="
 "
-      rel="stylesheet"
-    />
-  </head>
+          rel="stylesheet"
+  />
+</head>
 
-  <body>
-    <section id="header">
-      <!-- navbar -->
-      <nav>
-        <div class="menu">
-          <span></span>
-          <span></span>
-          <span></span>
-        </div>
-      </nav>
-
-      <div class="menu-items">
-        <ul>
-          <li>Home</li>
-          <li>Scheduler</li>
-          <li>Database</li>
-          <li>Markets</li>
-          <li>Currencies</li>
-        </ul>
-      </div>
-
-      <!-- header -->
-      <h1>CRYPTO SCANNER</h1>
-      <!-- buttons -->
-      <div id="buttonWrapper">
-        <button id="scan" class="button">SCAN</button>
-        <button id="filterButton" class="button">FILTER</button>
-      </div>
-      <div id="input-wrapper">
-        <form id="min-return" action="">
-          Minimum return:<br />
-          <input name="minreturn" type="text" value="" />
-        </form>
-        <form id="max-jumps" action="">
-          Maximum jumps:<br />
-          <input name="maxjumps" type="text" value="" />
-        </form>
-      </div>
-    </section>
-    <!-- spinner -->
-    <div class="container">
-      <div id="loading" class="loading">
-        Loading&#8230;
-      </div>
+<body>
+<section id="header">
+  <!-- navbar -->
+  <nav>
+    <div class="menu">
+      <span></span>
+      <span></span>
+      <span></span>
     </div>
-    <!-- results -->
-    <section id="results">
-      <div id="results-container"></div>
-    </section>
-    <script src="./app.js"></script>
-  </body>
+  </nav>
+
+  <div class="menu-items">
+    <ul>
+      <li>Home</li>
+      <li>Scheduler</li>
+      <li>Database</li>
+      <li>Markets</li>
+      <li>Currencies</li>
+    </ul>
+  </div>
+
+  <!-- header -->
+  <h1>CRYPTO SCANNER</h1>
+  <!-- buttons -->
+  <div id="buttonWrapper">
+    <button id="scan" class="button">SCAN</button>
+    <button id="filterButton" class="button">FILTER</button>
+  </div>
+  <div id="input-wrapper">
+    <form id="min-return" action="">
+      Minimum return:<br/>
+      <input name="minreturn" type="text" value=""/>
+    </form>
+    <form id="max-jumps" action="">
+      Maximum jumps:<br/>
+      <input name="maxjumps" type="text" value=""/>
+    </form>
+  </div>
+</section>
+<!-- spinner -->
+<div class="container">
+  <div id="loading" class="loading">
+    Loading&#8230;
+  </div>
+</div>
+<!-- results -->
+<section id="results">
+  <div id="results-container"></div>
+</section>
+<script src="./app.js"></script>
+</body>
 </html>

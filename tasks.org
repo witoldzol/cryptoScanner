@@ -150,7 +150,7 @@ if(ask) 1/x
 ln
 multiply by (-1)
 * DONE #AskBid create-ask-bid-enum
-* TODO #graph-service graph-libary bugfix-duplicate-ETH-BTC-nodes
+* DONE #graph-service graph-libary bugfix-duplicate-ETH-BTC-nodes
 graph creates duplicate ETHBTC nodes
 OR it's not duplicate, its merely adding nodes instead of overwritting them???
 Example:
@@ -175,8 +175,9 @@ links: [
     { source: 'USD', target: 'BCH', weight: [Object] },
     { source: 'BCH', target: 'USD', weight: [Object] }
   ]
-
 #+END_SRC
+
+write test that checks for duplicate nodes - so when we refactor we know we fixed it
 
 * #refactor use-pure-functions
 refactor graph-service function and make them pure
