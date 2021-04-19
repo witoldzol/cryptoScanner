@@ -179,6 +179,9 @@ links: [
 
 write test that checks for duplicate nodes - so when we refactor we know we fixed it
 
+* DONE #fix-arbitrage-function
+- create test that will relax after N-1 loops
+* TODO #calculate-arbitrage-value
 * #refactor use-pure-functions
 refactor graph-service function and make them pure
 this should lower bug incidence

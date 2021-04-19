@@ -37,24 +37,27 @@ function Graph (serialized) {
     return pair.substring(3, 6)
   }
 
-  function findNegativeCycles (source = 'BTC') {
-    // upper bounds for shortest path weight from source
-    let d = {}
-    //predecessors
-    let p = {}
+  function findNegativeCycles (sourceNode = 'BTC') {
+    let shortestPathFromSource = {}
+    let predecessors = {}
 
     function initializeSingleSource () {
       nodes().forEach(function (node) {
-        d[node] = Infinity
+        shortestPathFromSource[node] = Infinity
       })
-      d[source] = 0
+      shortestPathFromSource[sourceNode] = 0
     }
 
-    function relax (u, v) {
-      var w = getEdgeWeight(u, v)[0]
-      if (d[v] > d[u] + w) {
-        d[v] = d[u] + w
-        p[v] = u
+    function updateShortestPath (targetNode, sourceNode, weight) {
+      shortestPathFromSource[targetNode] = shortestPathFromSource[sourceNode] +
+        weight.price
+      predecessors[targetNode] = sourceNode
+    }
+
+    function relax (sourceNode, targetNode) {
+      let weight = getEdgeWeight(sourceNode, targetNode)
+      if (shorterPathFound(weight)) {
+        updateShortestPath(targetNode, sourceNode, weight)
       }
     }
 
@@ -62,39 +65,54 @@ function Graph (serialized) {
       // after N-1 relaxations MAX, there should be NO further improvements
       // UNLESS there is a 'negative' cycle
       let iterations = nodes().length - 1
-      for (var i = 0; i < iterations; i++) {
-        for (edge in edges) {
-          relax(getFirstCurrencyPair(edge), getSecondCurrencyPair(edge))
+      for (let i = 0; i < iterations; i++) {
+        for (sourceNode in edges) {
+          for (targetNode of edges[sourceNode])
+            relax(sourceNode, targetNode)
         }
       }
     }
 
+    function findPredecessors (sourceNode) {
+      let cycle = [sourceNode]
+      let prev = predecessors[sourceNode]
+      while (true) {
+        if (prev === sourceNode) break
+        cycle.unshift(prev)
+        prev = predecessors[prev]
+      }
+      return cycle
+    }
+
     // if distances 'd' still update after N-1 relaxations
-    // we have found a negative cycle
-    function returnNegativeCycles () {
-      let arbitrage = false
-      let negativeCycles = {}
-      for (firstCurrency in edges) {
-        for (secondCurrency of edges[firstCurrency]) {
-          let weight = getEdgeWeight(firstCurrency,
-            secondCurrency).priceWithFees
-          if (d[secondCurrency] > d[firstCurrency] + weight) {
-            arbitrage = true
-            d[secondCurrency] = d[firstCurrency] + weight
-            negativeCycles[secondCurrency] = true
-          }
+    function shorterPathFound (weight) {
+      return shortestPathFromSource[targetNode] >
+        shortestPathFromSource[sourceNode] + weight.price
+    }
+
+    function traceCycles (cycleSources) {
+      let negativeCycles = []
+      cycleSources.forEach(
+        source => negativeCycles.push(findPredecessors(source)))
+      return negativeCycles
+    }
+
+    function checkForNegativeCycles () {
+      let cycleSources = new Set()
+      for (sourceNode in edges) {
+        for (targetNode of edges[sourceNode]) {
+          let weight = getEdgeWeight(sourceNode,
+            targetNode)
+          if (shorterPathFound(weight))
+            cycleSources.add(sourceNode)
         }
       }
-
-      if (!arbitrage) {
-        console.log('NO ARBITRAGE OPPORTUNITY FOUND')
-      }
-      return negativeCycles
+      return traceCycles(cycleSources)
     }
 
     initializeSingleSource()
     relaxAllEdges()
-    return returnNegativeCycles()
+    return checkForNegativeCycles()
   }
 
   function getEdges () {
@@ -269,7 +287,7 @@ function Graph (serialized) {
       if (!visited[node]) {
         visited[node] = true
         node1Ancestors.push(node)
-        if (node == node2) {
+        if (node === node2) {
           lcas.push(node)
           return false // found - shortcut
         }
@@ -286,7 +304,7 @@ function Graph (serialized) {
         visited[node] = true
         if (node1Ancestors.indexOf(node) >= 0) {
           lcas.push(node)
-        } else if (lcas.length == 0) {
+        } else if (lcas.length === 0) {
           adjacent(node).forEach(function (node) {
             CA2Visit(visited, node)
           })
