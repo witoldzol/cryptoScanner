@@ -32,23 +32,27 @@ describe('Graph library', () => {
 
   it('#findNegativeCycles returns no cycles', () => {
     const negativeCycles = graph.findNegativeCycles()
-    expect(negativeCycles).toEqual({})
+    expect(negativeCycles).toEqual([])
   })
 
   it('#findNegativeCycles returns negative cycles', () => {
-    // TODO not working !! fix it:w
-    //
     const data = {
       GDAX: {
         ETHBTC: {
-          asks: [[0.03378, 59.59791775, 8]],
-          bids: [[0.03378, 59.59791775, 8]],
+          asks: [[1, 59.59791775, 8]],
+          bids: [[0.9, 59.59791775, 8]],
         },
       },
       BINANCE: {
         ETHBTC: {
-          asks: [[30.03378, 59.59791775, 8]],
-          bids: [[0.03378, 59.59791775, 8]],
+          asks: [[0.8, 59.59791775, 8]],
+          bids: [[1.2, 59.59791775, 8]],
+        },
+      },
+      LUNO: {
+        ETHBTC: {
+          asks: [[0.5, 59.59791775, 8]],
+          bids: [[1.5, 59.59791775, 8]],
         },
       },
     }
@@ -58,6 +62,6 @@ describe('Graph library', () => {
     graph = graphService.recalculateEdgeWeights(graph)
 
     const negativeCycles = graph.findNegativeCycles()
-    expect(negativeCycles).toEqual({})
+    expect(negativeCycles[0]).toEqual([ 'ETH', 'BTC' ])
   })
 })

@@ -237,7 +237,6 @@ class GraphService {
       for (let targetNode of edges[sourceNode]) {
         let currentWeight = graph.getEdgeWeight(sourceNode, targetNode)
         let updatedPrice = currentWeight.price
-
         if (currentWeight.isAsk) {
           updatedPrice = this.valueToReciprocal(updatedPrice)
         }
