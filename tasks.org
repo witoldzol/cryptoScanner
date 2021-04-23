@@ -1,4 +1,10 @@
 #+TITLE: crypto-scanner tasks
+#+STARTUP: overview
+
+# GREAT EXPLANATION OF ALGORITHM
+##########################################################
+https://www.thealgorists.com/Algo/ShortestPaths/Arbitrage
+##########################################################
 * DONE Rename files & reformat styles
 Use prettier default settings to reformat files
 * DONE Rp
@@ -181,7 +187,9 @@ write test that checks for duplicate nodes - so when we refactor we know we fixe
 
 * DONE #fix-arbitrage-function
 - create test that will relax after N-1 loops
-* TODO #calculate-arbitrage-value
+* DONE #calculate-arbitrage-value
+* TODO #fix-arbitrage-calculations
+When fees rise, arbitrage also rises -> clearly that is wrong
 * #refactor use-pure-functions
 refactor graph-service function and make them pure
 this should lower bug incidence

@@ -3,6 +3,17 @@ import { AsksBids, MarketData } from './models/MarketData'
 import { EdgeValues } from './models/EdgeValues'
 import { MARKET_FEES } from './models/MarketFees'
 
+export interface ResultNode {
+  source: string,
+  target: string,
+  market: string
+}
+
+export interface ArbitrageResult {
+  path: ResultNode[],
+  expectedReturn: number
+}
+
 interface SourceTargetPair {
   source: string
   target: string
@@ -249,6 +260,41 @@ class GraphService {
       }
     }
     return graph
+  }
+
+  getArbitrageResult (graph, cycle: string[]): ArbitrageResult {
+    let result: ArbitrageResult = { expectedReturn: 0, path: [] }
+    if (cycle.length < 2) return result
+
+    for (let i = 0; i < cycle.length - 1; i++) {
+      let { source, target, price, market } = this.extractEdgeValues(cycle, i,
+        graph)
+      let node: ResultNode = { market, source, target }
+      result.path.push(node)
+      result.expectedReturn += price
+    }
+    result.expectedReturn = +this.valueToNegative(result.expectedReturn).toFixed(2)
+
+    return result
+  }
+
+  private extractEdgeValues (cycle: string[], i: number, graph) {
+    let source = cycle[i]
+    let target = cycle[i + 1]
+    let edgeWeight = graph.getEdgeWeight(source, target)
+    let price = edgeWeight.price
+    let market = edgeWeight.marketName
+    return { source, target, price, market }
+  }
+
+  getArbitrageResults (graph: any, negativeCycles: []): any[] {
+    if (!negativeCycles.length) return []
+    let result: ArbitrageResult[] = []
+
+    negativeCycles.forEach((cycle: string[]) => {
+      result.push(this.getArbitrageResult(graph, cycle))
+    })
+    return result
   }
 }
 

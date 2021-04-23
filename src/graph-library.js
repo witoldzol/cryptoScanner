@@ -81,6 +81,7 @@ function Graph (serialized) {
         cycle.unshift(prev)
         prev = predecessors[prev]
       }
+      cycle.unshift(sourceNode)
       return cycle
     }
 
@@ -107,6 +108,7 @@ function Graph (serialized) {
             cycleSources.add(sourceNode)
         }
       }
+      if(!cycleSources.size) console.log('**** NO ARBITRAGE FOUND ****')
       return traceCycles(cycleSources)
     }
 
