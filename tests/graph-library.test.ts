@@ -62,6 +62,6 @@ describe('Graph library', () => {
     graph = graphService.recalculateEdgeWeights(graph)
 
     const negativeCycles = graph.findNegativeCycles()
-    expect(negativeCycles[0]).toEqual([ 'ETH', 'BTC' ])
+    expect(negativeCycles[0]).toEqual([ 'BTC', 'ETH', 'BTC' ])
   })
 })

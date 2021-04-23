@@ -1,4 +1,4 @@
-import { GraphService } from '../src/graph-service'
+import { GraphService, ResultNode, ArbitrageResult } from '../src/graph-service'
 
 describe('GraphService', () => {
   let service
@@ -7,7 +7,7 @@ describe('GraphService', () => {
     service = new GraphService()
   })
 
-  describe('getOneOverValue', () => {
+  describe('#getOneOverValue', () => {
     it('returns correct value', () => {
       let mockValue = 17
       let expectedValue = 1 / 17
@@ -180,10 +180,6 @@ describe('GraphService', () => {
   it(
     '#transactionCostAdjustment - market with high fees is rejected as the price is made worse',
     () => {
-      // Market fees -> binance is more attractive than luno
-      // LUNO: 1,
-      // BINANCE: 0.1,
-
       let data = {
         LUNO: {
           AAABBB: {
@@ -251,6 +247,51 @@ describe('GraphService', () => {
       expect(graph.getEdgeWeight('BBB', 'AAA').price).toEqual(
         bidPriceLoggedToNegative,
       )
+    })
+  })
+
+  describe('#calculateArbitrage', () => {
+    it('should return empty array when no negative cycles found', function () {
+      let negativeCycles = []
+      expect(service.getArbitrageResults(null, negativeCycles)).toEqual([])
+    })
+
+    it('should return 2 nested arrays with none zero return rates', () => {
+      const data = {
+        GDAX: {
+          ETHBTC: {
+            // ask is lower than bid -> this will result in negative cycle
+            asks: [[0.041, 1, 8]],
+            bids: [[0.045, 1, 8]],
+          },
+        },
+      }
+      let graphService = new GraphService()
+      let graph = graphService.populateGraph(data)
+      graph = graphService.recalculateEdgeWeights(graph)
+      const negativeCycles = graph.findNegativeCycles()
+      let resultNode: ResultNode[] = [
+        {
+          source: 'BTC',
+          target: 'ETH',
+          market: 'GDAX',
+        }, { source: 'ETH', target: 'BTC', market: 'GDAX' }]
+      const expected: ArbitrageResult[] = [
+        {
+          path: resultNode,
+          expectedReturn: 0.08,
+        }]
+      const actual = service.getArbitrageResults(graph, negativeCycles)
+      expect(actual).toEqual(expected)
+    })
+
+    it('should calculate rate as 0 if no negative cycles', () => {
+      const cycle = ['']
+      let graphService = new GraphService()
+      expect(graphService.getArbitrageResult(null, cycle)).toEqual({
+        expectedReturn: 0,
+        path: [],
+      })
     })
   })
 })

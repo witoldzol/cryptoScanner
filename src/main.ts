@@ -15,6 +15,11 @@ Promise.all([lunoPrices, gdaxPrices, binancePrices]).
   then((data) => mapDataToObject(data)).
   then((data) => graphService.populateGraph(data)).
   then((graph) => graphService.recalculateEdgeWeights(graph)).
-  then((graph) => graph.findNegativeCycles()).
-  then(result => console.log('RESULT: ', result)).
+  then((graph) => {
+    const cycles = graph.findNegativeCycles()
+    return graphService.getArbitrageResults(graph, cycles)
+  }).
+  then(result => {
+    result.forEach(x=>console.log(x))
+  }).
   catch((e) => console.log('error from main pricess ALL.Promise: ' + e.stack))
