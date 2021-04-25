@@ -1,10 +1,17 @@
-import { GraphService, ResultNode, ArbitrageResult } from '../src/graph-service'
+import {
+  GraphService,
+  ResultNode,
+  ArbitrageResult,
+  TransactionType,
+} from '../src/graph-service'
+import Graph = require('../src/graph-library')
+import { MarketData } from '../src/models/MarketData'
 
 describe('GraphService', () => {
   let service
 
   beforeEach(() => {
-    service = new GraphService()
+    service = new GraphService(Graph())
   })
 
   describe('#getOneOverValue', () => {
@@ -28,7 +35,7 @@ describe('GraphService', () => {
     const price = 100
     const market = 'luno'
     it('increases price by market fee when buying (asks)', () => {
-      const transaction = 'asks'
+      const transaction = TransactionType.ASKS
       const result = service.adjustPriceWithMarketFee(
         price,
         market,
@@ -76,17 +83,16 @@ describe('GraphService', () => {
       }
     })
     it('creates a valid graph', () => {
-      const graph = service.populateGraph(data)
-
-      expect(graph.nodes().length).toBe(2)
-      expect(graph.adjacent('AAA').length).toBe(1)
+      service.populateGraph(data)
+      expect(service.graph.nodes().length).toBe(2)
+      expect(service.graph.adjacent('AAA').length).toBe(1)
     })
 
     it(
       '#getFirstOfferFromData throws error if transaction type is not asks or bids',
       () => {
         expect(() => {
-          service.getFirstOfferFromData('bla', { asks: [1, 1], bids: [2, 2] })
+          service.getFirstOfferFromData('bla', { asks: [[1, 1]], bids: [[2, 2]] })
         }).toThrowError('Invalid transaction type')
       })
 
@@ -177,69 +183,36 @@ describe('GraphService', () => {
     })
   })
 
-  it(
-    '#transactionCostAdjustment - market with high fees is rejected as the price is made worse',
-    () => {
-      let data = {
-        LUNO: {
-          AAABBB: {
-            asks: [['18', '2']],
-            bids: [['12', '3']],
-          },
-        },
-        BINANCE: {
-          AAABBB: {
-            asks: [['18', '2']],
-            bids: [['12', '3']],
-          },
-        },
-      }
-
-      service.populateGraph(data)
-      const expectedMarketName = 'BINANCE'
-      const bidEdgeMarketName = service.graph.getEdgeWeight('BBB', 'AAA')[
-        'marketName'
-        ]
-
-      const askEdgeMarketName = service.graph.getEdgeWeight('AAA', 'BBB')[
-        'marketName'
-        ]
-      expect(bidEdgeMarketName).toBe(expectedMarketName)
-      expect(askEdgeMarketName).toBe(expectedMarketName)
-    })
-
   describe('#calculateGraphWeights', () => {
-    let data
-    beforeEach(() => {
-      data = {
+    it('calculates weights to negative natural log', () => {
+      const data: MarketData = {
         LUNO: {
           AAABBB: {
-            asks: [['17', '2']],
-            bids: [['12', '3']],
+            asks: [[17, 2]],
+            bids: [[12, 3]],
           },
         },
       }
-    })
-
-    it('calculates weights to negative natural log', () => {
-      let graph = service.populateGraph(data)
+      let service = new GraphService(Graph())
+      service.populateGraph(data)
       const askPrice = +data['LUNO']['AAABBB']['asks'][0][0]
       const bidPrice = +data['LUNO']['AAABBB']['bids'][0][0]
       const adjustedAskPrice = service.adjustPriceWithMarketFee(
         askPrice,
         'LUNO',
-        'asks',
+        TransactionType.ASKS,
       )
       const valueToReciprocal = 1 / adjustedAskPrice
       const askPriceLoggedToNegative = Math.log(valueToReciprocal) * -1
       const adjustedBidPrice = service.adjustPriceWithMarketFee(
         bidPrice,
         'LUNO',
-        'bids',
+        TransactionType.BIDS,
       )
       const bidPriceLoggedToNegative = Math.log(adjustedBidPrice) * -1
 
-      graph = service.recalculateEdgeWeights(graph)
+      service.recalculateEdgeWeights()
+      const graph = service.getGraph()
 
       expect(graph.getEdgeWeight('AAA', 'BBB').price).toEqual(
         askPriceLoggedToNegative,
@@ -251,13 +224,8 @@ describe('GraphService', () => {
   })
 
   describe('#calculateArbitrage', () => {
-    it('should return empty array when no negative cycles found', function () {
-      let negativeCycles = []
-      expect(service.getArbitrageResults(null, negativeCycles)).toEqual([])
-    })
-
     it('should return 2 nested arrays with none zero return rates', () => {
-      const data = {
+      const data: MarketData = {
         GDAX: {
           ETHBTC: {
             // ask is lower than bid -> this will result in negative cycle
@@ -266,10 +234,8 @@ describe('GraphService', () => {
           },
         },
       }
-      let graphService = new GraphService()
-      let graph = graphService.populateGraph(data)
-      graph = graphService.recalculateEdgeWeights(graph)
-      const negativeCycles = graph.findNegativeCycles()
+      let service = new GraphService(Graph())
+      service.populateGraph(data).recalculateEdgeWeights().findNegativeCycles()
       let resultNode: ResultNode[] = [
         {
           source: 'BTC',
@@ -281,14 +247,14 @@ describe('GraphService', () => {
           path: resultNode,
           expectedReturn: 0.08,
         }]
-      const actual = service.getArbitrageResults(graph, negativeCycles)
+      const actual = service.getArbitrageResults()
       expect(actual).toEqual(expected)
     })
 
     it('should calculate rate as 0 if no negative cycles', () => {
-      const cycle = ['']
-      let graphService = new GraphService()
-      expect(graphService.getArbitrageResult(null, cycle)).toEqual({
+      const cycle = []
+      let graphService = new GraphService(Graph())
+      expect(graphService.getArbitrageResult(cycle)).toEqual({
         expectedReturn: 0,
         path: [],
       })
