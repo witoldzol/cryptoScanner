@@ -14,10 +14,13 @@ let binancePrices = getPrices(binanceOptions)
 
 Promise.all([lunoPrices, gdaxPrices, binancePrices]).
   then((data) => mapDataToObject(data)).
-  then(data => {
-    return graphService.populateGraph(data).recalculateEdgeWeights().findNegativeCycles().getArbitrageResults()
-  }).
+  then(data =>
+    graphService.populateGraph(data).
+      recalculateEdgeWeights().
+      findNegativeCycles().
+      getArbitrageResults(),
+  ).
   then(result => {
-    result.forEach(x=>console.log(x))
+    result.forEach(x => console.log(x))
   }).
   catch((e) => console.log('error from main pricess ALL.Promise: ' + e.stack))
