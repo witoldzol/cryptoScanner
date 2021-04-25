@@ -1,4 +1,3 @@
-import Graph = require('../src/graph-library')
 import { AsksBids, MarketData } from './models/MarketData'
 import { EdgeValues } from './models/EdgeValues'
 import { MARKET_FEES } from './models/MarketFees'
@@ -25,10 +24,15 @@ export enum TransactionType {
 }
 
 class GraphService {
-  private graph
+  graph
+  private negativeCycles: []
 
-  constructor () {
-    this.graph = Graph()
+  constructor (graph) {
+    this.graph = graph
+  }
+
+  getGraph(){
+    return this.graph
   }
 
   valueToReciprocal (value: number): number {
@@ -229,24 +233,23 @@ class GraphService {
     }
   }
 
-  populateGraph (data: MarketData): any {
+  populateGraph (data: MarketData): GraphService{
     Object.keys(data).forEach((marketName: string) => {
       Object.keys(data[marketName]).forEach((pair: string) => {
         this.createBidEdge(pair, data[marketName][pair], marketName)
         this.createAskEdge(pair, data[marketName][pair], marketName)
       })
     })
-
-    return this.graph
+    return this
   }
 
   // once we have populated graph with best prices
   // we can recalculate them so that they can be used in bellman-ford algorithm
-  recalculateEdgeWeights (graph: any): any {
-    let edges = graph.getEdges()
+  recalculateEdgeWeights (): GraphService {
+    let edges = this.graph.getEdges()
     for (let sourceNode in edges) {
       for (let targetNode of edges[sourceNode]) {
-        let currentWeight = graph.getEdgeWeight(sourceNode, targetNode)
+        let currentWeight = this.graph.getEdgeWeight(sourceNode, targetNode)
         let updatedPrice = currentWeight.price
         if (currentWeight.isAsk) {
           updatedPrice = this.valueToReciprocal(updatedPrice)
@@ -256,19 +259,18 @@ class GraphService {
         updatedPrice = this.valueToNegative(updatedPrice)
         currentWeight.price = updatedPrice
 
-        graph.setEdgeWeight(sourceNode, targetNode, currentWeight)
+        this.graph.setEdgeWeight(sourceNode, targetNode, currentWeight)
       }
     }
-    return graph
+    return this
   }
 
-  getArbitrageResult (graph, cycle: string[]): ArbitrageResult {
+  getArbitrageResult ( cycle: string[]): ArbitrageResult {
     let result: ArbitrageResult = { expectedReturn: 0, path: [] }
     if (cycle.length < 2) return result
 
     for (let i = 0; i < cycle.length - 1; i++) {
-      let { source, target, price, market } = this.extractEdgeValues(cycle, i,
-        graph)
+      let { source, target, price, market } = this.extractEdgeValues(cycle, i )
       let node: ResultNode = { market, source, target }
       result.path.push(node)
       result.expectedReturn += price
@@ -278,23 +280,28 @@ class GraphService {
     return result
   }
 
-  private extractEdgeValues (cycle: string[], i: number, graph) {
+  private extractEdgeValues (cycle: string[], i: number) {
     let source = cycle[i]
     let target = cycle[i + 1]
-    let edgeWeight = graph.getEdgeWeight(source, target)
+    let edgeWeight = this.graph.getEdgeWeight(source, target)
     let price = edgeWeight.price
     let market = edgeWeight.marketName
     return { source, target, price, market }
   }
 
-  getArbitrageResults (graph: any, negativeCycles: []): any[] {
-    if (!negativeCycles.length) return []
+  getArbitrageResults (): ArbitrageResult[] {
+    if (!this.negativeCycles.length) return []
     let result: ArbitrageResult[] = []
 
-    negativeCycles.forEach((cycle: string[]) => {
-      result.push(this.getArbitrageResult(graph, cycle))
+    this.negativeCycles.forEach((cycle: string[]) => {
+      result.push(this.getArbitrageResult(cycle))
     })
     return result
+  }
+
+  findNegativeCycles(): GraphService{
+    this.negativeCycles = this.graph.findNegativeCycles()
+    return  this
   }
 }
 

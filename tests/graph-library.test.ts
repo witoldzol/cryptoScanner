@@ -20,9 +20,9 @@ describe('Graph library', () => {
   }
 
   beforeEach(() => {
-    graph = Graph()
-    graphService = new GraphService()
-    graph = graphService.populateGraph(data)
+    graphService = new GraphService(Graph())
+    graphService.populateGraph(data)
+    graph = graphService.getGraph()
   })
 
   it('returns valid graph', () => {
@@ -56,10 +56,10 @@ describe('Graph library', () => {
         },
       },
     }
-    let graph = Graph()
-    let graphService = new GraphService()
-    graph = graphService.populateGraph(data)
-    graph = graphService.recalculateEdgeWeights(graph)
+    let graphService = new GraphService(Graph())
+    let graph = graphService.getGraph()
+    graphService.populateGraph(data)
+    graphService.recalculateEdgeWeights()
 
     const negativeCycles = graph.findNegativeCycles()
     expect(negativeCycles[0]).toEqual([ 'BTC', 'ETH', 'BTC' ])
