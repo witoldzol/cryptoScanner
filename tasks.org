@@ -188,6 +188,8 @@ write test that checks for duplicate nodes - so when we refactor we know we fixe
 * DONE #fix-arbitrage-function
 - create test that will relax after N-1 loops
 * DONE #calculate-arbitrage-value
-* TODO #refactor use-pure-functions
+* DONE #refactor use-pure-functions
 refactor graph-service function and make them pure
 this should lower bug incidence
+
+* TODO #add-bitfinex-market
