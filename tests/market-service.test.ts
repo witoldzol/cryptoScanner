@@ -3,7 +3,7 @@ import rewire = require('rewire')
 
 const marketService = rewire('../src/market-service')
 const generateUrl = marketService.__get__('generateUrl')
-const selectFirst10Prices = marketService.__get__('selectFirst10Prices')
+const selectFirstPrice = marketService.__get__('selectFirstPrice')
 
 describe('Market Service', () => {
   it('generateUrl returns valid URL', () => {
@@ -17,7 +17,7 @@ describe('Market Service', () => {
     expect(result).toContain('ETH-BTC')
   })
 
-  it('selectFirst10Prices', () => {
+  it('selectFirstPrice', () => {
     let asks = [
       ['0.02564', '26.04083965', 3],
       ['0.02565', '82.09877604', 6],
@@ -60,7 +60,7 @@ describe('Market Service', () => {
 
     let pair = 'BTC-ETH'
 
-    let result = selectFirst10Prices(pair, response)
+    let result = selectFirstPrice(pair, response)
 
     expect(result.hasOwnProperty(pair)).toBe(true)
     expect(result[pair]['asks'].length).toBe(1)
