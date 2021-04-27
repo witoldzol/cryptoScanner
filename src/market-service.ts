@@ -9,14 +9,16 @@ function generateUrl (currencyPair: string, options: MarketOptions): string {
   return firstPartOfUrl + currencyPair + secondPartOfUrl
 }
 
-function selectFirst10Prices (pair: string, response: object): object {
-  let asks = response['data']['asks'].slice(0, 1)
-  let bids = response['data']['asks'].slice(0, 1)
+function selectFirstPrice (pair: string, response: object): object {
+  let asks = response['data']['asks']
+  if (asks) asks = asks.slice(0, 1)
+  let bids = response['data']['bids']
+  if (bids) bids = bids.slice(0, 1)
 
-  if (asks.length == 0 || bids.length == 0) {
-    return null
-  }
   let obj = {}
+  if (!asks || !bids || asks.length == 0 || bids.length == 0) {
+    return response['data']
+  }
   obj[pair] = { asks, bids }
   return obj
 }
@@ -29,11 +31,12 @@ function getAxios (options: MarketOptions) {
   })
 }
 
-function fetchPrices (options: MarketOptions): Function {
+function fetchMarketData (options: MarketOptions): Function {
   const axios = getAxios(options)
 
   return async function (pair: string) {
     let url = generateUrl(pair, options)
+    console.log('URL IS ', url)
     let tries = 1
     let response = null
 
@@ -47,12 +50,12 @@ function fetchPrices (options: MarketOptions): Function {
       } else return err
     }
     // todo: refactor it out of here
-    return selectFirst10Prices(pair, response)
+    return selectFirstPrice(pair, response)
   }
 }
 
 async function getPrices (options: MarketOptions) {
-  const fetchPricesWithOptions = fetchPrices(options)
+  const marketData = fetchMarketData(options)
 
   //last arg must be a promise, that's why async is used
   return await async.mapLimit(
@@ -60,7 +63,7 @@ async function getPrices (options: MarketOptions) {
     options.maxConcurrentRequests,
     // async doesn't play nice with typescript -> use asyncify to make it work
     // https://stackoverflow.com/questions/45572743/how-to-enable-async-maplimit-to-work-with-typescript-async-await
-    async.asyncify(async (pair: string) => fetchPricesWithOptions(pair)),
+    async.asyncify(async (pair: string) => marketData(pair)),
   ).then((data: object) => options.formatData(data))
 }
 
