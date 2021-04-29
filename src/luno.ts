@@ -5,7 +5,9 @@ import { MarketData } from './models/MarketData'
 const pairs = ['XBTIDR', 'XBTMYR', 'XBTNGN', 'XBTZAR', 'ETHXBT']
 
 function formatData (data: object[]): MarketData {
+  // console.log('luno data', data)
   let combinedData = util.mapDataToObject(data)
+  // console.log('combined data', combinedData)
   // TODO: keep object key:value format - update other merkets to convert arrays to more meaningful objects
   let formattedData = util.convertObjectToArray(combinedData)
   //luno uses XBT to represent BTC - replace for uniformity

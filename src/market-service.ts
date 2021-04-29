@@ -36,7 +36,6 @@ function fetchMarketData (options: MarketOptions): Function {
 
   return async function (pair: string) {
     let url = generateUrl(pair, options)
-    console.log('URL IS ', url)
     let tries = 1
     let response = null
 

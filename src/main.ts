@@ -9,13 +9,14 @@ import { bitfinexOptions } from './markets/bitfinex'
 
 let graphService = new GraphService(Graph())
 
-// let lunoPrices = getPrices(lunoOptions)
+let lunoPrices = getPrices(lunoOptions)
 // let gdaxPrices = getPrices(gdaxOptions)
 // let binancePrices = getPrices(binanceOptions)
 let bitfinexPrices = getPrices(bitfinexOptions)
 
 // Promise.all([lunoPrices, gdaxPrices, binancePrices]).
   Promise.all([bitfinexPrices]).
+    // Promise.all([lunoPrices]).
   // then((data) => mapDataToObject(data)).
   // then(data =>
   //   graphService.populateGraph(data).
