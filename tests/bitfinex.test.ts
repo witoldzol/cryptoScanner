@@ -63,4 +63,9 @@ describe('#formatData', () => {
     }
     expect(bitfinexOptions.formatData(rawData)).toEqual(expectedData)
   })
+  it('should return empty object when no data passed in', function () {
+    const rawData = []
+    const expectedData: MarketData = {[Market.BITFINEX]:{'':{bids:[[]], asks: [[]]}}}
+    expect(bitfinexOptions.formatData(rawData)).toEqual(expectedData)
+  })
 })
