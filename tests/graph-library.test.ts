@@ -1,5 +1,6 @@
 import Graph = require('../src/graph-library')
 import { GraphService } from '../src/graph-service'
+import { MarketData } from '../src/models/MarketData'
 
 describe('Graph library', () => {
   let graph
@@ -36,7 +37,7 @@ describe('Graph library', () => {
   })
 
   it('#findNegativeCycles returns negative cycles', () => {
-    const data = {
+    const data: MarketData = {
       GDAX: {
         ETHBTC: {
           asks: [[1, 59.59791775, 8]],
