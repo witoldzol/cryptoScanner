@@ -3,7 +3,7 @@ interface LunoAskOrBid {
   volume: number;
 }
 
-function mapDataToObject (data: object[]) {
+function mapDataToObject (data: object[]): object {
   let objectWithCombinedData = {}
   return data.map((sourceOfData) =>
     // issue with Object.assign -> solution

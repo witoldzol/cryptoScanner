@@ -15,9 +15,10 @@ let lunoPrices = getPrices(lunoOptions)
 let bitfinexPrices = getPrices(bitfinexOptions)
 
 // Promise.all([lunoPrices, gdaxPrices, binancePrices]).
-  Promise.all([bitfinexPrices]).
-    // Promise.all([lunoPrices]).
-  // then((data) => mapDataToObject(data)).
+//   Promise.all([bitfinexPrices]).
+    Promise.all([lunoPrices]).
+  then((data) => mapDataToObject(data))
+      .then(data=>console.log(data)).
   // then(data =>
   //   graphService.populateGraph(data).
   //     recalculateEdgeWeights().
