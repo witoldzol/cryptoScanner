@@ -1,15 +1,23 @@
+import { CurrencyPair, MarketData } from './models/MarketData'
+
 interface LunoAskOrBid {
   price: number;
   volume: number;
 }
 
-function mapDataToObject (data: object[]): object {
-  let objectWithCombinedData = {}
-  return data.map((sourceOfData) =>
-    // issue with Object.assign -> solution
-    // https://stackoverflow.com/questions/35959372/property-assign-does-not-exist-on-type-objectconstructor
-    Object.assign(objectWithCombinedData, sourceOfData),
-  )[0]
+function isValidTicker (ticker: CurrencyPair): boolean {
+  let symbol = Object.keys(ticker)[0]
+  return symbol.length === 6
+}
+
+function mapDataToObject (data): MarketData {
+  let combinedData = {}
+  data.forEach(ticker => {
+    let newTicker = removeSpecialChars(ticker)
+    isValidTicker(newTicker)
+    Object.assign(combinedData, newTicker)
+  })
+  return combinedData
 }
 
 function wrapDataInObjectWithMarketName (data: object, marketName: string) {
@@ -18,14 +26,17 @@ function wrapDataInObjectWithMarketName (data: object, marketName: string) {
   return wrapper
 }
 
-function removeSpecialChars (obj: object): object {
-  let newObject = {}
+function removeSpecialCharsFromString (input: string) {
+  return input.replace(/[^a-zA-Z ]/g, '')
+}
 
-  Object.keys(obj).forEach((key) => {
-    let newKey = key.replace(/[^A-Z]/g, '')
-    newObject[newKey] = obj[key]
-  })
-  return newObject
+function removeSpecialChars (input: CurrencyPair): CurrencyPair {
+  let result = {}
+  let originalSymbol = Object.keys(input)[0]
+  let value = input[originalSymbol]
+  let symbol = removeSpecialCharsFromString(Object.keys(input)[0])
+  result[symbol] = value
+  return result
 }
 
 function updateObjectKeys (
