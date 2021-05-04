@@ -6,8 +6,8 @@ const pairs: string[] = [ 'BCH-BTC','BCH-USD','BTC-EUR','BTC-GBP','BTC-USD','ETH
 // const pairs: string[] = ['ETH-BTC', 'BCH-USD']
 
 function formatData (data: object[]): MarketData {
+  console.log('gdax', data)
   let combinedData: object = util.mapDataToObject(data)
-  combinedData = util.removeSpecialChars(combinedData)
   return util.wrapDataInObjectWithMarketName(combinedData, this.marketName)
 }
 
