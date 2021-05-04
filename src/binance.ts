@@ -13,8 +13,8 @@ function formatData (data: object[]): MarketData {
 
 const binanceOptions: MarketOptions = {
   marketName: 'BINANCE',
-  baseURL: 'https://api.binance.com/api/v1',
-  urlPath: ['/depth?limit=10&symbol=', ''],
+  baseURL: 'https://api.binance.com/api/v3',
+  urlPath: ['/depth?limit=5&symbol=', ''],
   pairs: pairs,
   maxConcurrentRequests: 20,
   formatData: formatData,
