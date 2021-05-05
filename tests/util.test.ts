@@ -1,4 +1,5 @@
 import util = require('../src/util')
+import { CurrencyPair } from '../src/models/MarketData'
 
 describe('Util', () => {
   it('mapDataToObject assigns properties to target object', () => {
@@ -25,14 +26,14 @@ describe('Util', () => {
   })
 
   it('removeSpecialChars removes dashes from strings', () => {
-    const data = {
+    const data: CurrencyPair = {
       'ETH-BTC': {
-        asks: [['0.03133600', '0.01500000']],
-        bids: [['0.03133200', '32.57300000']],
+        asks: [[0.03133600, 0.01500000]],
+        bids: [[0.03133200, 32.57300000]],
       },
       'LTC-BTC': {
-        asks: [['0.00501200', '3.92000000']],
-        bids: [['0.00501000', '50.51000000']],
+        asks: [[0.00501200, 3.92000000]],
+        bids: [[0.00501000, 50.51000000]],
       },
     }
     let noDashData = util.removeSpecialChars(data)

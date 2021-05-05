@@ -5,19 +5,13 @@ interface LunoAskOrBid {
   volume: number;
 }
 
-function isValidTicker (ticker: CurrencyPair): boolean {
-  let symbol = Object.keys(ticker)[0]
-  return symbol.length === 6
-}
-
-function mapDataToObject (data): MarketData {
+function mapDataToObject (data: object[]): object {
   let combinedData = {}
-  data.forEach(ticker => {
-    let newTicker = removeSpecialChars(ticker)
-    isValidTicker(newTicker)
-    Object.assign(combinedData, newTicker)
-  })
-  return combinedData
+  return data.map((sourceOfData) =>
+    // issue with Object.assign -> solution
+    // https://stackoverflow.com/questions/35959372/property-assign-does-not-exist-on-type-objectconstructor
+    Object.assign(combinedData, sourceOfData),
+  )[0]
 }
 
 function wrapDataInObjectWithMarketName (data: object, marketName: string) {
@@ -34,8 +28,9 @@ function removeSpecialChars (input: CurrencyPair): CurrencyPair {
   let result = {}
   let originalSymbol = Object.keys(input)[0]
   let value = input[originalSymbol]
-  let symbol = removeSpecialCharsFromString(Object.keys(input)[0])
-  result[symbol] = value
+  Object.keys(input).forEach(symbol => {
+    result[removeSpecialCharsFromString(symbol)] = value
+  })
   return result
 }
 
