@@ -5,7 +5,7 @@ interface LunoAskOrBid {
   volume: number;
 }
 
-function mapDataToObject (data: object[]): object {
+function mapDataToObject (data: CurrencyPair[]): CurrencyPair {
   let combinedData = {}
   return data.map((sourceOfData) =>
     // issue with Object.assign -> solution

@@ -1,10 +1,10 @@
 import util = require('./util')
 import { MarketOptions } from './models/MarketOptions'
-import { MarketData } from './models/MarketData'
+import { CurrencyPair, MarketData } from './models/MarketData'
 
 const pairs = ['XBTIDR', 'XBTMYR', 'XBTNGN', 'XBTZAR', 'ETHXBT']
 
-function formatData (data: object[]): MarketData {
+function formatData (data: CurrencyPair[]): MarketData {
   // console.log('luno data', data)
   let combinedData = util.mapDataToObject(data)
   // console.log('combined data', combinedData)

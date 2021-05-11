@@ -3,16 +3,16 @@ import { CurrencyPair } from '../src/models/MarketData'
 
 describe('Util', () => {
   it('mapDataToObject assigns properties to target object', () => {
-    let a = { a: 1 }
-    let b = { b: 2 }
-    let c = { f: 3 }
+    let a: CurrencyPair = { 'AAABBB': {asks: [[1]], bids:[[2]] }}
+    let b = { 'BBBCCC': {asks: [[3]], bids:[[4]] }}
+    let c = { 'CCCDDD': {asks: [[5]], bids:[[6]] }}
     let sourceArray = [a, b, c]
 
     let f = util.mapDataToObject(sourceArray)
 
-    expect(f['a']).toBe(1)
-    expect(f['b']).toBe(2)
-    expect(f['f']).toBe(3)
+    expect(f['AAABBB']).toEqual({asks: [[1]], bids:[[2]]})
+    expect(f['BBBCCC']).toEqual({asks: [[3]], bids:[[4]]})
+    expect(f['CCCDDD']).toEqual({asks: [[5]], bids:[[6]]})
   })
 
   it('wrapDataInObjectWithMarketName returns valid object', () => {
