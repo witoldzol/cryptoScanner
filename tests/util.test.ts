@@ -1,18 +1,18 @@
 import util = require('../src/util')
-import { CurrencyPair } from '../src/models/MarketData'
+import { AsksBids, CurrencyPair } from '../src/models/MarketData'
 
 describe('Util', () => {
   it('mapDataToObject assigns properties to target object', () => {
-    let a: CurrencyPair = { 'AAABBB': {asks: [[1]], bids:[[2]] }}
-    let b = { 'BBBCCC': {asks: [[3]], bids:[[4]] }}
-    let c = { 'CCCDDD': {asks: [[5]], bids:[[6]] }}
+    let a: CurrencyPair = { 'AAABBB': { asks: [[1]], bids: [[2]] } }
+    let b = { 'BBBCCC': { asks: [[3]], bids: [[4]] } }
+    let c = { 'CCCDDD': { asks: [[5]], bids: [[6]] } }
     let sourceArray = [a, b, c]
 
     let f = util.mapDataToObject(sourceArray)
 
-    expect(f['AAABBB']).toEqual({asks: [[1]], bids:[[2]]})
-    expect(f['BBBCCC']).toEqual({asks: [[3]], bids:[[4]]})
-    expect(f['CCCDDD']).toEqual({asks: [[5]], bids:[[6]]})
+    expect(f['AAABBB']).toEqual({ asks: [[1]], bids: [[2]] })
+    expect(f['BBBCCC']).toEqual({ asks: [[3]], bids: [[4]] })
+    expect(f['CCCDDD']).toEqual({ asks: [[5]], bids: [[6]] })
   })
 
   it('wrapDataInObjectWithMarketName returns valid object', () => {
@@ -234,5 +234,25 @@ describe('Util', () => {
     const formattedData = util.convertObjectToArray(data)
 
     expect(formattedData).toBe(null)
+  })
+
+  it('should filter out invalid currency pairs', function () {
+    let asksBids: AsksBids = { asks: [[]], bids: [[]] }
+    const mixedData = {
+      bids: [{ price: '170290000.00', volume: '0.004414' }],
+    }
+    const mixedData2 = {
+      ZZXBTMYR: { asksBids },
+    }
+    const validData = {
+      XBTMYR: { asksBids },
+    }
+
+    let result = util.isValidPair(mixedData as any)
+    expect(result).toEqual(false )
+    result = util.isValidPair(mixedData2 as any)
+    expect(result).toEqual(false )
+    result = util.isValidPair(validData as any)
+    expect(result).toEqual(true)
   })
 })

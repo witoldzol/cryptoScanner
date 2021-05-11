@@ -1,5 +1,10 @@
 import { CurrencyPair, MarketData } from './models/MarketData'
 
+export function isValidPair (mixedData: CurrencyPair) {
+  if (!mixedData || Object.keys(mixedData)[0].length !== 6) return false
+  return true
+}
+
 interface LunoAskOrBid {
   price: number;
   volume: number;
