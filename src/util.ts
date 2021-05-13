@@ -12,10 +12,10 @@ interface LunoAskOrBid {
 
 function mapDataToObject (data: CurrencyPair[]): CurrencyPair {
   let combinedData = {}
-  return data.map((sourceOfData) =>
+  return data.map((pair) =>
     // issue with Object.assign -> solution
     // https://stackoverflow.com/questions/35959372/property-assign-does-not-exist-on-type-objectconstructor
-    Object.assign(combinedData, sourceOfData),
+    Object.assign(combinedData, pair),
   )[0]
 }
 

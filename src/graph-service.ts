@@ -31,7 +31,7 @@ class GraphService {
     this.graph = graph
   }
 
-  getGraph(){
+  getGraph () {
     return this.graph
   }
 
@@ -233,7 +233,7 @@ class GraphService {
     }
   }
 
-  populateGraph (data: MarketData): GraphService{
+  populateGraph (data: MarketData): GraphService {
     Object.keys(data).forEach((marketName: string) => {
       Object.keys(data[marketName]).forEach((pair: string) => {
         this.createBidEdge(pair, data[marketName][pair], marketName)
@@ -265,17 +265,18 @@ class GraphService {
     return this
   }
 
-  getArbitrageResult ( cycle: string[]): ArbitrageResult {
+  getArbitrageResult (cycle: string[]): ArbitrageResult {
     let result: ArbitrageResult = { expectedReturn: 0, path: [] }
     if (cycle.length < 2) return result
 
     for (let i = 0; i < cycle.length - 1; i++) {
-      let { source, target, price, market } = this.extractEdgeValues(cycle, i )
+      let { source, target, price, market } = this.extractEdgeValues(cycle, i)
       let node: ResultNode = { market, source, target }
       result.path.push(node)
       result.expectedReturn += price
     }
-    result.expectedReturn = +this.valueToNegative(result.expectedReturn).toFixed(2)
+    result.expectedReturn = +this.valueToNegative(result.expectedReturn).
+      toFixed(2)
 
     return result
   }
@@ -299,9 +300,9 @@ class GraphService {
     return result
   }
 
-  findNegativeCycles(): GraphService{
+  findNegativeCycles (): GraphService {
     this.negativeCycles = this.graph.findNegativeCycles()
-    return  this
+    return this
   }
 }
 

@@ -236,7 +236,7 @@ describe('Util', () => {
     expect(formattedData).toBe(null)
   })
 
-  it('should filter out invalid currency pairs', function () {
+  it('#ifIsValidPair should filter out invalid currency pairs', function () {
     let asksBids: AsksBids = { asks: [[]], bids: [[]] }
     const mixedData = {
       bids: [{ price: '170290000.00', volume: '0.004414' }],

@@ -6,6 +6,7 @@ import { mapDataToObject } from './util'
 import { GraphService } from './graph-service'
 import Graph = require('../src/graph-library')
 import { bitfinexOptions } from './markets/bitfinex'
+import { CurrencyPair } from './models/MarketData'
 
 let graphService = new GraphService(Graph())
 
@@ -14,17 +15,16 @@ let gdaxPrices = getPrices(gdaxOptions)
 let binancePrices = getPrices(binanceOptions)
 let bitfinexPrices = getPrices(bitfinexOptions)
 
-//   Promise.all([ bitfinexPrices, lunoPrices, gdaxPrices, binancePrices]).
-  Promise.all([ binancePrices]).
-  then(data=>console.log(data)).
-//   then((data) => mapDataToObject(data)).
-//   then(data =>
-//     graphService.populateGraph(data).
-//       recalculateEdgeWeights().
-//       findNegativeCycles().
-//       getArbitrageResults(),
-//   ).
-//   then(result => {
-//     result.forEach(x => console.log(x))
-//   }).
+Promise.all([bitfinexPrices, lunoPrices, gdaxPrices, binancePrices]).
+  then(data => mapDataToObject(data)).
+  then(data => console.log(data)).
+  then(data =>
+    graphService.populateGraph(data).
+      recalculateEdgeWeights().
+      findNegativeCycles().
+      getArbitrageResults(),
+  ).
+  then(result => {
+    result.forEach(x => console.log(x))
+  }).
   catch((e) => console.log('error from main pricess ALL.Promise: ' + e.stack))
