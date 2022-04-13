@@ -25,7 +25,7 @@
     "ts-node": "^9.0.0"
   },
   "dependencies": {
-    "async": "^3.2.0",
+    "async": "^3.2.2",
     "axios": "^0.21.1",
     "bottleneck": "^2.5.1",
     "rewire": "^5.0.0",
